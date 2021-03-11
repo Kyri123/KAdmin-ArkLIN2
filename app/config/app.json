@@ -1,0 +1,9 @@
+{
+  "servRoot"        : "/home/kadmin_arklin/servers/server",
+  "logRoot"         : "/home/kadmin_arklin/servers/logs",
+  "pathBackup"      : "/home/kadmin_arklin/servers/backups",
+  "pathSteam"       : "/home/steam",
+  "pathArkmanager"  : "/etc/arkmanager",
+  "port"            : 20030,
+  "useDebug"        : true
+}
