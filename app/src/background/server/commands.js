@@ -30,7 +30,7 @@ module.exports = {
             Object.entries(para).forEach(value => {
                if(isNaN(+value[0])) {
                   if(value[1].trim() !== '')
-                     parameter.push(`${value[0]}=\\\"${value[1]}\\\"`)
+                     parameter.push(`${value[0]}='${value[1]}'`)
                }
                else {
                   parameter.push(value[1])
@@ -43,7 +43,7 @@ module.exports = {
          let logPath    = pathMod.join(serverCfg.pathLogs, "latest.log")
 
          if(info.isFree) {
-            return serverShell.runSHELL(`echo "arkmanager ${action} @${server} ${parameter.join(' ')}" > ${logPath} && screen -dmS kadmin-arklin-${server} bash -c "arkmanager ${action} ${parameter.join(' ')} @${server} >> ${logPath} && exit"`)
+            return serverShell.runSHELL(`screen -mdS test echo "arkmanager ${action} @${server} ${parameter.join(' ')}" > ${logPath} && arkmanager ${action} ${parameter.join(' ')} @${server} >> ${logPath} && exit`)
          }
       }
       return false
