@@ -39,12 +39,11 @@ Wichtig
 Installation
 =============
 
-1. 1. Erstelle einen Benutzer `adduser kadmin_arklin`
-   2. Gebe den Benutzer alle nötigen Rechte für die Ordner `chown -R :kadmin_arklin /etc/arkmanager && chown -R :kadmin_arklin /home/steam && chown -R :steam /home/kadmin_arklin` (/home/steam = verzeichnis wo Steam liegt!)
-   3. Installiere alle nötigen Module `sudo apt-get install screen unzip zip curl`
-   4. Installiere NodeJS (min 15.6.0)
-2. Log dich in den Benutzer ein `su kadmin_arklin`
-3. Downloade den letzten Release `cd ~ && wget https://api.arklin2.kadmin-panels.de/sh/installer.sh && chmod 755 ./installer.sh && ./installer.sh master`
+1. 1. Installiere alle nötigen Module `sudo apt-get install screen unzip zip curl`
+   2. Installiere NodeJS (min 15.6.0)
+   3. gebe den Steam user rechte auf Arkmanager Verzeichnis
+2. Log dich in den Steam Benutzer ein `su steam`
+3. Downloade den letzten Release `cd ~ && mkdir kadmin_arklin && cd kadmin_arklin && wget https://api.arklin2.kadmin-panels.de/sh/installer.sh && chmod 755 ./installer.sh && ./installer.sh master`
    1. Hierbei kann `master` zu `dev` oder `test` geändert werden je nachdem welche branch man benutzen will
 4. Erstelle die eine Datenbank (MariaDB) und lade die Tabellen aus `./forInstaller` in diese (Todo automatisiertes erstellen von Tabellen)
 5. Konfiguriere:

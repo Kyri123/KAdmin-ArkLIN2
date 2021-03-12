@@ -98,35 +98,26 @@ router.route('/')
                 let stop    = false
                 let done    = false
                 let para    = POST.para === undefined ? [] : POST.para
+                let allowed = globalUtil.safeFileReadSync([mainDir, "public/json/sites", "serverCenterActions.cfg.json"], true)
 
-                // Server Installieren
-                switch(POST.action) {
-                    case "start":
-                        done = serverCommands.doStart(POST.cfg, para)
-                        break
-                    case "stop":
-                        done = serverCommands.doStop(POST.cfg, para)
-                        break
-                    case "backup":
-                        done = serverCommands.doBackup(POST.cfg, para)
-                        break
-                    case "restart":
-                        done = serverCommands.doRestart(POST.cfg, para)
-                        break
+                if(allowed.actions.includes(POST.action)) {
+                    // Server Installieren
+                    switch (POST.action) {
+                        case "backup":
+                            done = serverCommands.doBackup(POST.cfg, para)
+                            break
+                        default:
+                            done = serverCommands.doArkmanagerCommand(POST.cfg, para)
+                    }
+
+                    if (done) {
+                        res.render('ajax/json', {
+                            data: '{"success": true}'
+                        })
+                        stop = true
+                        return true
+                    }
                 }
-
-                if(done) {
-                    res.render('ajax/json', {
-                        data: `{"code":"1", "txt": "Install running"}`
-                    })
-                    stop = true
-                    return true
-                }
-
-                if(!stop) res.render('ajax/json', {
-                    data: `{"code":"404"}`
-                })
-                return true
             }
         }
 

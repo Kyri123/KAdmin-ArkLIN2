@@ -1,7 +1,7 @@
 {
-  "path"                    : "/home/kadmin_arklin/servers/server/5c68f48w",
-  "pathLogs"                : "/home/kadmin_arklin/servers/logs/5c68f48w",
-  "pathBackup"              : "/home/kadmin_arklin/servers/backups/5c68f48w",
+  "path"                    : "/home/steam/kadmin_arklin/servers/server/5c68f48w",
+  "pathLogs"                : "/home/steam/kadmin_arklin/servers/logs/5c68f48w",
+  "pathBackup"              : "/home/steam/kadmin_arklin/servers/backups/5c68f48w",
   "autoUpdate"              : false,
   "autoUpdateInterval"      : 1800000,
   "autoBackup"              : false,

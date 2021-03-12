@@ -27,15 +27,28 @@ module.exports = class serverClass {
       this.cfgPath            = [mainDir, '/app/json/server/', `${this.server}.json`]
       this.defaultCfgPath     = [mainDir, '/app/json/server/template/', `default.json`]
       this.serverInfoPath     = [mainDir, '/public/json/server/', `${this.server}.json`]
+      this.serverIniPath      = [CONFIG.app.pathArkmanager, 'instances', `${this.server}.cfg`]
       this.cfg                = {}
 
       if(globalUtil.poisonNull(this.server)) {
+         let ini         = this.getINI()
          let file        = globalUtil.safeFileReadSync(this.cfgPath, true)
          let dfile       = globalUtil.safeFileReadSync(this.defaultCfgPath, true)
-         this.cfg        = file !== false ? (
-            dfile !== false ? array_replace_recursive(dfile, file)
-               : file
-         ) : false
+
+         if(file === false) {
+            dfile.path        = ini.arkserverroot
+            dfile.pathLogs    = ini.logdir
+            dfile.pathBackup  = ini.arkbackupdir
+
+
+            this.cfg          = dfile
+            globalUtil.safeFileCreateSync(this.cfgPath, JSON.stringify(dfile))
+         }
+         else {
+            this.cfg          =  dfile !== false
+                  ? array_replace_recursive(dfile, file)
+                  : file
+         }
 
          this.exsists    = this.cfg !== false
       }
@@ -188,18 +201,16 @@ module.exports = class serverClass {
     * @return {boolean}
     */
    getINI() {
-      if(this.serverExsists()) {
-         let file    = globalUtil.safeFileReadSync([CONFIG.app.pathArkmanager, `instances`, `${this.server}.cfg`])
-         if(file === false)
-            file     = globalUtil.safeFileReadSync([mainDir, `/app/data/cfg`, `default.cfg`])
-         if(file !== false)
-            try {
-               return ini.parse(file)
-            }
-            catch(e) {
-               if(debug) console.log('[DEBUG_FAILED]', e)
-            }
-      }
+      let file    = globalUtil.safeFileReadSync(this.serverIniPath)
+      if(file === false)
+         file     = globalUtil.safeFileReadSync([mainDir, `/app/data/cfg`, `default.cfg`])
+      if(file !== false)
+         try {
+            return ini.parse(file)
+         }
+         catch(e) {
+            if(debug) console.log('[DEBUG_FAILED]', e)
+         }
       return false
    }
 }

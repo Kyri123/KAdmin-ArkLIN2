@@ -30,7 +30,7 @@ module.exports = {
                         if(array !== false) {
                             let serverData  = new serverClass(ITEM)
                             ITEM            = ITEM.replace(".json", '')
-                            array           = array_replace_recursive(array, serverData.getServerInfos(), serverData.getConfig())
+                            array           = array_replace_recursive(array, serverData.getServerInfos(), serverData.getConfig(), serverData.getINI())
                             servers[ITEM]   = array
                         }
                     }

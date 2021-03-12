@@ -19,7 +19,7 @@ const isRunning     = require('is-running')
 
 /**
  * Speichert Informationen in einer JSON oder in die MYSQL
- * @param {array} data - Daten die gespeichert werden
+ * @param {{}} data - Daten die gespeichert werden
  * @param {string} name - Bezeichung der gespeicherten Daten (bsp server)
  * @param {{}} state - Daten zusätzlich gespeichert werden sollen (array.state)
  * @param {boolean} use_state - Soll state benutzt werden?
@@ -33,16 +33,15 @@ function save(data, name, state, use_state = true) {
 
 module.exports = {
     getStateFromServers: async () => {
-        let serverLocalPath     = `./app/json/server`
+        let serverLocalPath     = CONFIG.app.pathArkmanager + "/instances"
         let dirArray            = fs.readdirSync(serverLocalPath)
         // Scanne Instancen
         dirArray.forEach((ITEM) => {
             // Erstelle Abfrage wenn es eine .cfg Datei ist
-            if (ITEM.includes(".json")) {
-
+            if (ITEM.includes(".cfg") && !ITEM.includes(".example")) {
                 let file               = pathMod.join(mainDir, '/public/json/server/')
                 if(!globalUtil.safeFileExsistsSync([file])) globalUtil.safeFileMkdirSync([file])
-                let name               = ITEM.replace(".json", "")
+                let name               = ITEM.replace(".cfg", "")
                 let serverData         = new serverClass(name)
                 let data               = serverData.getServerInfos() !== false
                    ? serverData.getServerInfos()
@@ -147,61 +146,64 @@ module.exports = {
                     if(data.alerts.length === 0)
                         data.alerts.push("4000")
 
-                if(globalUtil.safeFileExsistsSync(pifFileServer)) findProcess('pid', +globalUtil.safeFileReadSync(pifFileServer))
-                    .then(async function (list) {
-                        if (list.length) {
-                            let index   = 0
-                            let pid     = list[index].pid
-                            let ppid    = list[index].ppid
-                            let cmd     = list[index].cmd
-                            let bin     = list[index].bin
-                            try {
-                                let pidData = await pidusage(pid)
-                                data.cpuUsage          = Math.round(pidData.cpu / os.cpus().length * 100) / 100
-                                data.memory            = pidData.memory
-                                data.elapsed           = pidData.elapsed
-                                data.epoch             = pidData.timestamp
-                            }
-                            catch (e) {
+                if(globalUtil.safeFileExsistsSync(pifFileServer)) {
+                    findProcess('pid', +globalUtil.safeFileReadSync(pifFileServer))
+                       .then(async function (list) {
+                           if (list.length) {
+                               let index = 0
+                               let pid = list[index].pid
+                               let ppid = list[index].ppid
+                               let cmd = list[index].cmd
+                               let bin = list[index].bin
+                               try {
+                                   let pidData = await pidusage(pid)
+                                   data.cpuUsage = Math.round(pidData.cpu / os.cpus().length * 100) / 100
+                                   data.memory = pidData.memory
+                                   data.elapsed = pidData.elapsed
+                                   data.epoch = pidData.timestamp
+                               } catch (e) {
 
-                            }
+                               }
 
 
-                             data.run            = true
-                             data.cmd            = cmd
-                             data.pid            = pid
-                             data.ppid           = ppid
-                             data.bin            = bin
+                               data.run = true
+                               data.cmd = cmd
+                               data.pid = pid
+                               data.ppid = ppid
+                               data.bin = bin
 
-                             Gamedig.query({
-                                 type: 'arkse',
-                                 host: "127.0.0.1",
-                                 port: servINI.ark_QueryPort
-                             })
-                                 .then((state) => {
-                                     data.players        = servINI.ark_MaxPlayers
-                                     data.aplayers       = state.players.length
-                                     data.aplayersarr    = state.players
-                                     data.listening      = true
-                                     data.online         = true
-                                     data.cfg            = name
-                                     data.ServerName     = state.name
-                                     data.usePW          = state.password
-                                     data.version        = state.name.replaceAll(/[^0-9]/g, '') / 100
-                                     data.lastGameding   = state
+                               Gamedig.query({
+                                   type: 'arkse',
+                                   host: "127.0.0.1",
+                                   port: servINI.ark_QueryPort
+                               })
+                                  .then((state) => {
+                                      data.players = servINI.ark_MaxPlayers
+                                      data.aplayers = state.players.length
+                                      data.aplayersarr = state.players
+                                      data.listening = true
+                                      data.online = true
+                                      data.cfg = name
+                                      data.ServerName = state.name
+                                      data.usePW = state.password
+                                      data.version = state.name.replaceAll(/[^0-9]/g, '') / 100
+                                      data.lastGameding = state
 
-                                     // Speichern
-                                     save(data, name, state)
-                                 }).catch((error) => {
-                                     // Speichern
-                                     save(data, name, {})
-                                 })
-                        }
-                        else {
-                            // Speichern
-                            save(data, name, {})
-                        }
-                    })
+                                      // Speichern
+                                      save(data, name, state)
+                                  }).catch((error) => {
+                                   // Speichern
+                                   save(data, name, {})
+                               })
+                           } else {
+                               // Speichern
+                               save(data, name, {})
+                           }
+                       })
+                }
+                else {
+                    save(data, name, {})
+                }
             }
         })
     }

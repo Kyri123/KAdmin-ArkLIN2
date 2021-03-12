@@ -14,14 +14,14 @@ const serverShell           = require('./shell')
 module.exports = {
 
    /**
-    * Startet einen Server
+    * Sendet ein Arkmanager Befehl
     * @param server {string}
     * @param para {array} Parameters
     * <br>
     * - **--alwaysstart** (Server startet immer wenn dieser NICHT läuft) <br>
     * @return {boolean}
     */
-   doStart: (server, para) => {
+   doArkmanagerCommand: (server, para) => {
       let serv       = new serverClass(server)
       if(serv.serverExsists()) {
          let info       = serv.getServerInfos()
@@ -31,77 +31,6 @@ module.exports = {
             if(para.includes("--alwaysstart")) serv.writeConfig("shouldRun", true)
             return serverShell.runSHELL(startLine)
          }
-      }
-      return false
-   },
-
-   /**
-    * Stoppt einen Server
-    * @param server {string}
-    * @param para {array} Parameters
-    * <br>
-    * - **--hardstop** (Beendet mit kill) <br>
-    * @return {boolean}
-    */
-   doStop: (server, para) => {
-      let serv       = new serverClass(server)
-      if(serv.serverExsists()) {
-         let info       = serv.getServerInfos()
-
-         if(info.pid !== 0) {
-            serv.writeConfig("shouldRun", false)
-            if(para.includes("--hardstop")) {
-               //serverShell.runSHELL(`kill ${info.ppid}`)
-               return serverShell.runSHELL(`kill ${info.pid}`)
-            }
-            else {
-               setTimeout(() => {
-                  if(serv.isrun()) serverShell.runSHELL(`kill ${info.pid}`)
-               }, 30000)
-               return CommandUtil.sendToScreen(server, "stop")
-            }
-         }
-      }
-      return false
-   },
-
-   /**
-    * Startet einen Server neu (auch wenn dieser Offline ist!)
-    * @param server {string}
-    * @param para {array} Parameters
-    * <br>
-    * - **--hardstop** (Beendet mit kill) <br>
-    * - **--alwaysstart** (Server startet immer wenn dieser NICHT läuft) <br>
-    * @return {boolean}
-    */
-   doRestart: (server, para) => {
-      let serv       = new serverClass(server)
-      if(serv.serverExsists()) {
-         let interval         = undefined
-         let doStartInterval  = undefined
-
-         if(serv.isrun()) {
-            module.exports.doStop(server, para)
-            interval    = setInterval(() => {
-               if(!serv.isrun()) {
-                  clearInterval(interval)
-                  interval = undefined
-               }
-            }, 2000)
-         }
-
-         doStartInterval = setInterval(() => {
-            if(!interval) {
-               if(!serv.isrun()) {
-                  clearInterval(doStartInterval)
-                  doStartInterval = undefined
-
-                  module.exports.doStart(server, para)
-               }
-            }
-         }, 2000)
-
-         return true
       }
       return false
    },
@@ -120,32 +49,8 @@ module.exports = {
          let servINI          = serv.getINI()
          let zipPath          = pathMod.join(servCFG.pathBackup, `${Date.now()}.zip`)
          let backuprun        = pathMod.join(servCFG.pathBackup, `backuprun`)
-         let paths            = []
+         let paths            = ['*']
          globalUtil.safeFileMkdirSync([servCFG.pathBackup])
-
-         if(!para.includes('--onlyworld'))
-            if(globalUtil.safeFileExsistsSync([servCFG.path]))
-               paths.push("./")
-
-         if(para.includes('--onlyworld')) {
-            if(globalUtil.safeFileExsistsSync([servCFG.path, servINI['level-name']]))
-               paths.push(`./${servINI['level-name']}`)
-            if(globalUtil.safeFileExsistsSync([servCFG.path, servINI['level-name'] + "_nether"]))
-               paths.push(`./${servINI['level-name']}_nether`)
-            if(globalUtil.safeFileExsistsSync([servCFG.path, servINI['level-name'] + "_the_end"]))
-               paths.push(`./${servINI['level-name']}_the_end`)
-         }
-
-         if(para.includes('--onlyworld') && para.includes('--withmods')) {
-            if (globalUtil.safeFileExsistsSync([servCFG.path, "mods"]))
-               paths.push("./mods")
-            if (globalUtil.safeFileExsistsSync([servCFG.path, "config"]))
-               paths.push("./config")
-         }
-
-         if(para.includes('--onlyworld') && para.includes('--witplugins'))
-            if(globalUtil.safeFileExsistsSync([servCFG.path, "plugins"]))
-               paths.push("./plugins")
 
          if(
             !globalUtil.checkValidatePath(servCFG.path) ||
@@ -193,7 +98,7 @@ module.exports = {
             }
 
             if(checkBackupPath()) {
-               serverShell.runSHELL(`cd ${servCFG.path} && zip -9 -r ${zipPath} ${paths.join(" ")} && rm ${backuprun}`)
+               serverShell.runSHELL(`cd ${servCFG.path}/ShooterGame/Saved && zip -9 -r ${zipPath} ${paths.join(" ")} && rm ${backuprun}`)
                return true
             }
          }
