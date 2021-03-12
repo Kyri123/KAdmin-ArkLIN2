@@ -30,68 +30,6 @@ router.route('/')
             return true
         }
 
-        // ModpackPicker
-        if(
-           POST.installModpack !== undefined &&
-           POST.cfg !== undefined &&
-           POST.modid !== undefined &&
-           POST.fileid !== undefined &&
-           userHelper.hasPermissions(req.session.uid, "versionpicker", POST.cfg)
-        ) {
-            let serv        = new serverClass(POST.cfg)
-
-            if(serv.serverExsists()) {
-                serv.writeState("is_installing", true)
-                let modid   = parseInt(POST.modid)
-                let succ    = versionControlerModpacks.InstallPack(modid, parseInt(POST.fileid), POST.cfg)
-                if(succ) serv.writeConfig("currversion", modid)
-
-                res.render('ajax/json', {
-                    data: JSON.stringify({
-                        success: succ
-                    })
-                });
-                return true
-            }
-        }
-
-        // VersionPicker
-        if(
-           POST.installVersion !== undefined &&
-           userHelper.hasPermissions(req.session.uid, "versionpicker", POST.cfg)
-        ) {
-            let serv        = new serverClass(POST.cfg)
-
-            if(serv.serverExsists()) {
-                let v       = POST.version.replace(".jar", "")
-                let succ
-                if(POST.type === "spigot") {
-                    serv.writeState("is_installing", true)
-                    succ    = versionSpigotControler.downloadServer(POST.version, `${serv.getConfig().path}/serverSpigot.jar`)
-                    if(succ) serv.writeConfig("jar", "serverSpigot.jar")
-                }
-                else if(POST.type === "craftbukkit") {
-                    serv.writeState("is_installing", true)
-                    succ    = versionCraftbukkitControler.downloadServer(POST.version, `${serv.getConfig().path}/serverCraftbukkit.jar`)
-                    if(succ) serv.writeConfig("jar", "serverCraftbukkit.jar")
-                }
-                else {
-                    serv.writeState("is_installing", true)
-                    v       = versionVanillaControler.readList().versions[POST.version].id
-                    succ    = versionVanillaControler.downloadServer(POST.version, `${serv.getConfig().path}/server.jar`)
-                    if(succ) serv.writeConfig("jar", "server.jar")
-                }
-                if(succ) serv.writeConfig("currversion", v)
-
-                res.render('ajax/json', {
-                    data: JSON.stringify({
-                        alert: alerter.rd(succ ? 1018 : 3).replace("{v}", v)
-                    })
-                })
-                return true
-            }
-        }
-
         // Action Handle
         if(POST.actions !== undefined && POST.cfg !== undefined && userHelper.hasPermissions(req.session.uid, "actions", POST.cfg)) {
             if(POST.actions === "sendcommand") {
@@ -107,14 +45,13 @@ router.route('/')
                             done = serverCommands.doBackup(POST.cfg, para)
                             break
                         default:
-                            done = serverCommands.doArkmanagerCommand(POST.cfg, para)
+                            done = serverCommands.doArkmanagerCommand(POST.cfg, POST.action, para)
                     }
 
                     if (done) {
                         res.render('ajax/json', {
                             data: '{"success": true}'
                         })
-                        stop = true
                         return true
                     }
                 }

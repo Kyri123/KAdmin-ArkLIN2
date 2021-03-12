@@ -189,6 +189,7 @@ $("#action_form").submit(() => {
                         $("#all_resp").html(data.msg)
                         $('#action').modal('hide')
                         $('.modal-backdrop').remove()
+                        VUE_serverCenterHead.actionParam = {}
 
                         $("#action_sel").prop('selectedIndex',0)
                         $('#actioninfo').toggleClass('d-none', true)

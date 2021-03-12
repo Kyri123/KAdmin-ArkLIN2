@@ -39,7 +39,7 @@ module.exports = class serverClass {
             dfile.path        = ini.arkserverroot
             dfile.pathLogs    = ini.logdir
             dfile.pathBackup  = ini.arkbackupdir
-
+            dfile.selfname    = ini.ark_SessionName
 
             this.cfg          = dfile
             globalUtil.safeFileCreateSync(this.cfgPath, JSON.stringify(dfile))

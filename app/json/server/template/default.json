@@ -4,6 +4,7 @@
   "pathBackup"              : "{BACKUPROOT}/{SERVERNAME}",
   "autoUpdate"              : false,
   "autoUpdateInterval"      : 1800000,
+  "autoUpdateNext"          : 0,
   "autoBackup"              : false,
   "autoBackupPara"          : [],
   "autoBackupInterval"      : 1800000,

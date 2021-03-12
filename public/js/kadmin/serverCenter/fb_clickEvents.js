@@ -136,7 +136,7 @@ function reloadClickEvents() {
     })
 
     // moveFiles/Folders
-    $('*[data-move="use"],#FB_moveFolder').click((e) => {
+    /*$('*[data-move="use"],#FB_moveFolder').click((e) => {
         if(e.currentTarget.dataset.path !== undefined) swalWithBootstrapButtons .fire({
             icon: 'question',
             title: `<strong>${globalvars.lang_arr["servercenter_filebrowser"].sweet.move.title}</strong>`,
@@ -175,7 +175,7 @@ function reloadClickEvents() {
             }
             if(cancel) fireToast(8, 'error')
         })
-    })
+    })*/
 
     // rename
     $('*[data-rename="use"],#FB_renameFolder').click((e) => {

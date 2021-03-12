@@ -28,8 +28,8 @@ module.exports = {
                     if(globalUtil.safeFileExsistsSync([serverLocalPath, ITEM])) {
                         let array   = globalUtil.safeFileReadSync([serverLocalPath, ITEM], true)
                         if(array !== false) {
-                            let serverData  = new serverClass(ITEM)
                             ITEM            = ITEM.replace(".json", '')
+                            let serverData  = new serverClass(ITEM)
                             array           = array_replace_recursive(array, serverData.getServerInfos(), serverData.getConfig(), serverData.getINI())
                             servers[ITEM]   = array
                         }

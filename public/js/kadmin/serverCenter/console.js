@@ -51,15 +51,17 @@ function loadActionLog() {
                for(let item of data.split('\n').reverse()) {
                   let logitem = {}
                   if(item.trim() !== "" && item.trim() !== ">")  {
-                     logitem.color = item.includes("server overloaded") || item.includes("/ERROR")
+                     logitem.color = item.includes("FAILED") || item.includes("ERROR")
                         ? "red"
-                        : item.includes("/WARN")
+                        : item.includes("WARN")
                            ? "yellow"
-                           : item.includes("/INFO")
+                           : item.includes("INFO") || item.includes(`${vars.cfg} `)
                               ? "info"
-                              : item.includes("Done (")
-                                 ? "blue"
-                                 : "green"
+                              : item.includes("OK") || item.toLowerCase().includes("update")
+                                 ? "success"
+                                 : item.includes("Done (")
+                                    ? "blue"
+                                    : "gray"
 
                      item = JSON.stringify(item)
                      if(item[1] === ">")
@@ -87,6 +89,19 @@ function loadActionLog() {
                         .replaceAll(`[?1l>>`, "")
                         .replaceAll(`<`, "&lt;")
                         .replaceAll(`>`, "&gt;")
+                        .replaceAll(`[0;39m`, "")
+                        .replaceAll(`[0;33m`, "")
+                        .replaceAll(`[0;31m`, "")
+                        .replaceAll(`[1;31m`, "")
+                        .replaceAll(`[0;33m`, "")
+                        .replaceAll(`[0;32m`, "")
+                        .replaceAll(`8[J`, "")
+                        .replaceAll(`[68G`, "")
+                        .replaceAll(`[1;32m`, "")
+                        .replaceAll(`\\\\033`, "")
+                        .replaceAll(`\\\\e`, "")
+                        .replaceAll(`7The`, "The")
+                        .replaceAll(`-/|\\\\`, "")
 
                      if(item.trim() !== "" && item.trim() !== ">") {
                         logitem.text = item

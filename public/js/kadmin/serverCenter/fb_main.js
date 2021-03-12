@@ -24,7 +24,7 @@ dirFrontend.html(loading("FB"))
 
 let dirlist         = []
 let dirlistSweet    = []
-setInterval(() => {
+/*setInterval(() => {
     $.get("/ajax/serverCenterFilebrowser", {
         getDirList  : true,
         server      : vars.cfg
@@ -41,7 +41,7 @@ setInterval(() => {
             dirlistSweet[item] = item.replace(vars.defaultPath, "")
         }
     })
-}, 1000)
+}, 1000)*/
 
 getPath(vars.defaultPath)
 
@@ -140,9 +140,9 @@ function getPath(path) {
                                     ${ hasPermissions(globalvars.perm, "filebrowser/renameFiles", vars.cfg)
                                        ? `<a class="dropdown-item" href="javascript:void(0)" data-rename="use" data-filename="${file.name}" data-isfile="yes" data-path="${file.totalPath}"><i class="fas fa-file-signature"></i> ${globalvars.lang_arr["servercenter_filebrowser"].options.rename}</a>` : ""
                                     }
-                                    ${ hasPermissions(globalvars.perm, "filebrowser/moveFiles", vars.cfg)
+                                    <!--${ hasPermissions(globalvars.perm, "filebrowser/moveFiles", vars.cfg)
                                        ? `<a class="dropdown-item" href="javascript:void(0)" data-move="use" data-isfile="yes" data-path="${file.totalPath}"><i class="fas fa-arrows-alt"></i> ${globalvars.lang_arr["servercenter_filebrowser"].options.move}</a>` : ""
-                                    }
+                                    }-->
                                     ${ hasPermissions(globalvars.perm, "filebrowser/downloadFiles", vars.cfg)
                                        ? `<a class="dropdown-item" href="${file.totalPath.replace(vars.defaultPath, `/serv/${vars.cfg}`)}" download=""><i class="fas fa-file-download"></i> ${globalvars.lang_arr["servercenter_filebrowser"].options.download}</a>` : ""
                                     }

@@ -223,7 +223,7 @@ router.route('/')
          typeof GET.path     !== "undefined"
       ) if(userHelper.hasPermissions(req.session.uid,`filebrowser/show`, GET.server)) {
          res.render('ajax/json', {
-            data: pathMod.join(GET.path).includes(GET.server) ? JSON.stringify(globalUtil.safeFileReadDirSync([GET.path])) : false
+            data: pathMod.join(GET.path.toString()).includes(GET.server.toString()) ? JSON.stringify(globalUtil.safeFileReadDirSync([GET.path])) : false
          })
          return true
       }

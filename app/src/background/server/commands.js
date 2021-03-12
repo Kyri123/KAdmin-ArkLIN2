@@ -21,15 +21,29 @@ module.exports = {
     * - **--alwaysstart** (Server startet immer wenn dieser NICHT läuft) <br>
     * @return {boolean}
     */
-   doArkmanagerCommand: (server, para) => {
+   doArkmanagerCommand: (server,action , para) => {
       let serv       = new serverClass(server)
       if(serv.serverExsists()) {
-         let info       = serv.getServerInfos()
-         let startLine  = CommandUtil.getStartLine(server)
+         let parameter  = Array.isArray(para) ? para : []
 
-         if(info.pid === 0) {
-            if(para.includes("--alwaysstart")) serv.writeConfig("shouldRun", true)
-            return serverShell.runSHELL(startLine)
+         if(!Array.isArray(para)) {
+            Object.entries(para).forEach(value => {
+               if(isNaN(+value[0])) {
+                  if(value[1].trim() !== '')
+                     parameter.push(`${value[0]}=\\\"${value[1]}\\\"`)
+               }
+               else {
+                  parameter.push(value[1])
+               }
+            })
+         }
+
+         let info       = serv.getServerInfos()
+         let serverCfg  = serv.getConfig()
+         let logPath    = pathMod.join(serverCfg.pathLogs, "latest.log")
+
+         if(info.isFree) {
+            return serverShell.runSHELL(`echo "arkmanager ${action} @${server} ${parameter.join(' ')}" > ${logPath} && screen -dmS kadmin-arklin-${server} bash -c "arkmanager ${action} ${parameter.join(' ')} @${server} >> ${logPath} && exit"`)
          }
       }
       return false
@@ -39,17 +53,18 @@ module.exports = {
     * Erstellt ein Backup vom Server
     * @param server {string}
     * @param para {array} Parameters
+    * @param fromPanel {bool}
     * <br>
     * - **Derzeit keine Parameter**
     */
-   doBackup: function(server, para) {
+   doBackup: function(server, para, fromPanel = true) {
       let serv       = new serverClass(server)
       if(serv.serverExsists()) {
          let servCFG          = serv.getConfig()
-         let servINI          = serv.getINI()
          let zipPath          = pathMod.join(servCFG.pathBackup, `${Date.now()}.zip`)
          let backuprun        = pathMod.join(servCFG.pathBackup, `backuprun`)
          let paths            = ['*']
+         let logPath          = pathMod.join(servCFG.pathLogs, "latest.log")
          globalUtil.safeFileMkdirSync([servCFG.pathBackup])
 
          if(
@@ -98,7 +113,7 @@ module.exports = {
             }
 
             if(checkBackupPath()) {
-               serverShell.runSHELL(`cd ${servCFG.path}/ShooterGame/Saved && zip -9 -r ${zipPath} ${paths.join(" ")} && rm ${backuprun}`)
+               serverShell.runSHELL(`cd ${servCFG.path}/ShooterGame/Saved && zip -9 -r ${zipPath} ${paths.join(" ")} ${fromPanel ? `> ${logPath}` : ''} && rm ${backuprun}`)
                return true
             }
          }
