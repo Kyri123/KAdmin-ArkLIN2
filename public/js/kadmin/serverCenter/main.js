@@ -80,7 +80,7 @@ function getSCState() {
             let css         = 'danger'
             inhalt          = varser.lang_arr.servercenter_any.actionClose
 
-            if(stateColor !== "info" && hasPermissions(globalvars.perm, "actions", varser.cfg)) {
+            if(serverInfos.isFree && hasPermissions(globalvars.perm, "actions", varser.cfg)) {
                 inhalt      = `<a href="javascript:void()" class="small-box-footer btn btn-sm btn-success" data-toggle="modal" data-target="#action">${varser.lang_arr.servercenter_any.actionFree}</a>`
                 css         = "success"
             }

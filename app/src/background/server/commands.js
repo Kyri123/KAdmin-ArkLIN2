@@ -43,7 +43,8 @@ module.exports = {
          let logPath    = pathMod.join(serverCfg.pathLogs, "latest.log")
 
          if(info.isFree) {
-            return serverShell.runSHELL(`screen -mdS test echo "arkmanager ${action} @${server} ${parameter.join(' ')}" > ${logPath} && arkmanager ${action} ${parameter.join(' ')} @${server} >> ${logPath} && exit`)
+            globalUtil.safeFileSaveSync([logPath], `arkmanager ${action} @${server} ${parameter.join(' ')} \n`)
+            return serverShell.runSHELL(`arkmanager ${action} ${parameter.join(' ')} @${server} >> ${logPath}`)
          }
       }
       return false
@@ -72,7 +73,8 @@ module.exports = {
             !globalUtil.checkValidatePath(servCFG.pathBackup)
          ) return false
 
-         if(globalUtil.safeFileCreateSync([backuprun]) && paths.length !== 0) {
+         if(paths.length !== 0) {
+            if(fromPanel) globalUtil.safeFileCreateSync([backuprun])
             // prüfe backupverzeichnis
             let checkBackupPath = function () {
             let haveRm          = false
@@ -113,7 +115,7 @@ module.exports = {
             }
 
             if(checkBackupPath()) {
-               serverShell.runSHELL(`cd ${servCFG.path}/ShooterGame/Saved && zip -9 -r ${zipPath} ${paths.join(" ")} ${fromPanel ? `> ${logPath}` : ''} && rm ${backuprun}`)
+               serverShell.runSHELLInScreen(`cd ${servCFG.path}/ShooterGame/Saved && zip -9 -r ${zipPath} ${paths.join(" ")} ${fromPanel ? `> ${logPath}` : ''} ${fromPanel ? `&& rm ${backuprun}` : ''}`, `kadmin_arklin_backupsystem_${server}`)
                return true
             }
          }

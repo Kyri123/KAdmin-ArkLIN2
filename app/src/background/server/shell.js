@@ -8,28 +8,19 @@
  */
 "use strict"
 
-const util      = require('util');
-const exec      = util.promisify(require('child_process').exec)
-const execSync  = require('child_process').execSync
+const { spawn, exec, execSync }  = require('child_process')
 
 /**
  * Führt einen Befehl aus
- * @param command
+ * @param {string} command
  * @return {boolean}
  */
-async function execShell(command) {
+function spawnShell(command) {
     try {
-        const { stdout, stderr } = await exec(command)
-        if(debug) {
-            if(stdout && debug) console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}]\x1b[36m runCMD > ${command} >`, stdout)
-            if(stderr) {
-                if(debug) console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}][DEBUG]\x1b[36m runCMD > ${command} >`, stderr)
-                return false
-            }
-            return true
-        }
+        spawn(command, { shell: true, detached: true })
+        return true
     }
-    catch(e) {
+    catch (e) {
         if(debug) console.log('[DEBUG_FAILED]', e)
         return false
     }
@@ -39,19 +30,30 @@ module.exports  = {
     /**
      * Führt SHELL Command aus
      * @param {string} command CMD command
+     * @param {string} screenName Screen Name
      * @returns {boolean}
      */
-    runSHELL: (command) => {
-        console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}]\x1b[36m runCMD > ${command}`)
-        execShell(command)
-        return true
+    runSHELLInScreen: (command, screenName) => {
+        console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}]\x1b[36m runCMD > screen -mdS ${screenName} bash -c "${command}"`)
+        return spawnShell(command)
     },
+
     /**
      * Führt SHELL Command aus
      * @param {string} command CMD command
      * @returns {boolean}
      */
+    runSHELL: (command) => {
+        console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}]\x1b[36m runCMD > ${command}`)
+        return spawnShell(command)
+    },
+
+    /**
+     * Führt SHELL Command aus
+     * @param {string} command CMD command
+     * @returns {string}
+     */
     runSyncSHELL: (command) => {
-        return execSync(command)
+        return execSync(command).toString()
     },
 }

@@ -49,6 +49,8 @@ module.exports = {
                 let servCFG            = serverData.getConfig()
                 let servINI            = serverData.getINI()
                 let serverPath         = servCFG.path
+                let isBackupRunning    = !globalUtil.safeFileExsistsSync([servCFG.pathBackup, `backuprun`])
+                let isPlayIn           = !globalUtil.safeFileExsistsSync([servCFG.path, `isplayin`])
 
                 let pidFileArkmanager  = [serverPath, '/ShooterGame/Saved', `.arkmanager-${name}.pid`]
                 let pifFileServer      = [serverPath, '/ShooterGame/Saved', `.arkserver-${name}.pid`]
@@ -63,7 +65,7 @@ module.exports = {
                    ? !isRunning(+globalUtil.safeFileReadSync(arkUpdatePidFile))
                    : true
 
-                data.isFree            = arkUpdateProcess
+                data.isFree            = arkUpdateProcess && isBackupRunning && isPlayIn
                 data.aplayers          = 0
                 data.players           = 0
                 data.cpuUsage          = 0
@@ -84,8 +86,8 @@ module.exports = {
                    ? `/img/maps/${servINI.serverMap}.jpg`
                    : "/img/logo/logo.png"
                 data.isAction          = (
-                    globalUtil.safeFileExsistsSync([serverPath, "backuprun"]) ||
-                    globalUtil.safeFileExsistsSync([serverPath, "isplayin"])
+                    isBackupRunning,
+                    !isPlayIn
                 )
 
                 // Runing infos
