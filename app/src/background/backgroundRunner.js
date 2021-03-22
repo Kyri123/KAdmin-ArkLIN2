@@ -1,7 +1,7 @@
 /*
  * *******************************************************************************************
  * @author:  Oliver Kaufmann (Kyri123)
- * @copyright Copyright (c) 2020-2021, Oliver Kaufmann
+ * @copyright Copyright (c) 2021, Oliver Kaufmann
  * @license MIT License (LICENSE or https://github.com/Kyri123/KAdmin-ArkLIN2/blob/master/LICENSE)
  * Github: https://github.com/Kyri123/KAdmin-ArkLIN2
  * *******************************************************************************************
@@ -146,6 +146,15 @@ module.exports = {
                             if(Date.now() > cfg.autoBackupNext) {
                                 serverCommands.doBackup(val[0], cfg.autoBackupPara);
                                 serv.writeConfig("autoBackupNext", (Date.now() + cfg.autoBackupInterval))
+                                if(debug) console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}][DEBUG]\x1b[36m run > doServerBackgrounder > autoBackup > ${val[0]}`)
+                            }
+                        }
+
+                        // Auto Update system
+                        if(cfg.autoUpdate) {
+                            if(Date.now() > cfg.autoUpdateNext) {
+                                serverCommands.doArkmanagerCommand(val[0], cfg.autoUpdatePara);
+                                serv.writeConfig("autoBackupNext", (Date.now() + cfg.autoUpdateInterval))
                                 if(debug) console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}][DEBUG]\x1b[36m run > doServerBackgrounder > autoBackup > ${val[0]}`)
                             }
                         }

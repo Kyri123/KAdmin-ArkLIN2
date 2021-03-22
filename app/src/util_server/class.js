@@ -1,7 +1,7 @@
 /*
  * *******************************************************************************************
  * @author:  Oliver Kaufmann (Kyri123)
- * @copyright Copyright (c) 2020-2021, Oliver Kaufmann
+ * @copyright Copyright (c) 2021, Oliver Kaufmann
  * @license MIT License (LICENSE or https://github.com/Kyri123/KAdmin-ArkLIN2/blob/master/LICENSE)
  * Github: https://github.com/Kyri123/KAdmin-ArkLIN2
  * *******************************************************************************************
@@ -211,6 +211,45 @@ module.exports = class serverClass {
          catch(e) {
             if(debug) console.log('[DEBUG_FAILED]', e)
          }
+      return false
+   }
+
+   /**
+    * holt das Speicherstandverzeichnis
+    * @param {boolean} absolute mit unterverzeichnis?
+    * @return {boolean|string}
+    */
+   getSaveDirLocation(absolute = true) {
+      if(this.serverExsists()) {
+         let ini = this.getINI()
+         return absolute
+            ? pathMod.join(ini.arkserverroot, 'ShooterGame/Saved')
+            : pathMod.join(ini.arkserverroot, 'ShooterGame/Saved', ini.ark_AltSaveDirectoryName)
+      }
+      return false
+   }
+
+   /**
+    * holt das Ini verzeichnis
+    * @return {boolean|string}
+    */
+   getIniDirLocation() {
+      if(this.serverExsists()) {
+         let ini = this.getINI()
+         return pathMod.join(ini.arkserverroot, 'ShooterGame/Saved/Config/LinuxServer')
+      }
+      return false
+   }
+
+   /**
+    * Gibt den Array an Mods
+    * @return {boolean|string}
+    */
+   getModArray() {
+      if(this.serverExsists()) {
+         let ini = this.getINI()
+         return ini.ark_GameModIds.split(',')
+      }
       return false
    }
 }

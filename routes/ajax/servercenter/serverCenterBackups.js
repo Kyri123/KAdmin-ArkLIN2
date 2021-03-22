@@ -1,7 +1,7 @@
 /*
  * *******************************************************************************************
  * @author:  Oliver Kaufmann (Kyri123)
- * @copyright Copyright (c) 2020-2021, Oliver Kaufmann
+ * @copyright Copyright (c) 2021, Oliver Kaufmann
  * @license MIT License (LICENSE or https://github.com/Kyri123/KAdmin-ArkLIN2/blob/master/LICENSE)
  * Github: https://github.com/Kyri123/KAdmin-ArkLIN2
  * *******************************************************************************************
@@ -104,28 +104,30 @@ router.route('/')
 
         // Playin
         if(
-            POST.server     !== undefined &&
-            POST.file       !== undefined &&
-            POST.playin     !== undefined
+           POST.server     !== undefined &&
+           POST.file       !== undefined &&
+           POST.playin     !== undefined
         ) if(userHelper.hasPermissions(req.session.uid, "backups/playin", POST.server)) {
-            let serverData  = new serverClass(POST.server)
-            let serverCFG   = serverData.getConfig()
-            let success     = false
+            let serverData      = new serverClass(POST.server)
+            let serverINI       = serverData.getINI()
+            let saveLocation    = serverData.getIniDirLocation()
+            let success         = false
+
             try {
                 if(globalUtil.poisonNull(POST.file) && !POST.file.includes("..") && !POST.file.includes("/") && !serverData.isrun()) {
-                    if(globalUtil.safeFileMkdirSync([serverCFG.path, "tmp"]) && globalUtil.safeFileCreateSync([serverCFG.path, "isplayin"])) {
-                        fs.createReadStream(pathMod.join(serverCFG.pathBackup, POST.file))
-                            .pipe(unzip.Extract({path: pathMod.join(serverCFG.path, "tmp")}))
+                    if(globalUtil.safeFileMkdirSync([serverINI.arkserverroot, "tmp"]) && globalUtil.safeFileCreateSync([serverINI.arkserverroot, "isplayin"])) {
+                        fs.createReadStream(pathMod.join(serverINI.arkbackupdir, POST.file))
+                            .pipe(unzip.Extract({path: pathMod.join(serverINI.arkserverroot, "tmp")}))
                             .on("close", () => {
-                                let dirRead = fs.readdirSync(pathMod.join(serverCFG.path, "tmp"))
+                                let dirRead = fs.readdirSync(pathMod.join(serverINI.arkserverroot, "tmp"))
 
                                 for(let file of dirRead) {
-                                    globalUtil.safeFileRmSync([serverCFG.path, file])
-                                    globalUtil.safeFileRenameSync([serverCFG.path, "tmp", file], [serverCFG.path, file])
+                                    globalUtil.safeFileRmSync([serverINI.arkserverroot, file])
+                                    globalUtil.safeFileRenameSync([serverINI.arkserverroot, "tmp", file], [saveLocation, file])
                                 }
 
-                                globalUtil.safeFileRmSync([serverCFG.path, "tmp"])
-                                globalUtil.safeFileRmSync([serverCFG.path, "isplayin"])
+                                globalUtil.safeFileRmSync([serverINI.arkserverroot, "tmp"])
+                                globalUtil.safeFileRmSync([serverINI.arkserverroot, "isplayin"])
                             })
                         success = true
                     }
