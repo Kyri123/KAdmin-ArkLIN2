@@ -41,11 +41,11 @@ function getServers() {
             serverList.forEach((val, key) => {
                 let server = {}
                 if (hasPermissions(globalvars.perm, "show", val[0])) {
-                    let stateColor = "danger"
-                    if (!val[1].is_installed) stateColor = "warning"
-                    if (val[1].pid !== 0 && !val[1].online) stateColor = "primary"
-                    if (val[1].pid !== 0 && val[1].online) stateColor = "success"
-                    if (val[1].is_installing) stateColor = "info"
+                    let                                                              stateColor  = "danger"
+                    if(!val[1].is_installed)                                         stateColor  = "warning"
+                    if(val[1].pid !== 0 && val[1].online)                            stateColor  = "success"
+                    if((val[1].pid !== 0 && !val[1].online) || !val[1].isFree)       stateColor  = "primary"
+                    if(val[1].is_installing)                                         stateColor  = "info"
 
                     server.stateColor   = stateColor
                     server.name         = val[0]

@@ -39,11 +39,11 @@ function getServerList() {
          let server = {}
 
          if(hasPermissions(globalvars.perm, "show", val[0])) {
-            let                                                            stateColor = "danger"
-            if (!val[1].is_installed)                                      stateColor = "warning"
-            if (val[1].pid !== 0 && val[1].online)                         stateColor = "success"
-            if ((val[1].pid !== 0 && !val[1].online) || val[1].isAction)   stateColor = "primary"
-            if (val[1].is_installing)                                      stateColor = "info"
+            let                                                              stateColor  = "danger"
+            if(!val[1].is_installed)                                         stateColor  = "warning"
+            if(val[1].pid !== 0 && val[1].online)                            stateColor  = "success"
+            if((val[1].pid !== 0 && !val[1].online) || !val[1].isFree)       stateColor  = "primary"
+            if(val[1].is_installing)                                         stateColor  = "info"
 
             if (old_state[val[0]] === undefined) old_state[val[0]] = stateColor
             if (old_state[val[0]] !== stateColor) {
