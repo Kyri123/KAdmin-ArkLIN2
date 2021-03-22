@@ -7,10 +7,16 @@
   "showalerts"            : 0,
   "config": {
     "show"                  : 0,
-    "server"                : 0,
     "kadmin"                : 0,
-    "show_server"           : 0,
-    "show_kadmin"           : 0
+    "gameuser"              : 0,
+    "game"                  : 0,
+    "engine"                : 0,
+    "arkmanager"            : 0,
+    "show_kadmin"           : 0,
+    "show_gameuser"         : 0,
+    "show_game"             : 0,
+    "show_engine"           : 0,
+    "show_arkmanager"       : 0
   },
   "backups": {
     "show"                  : 0,

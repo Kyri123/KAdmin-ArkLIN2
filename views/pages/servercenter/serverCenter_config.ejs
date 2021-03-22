@@ -13,17 +13,41 @@
 
             <div class="collapse navbar-collapse navbar-secondary" id="navbarColor03">
                 <ul class="nav navbar-nav mr-auto aa-nav" id="pills-tab">
-                    <% if(userHelper.hasPermissions(userID, "config/show_server", serverName)) { %>
+                    <% if(userHelper.hasPermissions(userID, "config/show_gameuser", serverName)) { %>
+                        <li v-if="gus_exsists" class="nav-item">
+                            <a class="nav-link btn-dark p-3" id="pills-gus-tab" data-toggle="pill" href="#pills-gus" role="tab" aria-controls="pills-gus" aria-selected="false">
+                                GameUserSettings.ini
+                            </a>
+                        </li>
+                    <% } %>
+
+                    <% if(userHelper.hasPermissions(userID, "config/show_game", serverName)) { %>
+                        <li v-if="game_exsists" class="nav-item">
+                            <a class="nav-link btn-dark p-3" id="pills-game-tab" data-toggle="pill" href="#pills-game" role="tab" aria-controls="pills-game" aria-selected="false">
+                                Game.ini
+                            </a>
+                        </li>
+                    <% } %>
+
+                    <% if(userHelper.hasPermissions(userID, "config/show_engine", serverName)) { %>
+                        <li v-if="engine_exsists" class="nav-item">
+                            <a class="nav-link btn-dark p-3" id="pills-engine-tab" data-toggle="pill" href="#pills-engine" role="tab" aria-controls="pills-engine" aria-selected="false">
+                                Engine.ini
+                            </a>
+                        </li>
+                    <% } %>
+
+                    <% if(userHelper.hasPermissions(userID, "config/show_arkmanager", serverName)) { %>
                         <li class="nav-item">
-                            <a class="nav-link active btn-dark p-3" id="pills-gus-tab" data-toggle="pill" href="#pills-gus" role="tab" aria-controls="pills-gus" aria-selected="false">
-                                Server.Properties
+                            <a class="nav-link btn-dark p-3" id="pills-arkmanager-tab" data-toggle="pill" href="#pills-arkmanager" role="tab" aria-controls="pills-arkmanager" aria-selected="false">
+                                ArkManager
                             </a>
                         </li>
                     <% } %>
 
                     <% if(userHelper.hasPermissions(userID, "config/show_kadmin", serverName)) { %>
                         <li class="nav-item">
-                            <a class="nav-link<%- !userHelper.hasPermissions(userID, "config/show_server", serverName) ? " active" : "" %> btn-dark p-3" id="pills-server-tab" data-toggle="pill" href="#pills-server" role="tab" aria-controls="pills-server" aria-selected="false">
+                            <a class="nav-link btn-dark p-3" id="pills-server-tab" data-toggle="pill" href="#pills-server" role="tab" aria-controls="pills-server" aria-selected="false">
                                 KAdmin-ArkLIN2
                             </a>
                         </li>
@@ -36,27 +60,86 @@
         <div class="card shadow">
             <div class="tab-content" id="pills-tabContent">
 
-                <% if(userHelper.hasPermissions(userID, "config/show_server", serverName)) { %>
-                    <!-- Server.Properties -->
-                    <div class="tab-pane fade show active" id="pills-gus" role="tabpanel" aria-labelledby="pills-llog-tab">
+                <% if(userHelper.hasPermissions(userID, "config/show_gameuser", serverName)) { %>
+                    <!-- GameUserSettings -->
+                    <div v-if="gus_exsists" class="tab-pane fade" id="pills-gus" role="tabpanel" aria-labelledby="pills-llog-tab">
                         <table class="table table-striped mb-0" style="border: 0!important;">
                             <tbody>
                                 <tr class="bg-dark">
                                     <th colspan="2" class="p-0" style="border: 0!important;">
                                         <div class="list-group-item bg-dark">
-                                            <h4 class="m-0">Server.Properties</h4>
+                                            <h4 class="m-0">GameUserSettings.ini</h4>
                                         </div>
                                     </th>
                                 </tr>
                             </tbody>
                         </table>
-                        <textarea class="p-3 m-0" style="max-height: 500px; width: 100%; overflow-y: scroll; overflow-x: hidden; min-height: 500px" id="serverprop">Loading...</textarea>
-                        <button class="btn btn-primary" style="width: 100%" onclick="serverSave('#serverprop', '<%- serverName %>')"><%- lang[page].save %></button>
+                        <textarea class="p-3 m-0" style="max-height: 500px; width: 100%; overflow-y: scroll; overflow-x: hidden; min-height: 500px" id="GameUserSettings">Loading...</textarea>
+                        <button class="btn btn-primary" style="width: 100%" onclick="serverSave('#GameUserSettings', '<%- serverName %>')"><%- lang[page].save %></button>
                     </div>
                 <% } %>
 
+                <% if(userHelper.hasPermissions(userID, "config/show_game", serverName)) { %>
+                    <!-- GameUserSettings -->
+                    <div v-if="game_exsists" class="tab-pane fade" id="pills-game" role="tabpanel" aria-labelledby="pills-llog-tab">
+                        <table class="table table-striped mb-0" style="border: 0!important;">
+                            <tbody>
+                            <tr class="bg-dark">
+                                <th colspan="2" class="p-0" style="border: 0!important;">
+                                    <div class="list-group-item bg-dark">
+                                        <h4 class="m-0">Game.ini</h4>
+                                    </div>
+                                </th>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <textarea class="p-3 m-0" style="max-height: 500px; width: 100%; overflow-y: scroll; overflow-x: hidden; min-height: 500px" id="Game">Loading...</textarea>
+                        <button class="btn btn-primary" style="width: 100%" onclick="serverSave('#Game', '<%- serverName %>')"><%- lang[page].save %></button>
+                    </div>
+                <% } %>
+
+                <% if(userHelper.hasPermissions(userID, "config/show_engine", serverName)) { %>
+                    <!-- GameUserSettings -->
+                    <div v-if="engine_exsists" class="tab-pane fade" id="pills-engine" role="tabpanel" aria-labelledby="pills-llog-tab">
+                        <table class="table table-striped mb-0" style="border: 0!important;">
+                            <tbody>
+                            <tr class="bg-dark">
+                                <th colspan="2" class="p-0" style="border: 0!important;">
+                                    <div class="list-group-item bg-dark">
+                                        <h4 class="m-0">Engine.ini</h4>
+                                    </div>
+                                </th>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <textarea class="p-3 m-0" style="max-height: 500px; width: 100%; overflow-y: scroll; overflow-x: hidden; min-height: 500px" id="Engine">Loading...</textarea>
+                        <button class="btn btn-primary" style="width: 100%" onclick="serverSave('#Engine', '<%- serverName %>')"><%- lang[page].save %></button>
+                    </div>
+                <% } %>
+
+                <!-- ArkManager -->
+                <% if(userHelper.hasPermissions(userID, "config/show_arkmanager", serverName)) { %>
+                    <!-- GameUserSettings -->
+                    <div class="tab-pane fade" id="pills-arkmanager" role="tabpanel" aria-labelledby="pills-llog-tab">
+                        <table class="table table-striped mb-0" style="border: 0!important;">
+                            <tbody>
+                            <tr class="bg-dark">
+                                <th colspan="2" class="p-0" style="border: 0!important;">
+                                    <div class="list-group-item bg-dark">
+                                        <h4 class="m-0">ArkManager</h4>
+                                    </div>
+                                </th>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <textarea class="p-3 m-0" style="max-height: 500px; width: 100%; overflow-y: scroll; overflow-x: hidden; min-height: 500px" id="ArkManager">Loading...</textarea>
+                        <button class="btn btn-primary" style="width: 100%" onclick="serverSave('#ArkManager', '<%- serverName %>')"><%- lang[page].save %></button>
+                    </div>
+                <% } %>
+
+                <!-- KADMIN -->
                 <% if(userHelper.hasPermissions(userID, "config/show_kadmin", serverName)) { %>
-                    <form class="tab-pane fade<%- !userHelper.hasPermissions(userID, "config/show_server", serverName) ? " show active" : "" %>" id="pills-server" role="tabpanel" aria-labelledby="pills-llog-tab">
+                    <form class="tab-pane fade" id="pills-server" role="tabpanel" aria-labelledby="pills-llog-tab">
                         <table class="table table-striped mb-0" style="border: 0!important;">
                             <thead>
                                 <tr class="bg-dark">
@@ -72,62 +155,23 @@
                                 <!-- selfname -->
                                 <tr v-for="(value, key) in cfg" v-if="typeof value !== 'object' && globalvars.lang_arr['servercenter_config'].cfg[key]">
 
+
                                     <!-- Text -->
                                     <td class="p-2">{{ globalvars.lang_arr['servercenter_config'].cfg[key] || key }}</td>
 
-                                    <!-- default Backups -->
-                                    <td v-if="key === 'autoBackup'" class="p-2" colspan="2" style="max-width: 400px!important;">
+                                    <!-- default Updates -->
+                                    <td v-if="key === 'autoUpdate'" class="p-2" colspan="2" style="max-width: 400px!important;">
                                         <div class="input-group-sm mb-0">
                                             <select class="form-control form-control-sm" name="cfgsend[autoBackup]">
                                                 <option value="true" :selected="value">{{ globalvars.lang_arr['servercenter_config'].true }}</option>
                                                 <option value="false" :selected="!value">{{ globalvars.lang_arr['servercenter_config'].false }}</option>
                                             </select>
                                             <!-- autoBackupPara -->
-                                            <div class="icheck-primary mb-3">
-                                                <input :checked="cfg.autoBackupPara.includes('--onlyworld')" type="checkbox" name="cfgsend[autoBackupPara][]" value="--onlyworld" id="KONF_onlyworld">
-                                                <label for="KONF_onlyworld">
-                                                    {{ globalvars.lang_arr.forservers.parameter.onlyworld }}
+                                            <div class="icheck-primary mb-3" v-for="item in parameters" v-if="item.type === 0">
+                                                <input :checked="cfg.autoBackupPara.includes(item.value)" type="checkbox" name="cfgsend[autoUpdatePara][]" :value="item.value" :id="'KONF_' + item.id.replace('#', '')">
+                                                <label :for="'KONF_' + item.id.replace('#', '')">
+                                                    {{ item.text }}
                                                 </label>
-                                            </div>
-                                            <div class="icheck-primary mb-3">
-                                                <input :checked="cfg.autoBackupPara.includes('--withmods')" type="checkbox" name="cfgsend[autoBackupPara][]" value="--withmods" id="KONF_withmods">
-                                                <label for="KONF_withmods">
-                                                    {{ globalvars.lang_arr.forservers.parameter.withmods }}
-                                                </label>
-                                            </div>
-                                            <div class="icheck-primary mb-3">
-                                                <input :checked="cfg.autoBackupPara.includes('--witplugins')" type="checkbox" name="cfgsend[autoBackupPara][]" value="--witplugins" id="KONF_witplugins">
-                                                <label for="KONF_witplugins">
-                                                    {{ globalvars.lang_arr.forservers.parameter.witplugins }}
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    <!-- default Jar -->
-                                    <td v-else-if="key === 'jar'" class="p-2" colspan="2" style="max-width: 400px!important;">
-                                        <div class="input-group-sm mb-0">
-                                            <select class="form-control form-control-sm" :name="`cfgsend[${key}]`">
-                                                <%  jars.forEach(item => { %>
-                                                    <option value="<%- item %>" <%- item === servcfg.jar ? "selected" : "" %>><%- item %></option>
-                                                <% }) %>
-                                            </select>
-                                        </div>
-                                    </td>
-
-                                    <!-- default Size -->
-                                    <td v-else-if="key === 'xmx' || key === 'xms' || key === 'autoBackupMaxDirSize'" class="p-2" colspan="2" style="max-width: 400px!important;">
-                                        <div class="input-group input-group-sm mb-0">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">MB</span>
-                                            </div>
-                                            <input type="number" :name="`cfgsend[${key}]`" class="form-control form-control-sm" :value="value" :id="key + 'MB'"
-                                                   @change="VUE_configContainer.cfg[key] = +document.getElementById(key + 'MB').value">
-
-                                            <input type="number" step="0.01" class="form-control form-control-sm" :value="Math.round(value / 1024 * 100) / 100" :id="key + 'GB'"
-                                                   @change="VUE_configContainer.cfg[key] = Math.round(+document.getElementById(key + 'GB').value * 1024)">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">GB</span>
                                             </div>
                                         </div>
                                     </td>
@@ -148,7 +192,22 @@
                                                 <span class="input-group-text">MIN</span>
                                             </div>
                                         </div>
-                                        <input type="hidden" class="form-control form-control-sm" :name="`cfgsend[${key}]`" id="autoBackupIntervalValue" :value="value">
+                                        <input type="hidden" class="form-control form-control-sm" :name="`cfgsend[${key}]`" :id="key + 'Value'" :value="value">
+                                    </td>
+
+                                    <!-- default Bool -->
+                                    <td v-else-if="typeof value === 'boolean'" class="p-2" colspan="2" style="max-width: 400px!important;">
+                                        <select class="form-control form-control-sm" :name="`cfgsend[${key}]`">
+                                            <option value="true" :selected="value">{{ globalvars.lang_arr['servercenter_config'].true }}</option>
+                                            <option value="false" :selected="!value">{{ globalvars.lang_arr['servercenter_config'].false }}</option>
+                                        </select>
+                                    </td>
+
+                                    <!-- default Int -->
+                                    <td v-else-if="typeof value === 'number'" class="p-2" colspan="2" style="max-width: 400px!important;">
+                                        <div class="input-group-sm mb-0">
+                                            <input type="number" class="form-control form-control-sm" :name="`cfgsend[${key}]`" :value="value">
+                                        </div>
                                     </td>
 
                                     <!-- default Text -->

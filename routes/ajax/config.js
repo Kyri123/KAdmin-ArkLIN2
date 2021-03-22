@@ -9,7 +9,6 @@
 "use strict"
 
 const router            = require('express').Router()
-const updater           = require("./../../app/src/background/updater")
 
 router.route('/')
 

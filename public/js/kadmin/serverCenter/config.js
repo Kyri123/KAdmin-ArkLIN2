@@ -10,41 +10,75 @@
 let VUE_configContainer = new Vue({
     el      : '#configContainer',
     data    : {
-        cfg : {}
+        cfg                 : {},
+        parameters          : [],
+        game_exsists        : false,
+        engine_exsists      : false,
+        gus_exsists         : false
     }
 })
 
-function getCfg() {
+$.get('/json/sites/serverCenterActions.cfg.json', (datas) => {
+    let parm        = datas.parameter
+    let array       = []
+
+    parm.forEach((val) => {
+        let parameter       = {}
+        parameter.value     = val.parameter
+        parameter.text      = varser.lang_arr.forservers.parameter[val.id_js.replaceAll('#', '')]
+        parameter.type      = val.type
+        parameter.id        = val.id_js
+
+        array.push(parameter)
+    })
+    console.log(array)
+    VUE_configContainer.parameters = array
+})
+
+let editor = {}
+function getInis() {
     $.get('/ajax/serverCenterConfig', {
-        serverCfg: true,
-        server: vars.cfg
+        serverInis  : true,
+        server      : vars.cfg
     })
        .done((data) => {
-              VUE_configContainer.cfg = JSON.parse(data)
-          })
+           data                                 = JSON.parse(data)
+           console.log(data)
+           VUE_configContainer.cfg              = data.cfg
+           VUE_configContainer.game_exsists     = data.Game !== "false"
+           VUE_configContainer.engine_exsists   = data.Engine !== "false"
+           VUE_configContainer.gus_exsists      = data.GameUserSettings !== "false"
+
+           setTimeout(() => {
+               let Editors = [
+                   "GameUserSettings",
+                   "Game",
+                   "Engine",
+                   "ArkManager"
+               ]
+               Editors.forEach(item => {
+                   try {
+                       editor[`#${item}`] = CodeMirror.fromTextArea(document.getElementById(item), {
+                           lineNumbers: true,
+                           mode: "javascript",
+                           theme: "material"
+                       })
+
+                       editor[`#${item}`].setValue(data[item])
+                   }
+                   catch (e) {
+                       console.log(e)
+                   }
+               })
+           }, 1000)
+       })
        .fail(
           () => setTimeout(
              () => getCfg()
           ), 5000
        )
 }
-getCfg()
-
-let editor = {
-    "#serverprop": CodeMirror.fromTextArea(document.getElementById("serverprop"), {
-        lineNumbers: true,
-        mode: "javascript",
-        theme: "material"
-    })
-}
-
-if (hasPermissions(globalvars.perm, "config/show_server", varser.cfg)) $.get('/ajax/serverCenterConfig', {
-    serverInis: true,
-    ini: "server",
-    server: vars.cfg
-}, (data) => {
-    editor["#serverprop"].setValue(data)
-})
+getInis()
 
 /**
  * Speicher Cfg

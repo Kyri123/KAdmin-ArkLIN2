@@ -197,20 +197,46 @@ module.exports = class serverClass {
    }
 
    /**
+    * lese eine GameIni aus
+    * @param {string} ini
+    * @param {boolean} asString
+    * @return {string|boolean}
+    */
+   getGameINI(ini = "GameUserSettings.ini", asString = false) {
+      let file          = pathMod.join(this.getIniDirLocation(), ini)
+      let fileContent   = globalUtil.safeFileReadSync([file])
+      if(file !== false && !asString) {
+         try {
+            return ini.parse(fileContent)
+         } catch (e) {
+            if (debug) console.log('[DEBUG_FAILED]', e)
+         }
+      }
+      else if(file !== false && asString) {
+         return fileContent
+      }
+      return false
+   }
+
+   /**
     * Speichert eine Ini
+    * @param {boolean} asString
     * @return {boolean}
     */
-   getINI() {
+   getINI(asString = false) {
       let file    = globalUtil.safeFileReadSync(this.serverIniPath)
       if(file === false)
          file     = globalUtil.safeFileReadSync([mainDir, `/app/data/cfg`, `default.cfg`])
-      if(file !== false)
+      if(file !== false && !asString) {
          try {
             return ini.parse(file)
+         } catch (e) {
+            if (debug) console.log('[DEBUG_FAILED]', e)
          }
-         catch(e) {
-            if(debug) console.log('[DEBUG_FAILED]', e)
-         }
+      }
+      else if(file !== false && asString) {
+         return file
+      }
       return false
    }
 

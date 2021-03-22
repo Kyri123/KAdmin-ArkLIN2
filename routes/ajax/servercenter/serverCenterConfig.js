@@ -9,8 +9,7 @@
 "use strict"
 
 const router            = require('express').Router()
-const serverClass       = require('./../../../app/src/util_server/class');
-const ini               = require('ini')
+const serverClass       = require('./../../../app/src/util_server/class')
 
 router.route('/')
 
@@ -80,14 +79,34 @@ router.route('/')
     .get((req,res)=>{
         // DEFAULT AJAX
         let GET         = req.query
+        let SESS        = req.session
         if(GET.server === undefined) GET.server = ''
 
         // GET serverInis
         if(GET.serverInis !== undefined && userHelper.hasPermissions(req.session.uid, "show_kadmin", GET.server)) {
             let serverData  = new serverClass(GET.server)
 
+            let cfg         = {}
+            let forbidden   = globalUtil.safeFileReadSync([mainDir, "app/json/server/template", "forbidden.json"], true)
+            let currCfg     = serverData.getConfig()
+
+            for (const [key, value] of Object.entries(currCfg))
+                if(!forbidden[key])
+                    cfg[key] = currCfg[key]
+
+            let GameUserSettings    = userHelper.hasPermissions(SESS.uid, "config/show_gameuser", GET.server) ? serverData.getGameINI("GameUserSettings.ini", true) : false
+            let Game                = userHelper.hasPermissions(SESS.uid, "config/show_gameuser", GET.server) ? serverData.getGameINI("Game.ini", true) : false
+            let Engine              = userHelper.hasPermissions(SESS.uid, "config/show_gameuser", GET.server) ? serverData.getGameINI("Engine.ini", true) : false
+            let ArkManager          = userHelper.hasPermissions(SESS.uid, "config/show_gameuser", GET.server) ? serverData.getINI(true) : false
+
             res.render('ajax/json', {
-                data: serverData.getINI() !== false ? ini.stringify(serverData.getINI()) : 'failed'
+                data: JSON.stringify({
+                    GameUserSettings    : GameUserSettings,
+                    Game                : Game,
+                    Engine              : Engine,
+                    ArkManager          : ArkManager,
+                    cfg                 : cfg
+                })
             })
             return true
         }
