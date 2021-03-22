@@ -16,5 +16,10 @@
     "jar"                   : ".Jar Datei die als Server verwendet werden soll",
     "autoBackupMaxCount"    : "Maximale Anzahl an Backups (0 = unendlich; die ältesten backups werden gelöscht)",
     "autoBackupMaxDirSize"  : "Maximale Größe des Backup Ordners (0 = unendlich; die ältesten backups werden gelöscht)"
+  },
+  "ini": {
+    "ark_Port"              : "Spiel Port",
+    "ark_QueryPort"         : "Query Port (auch der Port zum Beitreten des Servers",
+    "ark_RCONPort"          : "RCON Port"
   }
 }

@@ -118,21 +118,17 @@
                 </div>
                 <div class="modal-body p-0">
                     <table class="table table-striped mb-0" style="border: 0!important;">
-                        <tbody>
-                            <!-- selfname -->
+                        <tbody v-if="action === 'edit'">
                             <tr v-for="(value, key) in cfgForm" v-if="typeof value !== 'object' && globalvars.lang_arr['servercenter_config'].cfg[key]">
 
-                                <!-- Text -->
                                 <td class="p-2">{{ globalvars.lang_arr['servercenter_config'].cfg[key] || key }}</td>
 
-                                <!-- default Backups -->
                                 <td v-if="key === 'autoBackup'" class="p-2" colspan="2" style="max-width: 400px!important;">
                                     <div class="input-group-sm mb-0">
                                         <select class="form-control form-control-sm" name="cfgsend[autoBackup]">
                                             <option value="true" :selected="value">{{ globalvars.lang_arr['servercenter_config'].true }}</option>
                                             <option value="false" :selected="!value">{{ globalvars.lang_arr['servercenter_config'].false }}</option>
                                         </select>
-                                        <!-- autoBackupPara -->
                                         <div class="icheck-primary mb-3">
                                             <input :checked="cfg.autoBackupPara.includes('--onlyworld')" type="checkbox" name="cfgsend[autoBackupPara][]" value="--onlyworld" id="KONF_onlyworld">
                                             <label for="KONF_onlyworld">
@@ -154,7 +150,6 @@
                                     </div>
                                 </td>
 
-                                <!-- default Size -->
                                 <td v-else-if="key === 'xmx' || key === 'xms' || key === 'autoBackupMaxDirSize'" class="p-2" colspan="2" style="max-width: 400px!important;">
                                     <div class="input-group input-group-sm mb-0">
                                         <div class="input-group-prepend">
@@ -171,7 +166,6 @@
                                     </div>
                                 </td>
 
-                                <!-- default Time -->
                                 <td v-else-if="key.toString().toLowerCase().includes('interval')" class="p-2" colspan="2" style="max-width: 400px!important;">
                                     <div class="input-group input-group-sm mb-0">
                                         <div class="input-group-prepend">
@@ -190,10 +184,41 @@
                                     <input type="hidden" class="form-control form-control-sm" :name="`cfgsend[${key}]`" id="autoBackupIntervalValue" :value="value">
                                 </td>
 
-                                <!-- default Text -->
                                 <td v-else class="p-2" colspan="2" style="max-width: 400px!important;">
                                     <div class="input-group-sm mb-0">
                                         <input type="text" class="form-control form-control-sm" :name="`cfgsend[${key}]`" :value="value">
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody v-else>
+
+                            <!-- Port Game -->
+                            <tr v-if="action !== 'edit'">
+                                <td class="p-2">{{ globalvars.lang_arr['servercenter_config'].ini['ark_Port'] || 'ark_Port' }}</td>
+                                <td class="p-2" colspan="2" style="max-width: 400px!important;">
+                                    <div class="input-group-sm mb-0">
+                                        <input type="number" class="form-control form-control-sm" name="ark_Port" value="7777">
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Port Query -->
+                            <tr v-if="action !== 'edit'">
+                                <td class="p-2">{{ globalvars.lang_arr['servercenter_config'].ini['ark_QueryPort'] || 'ark_QueryPort' }}</td>
+                                <td class="p-2" colspan="2" style="max-width: 400px!important;">
+                                    <div class="input-group-sm mb-0">
+                                        <input type="number" class="form-control form-control-sm" name="ark_QueryPort" value="27015">
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Port RCON -->
+                            <tr v-if="action !== 'edit'">
+                                <td class="p-2">{{ globalvars.lang_arr['servercenter_config'].ini['ark_RCONPort'] || 'ark_RCONPort' }}</td>
+                                <td class="p-2" colspan="2" style="max-width: 400px!important;">
+                                    <div class="input-group-sm mb-0">
+                                        <input type="number" class="form-control form-control-sm" name="ark_RCONPort" value="8888">
                                     </div>
                                 </td>
                             </tr>

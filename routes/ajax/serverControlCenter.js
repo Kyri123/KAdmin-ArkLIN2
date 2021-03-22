@@ -11,6 +11,7 @@
 const router            = require('express').Router()
 const serverClass       = require('../../app/src/util_server/class')
 const serverCommands    = require('../../app/src/background/server/commands')
+const ini               = require('ini')
 
 router.route('/')
 
@@ -23,41 +24,45 @@ router.route('/')
             let createPerm      = userHelper.hasPermissions(req.session.uid, "servercontrolcenter/create")
             let editPerm        = userHelper.hasPermissions(req.session.uid, "servercontrolcenter/editServer")
             let forbidden       = globalUtil.safeFileReadSync([mainDir, "app/json/server/template", "forbidden.json"], true)
-            let serverNameJSON  = undefined
+            let serverNameCFG  = undefined
             let sendedCfg       = POST.cfgsend
 
             // Erstellen
             if(POST.action === 'add' && createPerm) {
                 let curr            = fs.readdirSync(pathMod.join(mainDir, '/app/json/server/'))
-                let serverData      = globalUtil.safeFileReadSync([mainDir, "app/json/server/template", "default.json"], true)
+                let defaultString   = globalUtil.safeFileReadSync([mainDir, "app/json/server/template", "default.cfg"])
+                let success         = false
 
-                let serverName      = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7)
-                serverNameJSON      = serverName + '.json'
-                while (true) {
-                    if (curr.includes(serverNameJSON)) {
-                        serverName          = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7) + '.json'
-                        serverNameJSON      = serverName + '.json'
-                    } else {
-                        break
+                if(defaultString !== false) {
+                    let serverCfg = ini.parse(defaultString)
+
+
+                    let serverName = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7)
+                    serverNameCFG = serverName + '.cfg'
+                    while (true) {
+                        if (curr.includes(serverNameCFG)) {
+                            serverName = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7) + '.json'
+                            serverNameCFG = serverName + '.json'
+                        } else {
+                            break
+                        }
                     }
+
+                    // Schreibe Daten
+                    serverCfg.arkserverroot                 = pathMod.join(CONFIG.app.servRoot, serverName)
+                    serverCfg.logdir                        = pathMod.join(CONFIG.app.logRoot, serverName)
+                    serverCfg.arkbackupdir                  = pathMod.join(CONFIG.app.pathBackup, serverName)
+                    serverCfg.ark_ServerAdminPassword       = Math.random().toString(36).substring(2, 7) + Math.random().toString(36).substring(2, 7)
+                    serverCfg.ark_Port                      = +POST.ark_Port.replaceAll(/[^0-9]/g, '')
+                    serverCfg.ark_RCONPort                  = +POST.ark_RCONPort.replaceAll(/[^0-9]/g, '')
+                    serverCfg.ark_QueryPort                 = +POST.ark_QueryPort.replaceAll(/[^0-9]/g, '')
+
+                    success     = globalUtil.safeFileSaveSync([CONFIG.app.pathArkmanager, 'instances', serverNameCFG], ini.stringify(globalUtil.convertObject(serverCfg)))
                 }
 
-                // Erstelle Cfg
-                for (const [key, value] of Object.entries(serverData)) {
-                    if(forbidden[key]) {
-                        serverData[key] = sendedCfg[key] || value
-                    }
-                }
-
-                // Schreibe Daten
-                serverData.path         = serverData.path.replace('{SERVERNAME}', serverName).replace('{SERVROOT}', CONFIG.app.servRoot)
-                serverData.pathLogs     = serverData.pathLogs.replace('{SERVERNAME}', serverName).replace('{LOGROOT}', CONFIG.app.logRoot)
-                serverData.pathBackup   = serverData.pathBackup.replace('{SERVERNAME}', serverName).replace('{BACKUPROOT}', CONFIG.app.pathBackup)
-
-                serverData  = globalUtil.convertObject(serverData)
                 res.render('ajax/json', {
                     data: JSON.stringify({
-                        success : globalUtil.safeFileSaveSync([mainDir, '/app/json/server/', serverNameJSON], JSON.stringify(serverData)),
+                        success : success,
                         action  : POST.action
                     })
                 })
@@ -101,16 +106,16 @@ router.route('/')
             let serverInformationen     = serverData.getServerInfos(serverName)
 
             // fahre server runter wenn dieser noch online ist
-            if(serverInformationen.pid !== 0) serverCommands.doStop(serverName, ['--hardstop'])
+            serverCommands.doArkmanagerCommand(serverName, "stop", [])
 
             // lösche alle Informationen
             try {
-                if (globalUtil.safeFileExsistsSync([mainDir, '/public/json/server/', `${serverName}.json`]))               globalUtil.safeFileRmSync([mainDir, '/public/json/server/', `${serverName}.json`])
-                if (globalUtil.safeFileExsistsSync([mainDir, '/public/json/serveraction/', `action_${serverName}.json`]))  globalUtil.safeFileRmSync([mainDir, '/public/json/serveraction/', `action_${serverName}.json`])
+                globalUtil.safeFileRmSync([mainDir, '/public/json/server/', `${serverName}.json`])
+                globalUtil.safeFileRmSync([mainDir, '/public/json/serveraction/', `action_${serverName}.json`])
 
                 res.render('ajax/json', {
                     data: JSON.stringify({
-                        success: globalUtil.safeFileRmSync([mainDir, '/app/json/server/', `${serverName}.json`])
+                        success: globalUtil.safeFileRmSync([CONFIG.app.pathArkmanager, 'instances', `${serverName}.cfg`]) && globalUtil.safeFileRmSync([mainDir, '/app/json/server/', `${serverName}.json`])
                     })
                 })
                 return true
