@@ -29,8 +29,6 @@ module.exports = {
             "/app/config/mysql.json",
             "/app/config/updater.json",
             "/app/json/panel/changelog.json",
-            "/public/json/serverInfos/mcVersionsCraftbukkit.json",
-            "/public/json/serverInfos/mcVersionsSpigot.json",
             "/app/json/server/5c68f48w.json",
             "/app/json/server/5g28f48x.json"
         ]

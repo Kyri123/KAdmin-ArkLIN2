@@ -74,10 +74,13 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <textarea class="p-3 m-0" style="max-height: 500px; width: 100%; overflow-y: scroll; overflow-x: hidden; min-height: 500px" id="GameUserSettings">Loading...</textarea>
+                        <textarea class="p-3 m-0" style="max-height: 500px; width: 100%; overflow-y: scroll; overflow-x: hidden; min-height: 500px" id="GameUserSettings">{{ gus }}</textarea>
                         <button class="btn btn-primary" style="width: 100%" onclick="serverSave('#GameUserSettings', '<%- serverName %>')"><%- lang[page].save %></button>
                     </div>
                 <% } %>
+
+
+
 
                 <% if(userHelper.hasPermissions(userID, "config/show_game", serverName)) { %>
                     <!-- GameUserSettings -->
@@ -93,10 +96,13 @@
                             </tr>
                             </tbody>
                         </table>
-                        <textarea class="p-3 m-0" style="max-height: 500px; width: 100%; overflow-y: scroll; overflow-x: hidden; min-height: 500px" id="Game">Loading...</textarea>
+                        <textarea class="p-3 m-0" style="max-height: 500px; width: 100%; overflow-y: scroll; overflow-x: hidden; min-height: 500px" id="Game">{{ game }}</textarea>
                         <button class="btn btn-primary" style="width: 100%" onclick="serverSave('#Game', '<%- serverName %>')"><%- lang[page].save %></button>
                     </div>
                 <% } %>
+
+
+
 
                 <% if(userHelper.hasPermissions(userID, "config/show_engine", serverName)) { %>
                     <!-- GameUserSettings -->
@@ -112,17 +118,20 @@
                             </tr>
                             </tbody>
                         </table>
-                        <textarea class="p-3 m-0" style="max-height: 500px; width: 100%; overflow-y: scroll; overflow-x: hidden; min-height: 500px" id="Engine">Loading...</textarea>
+                        <textarea class="p-3 m-0" style="max-height: 500px; width: 100%; overflow-y: scroll; overflow-x: hidden; min-height: 500px" id="Engine">{{ engine }}</textarea>
                         <button class="btn btn-primary" style="width: 100%" onclick="serverSave('#Engine', '<%- serverName %>')"><%- lang[page].save %></button>
                     </div>
                 <% } %>
+
+
+
 
                 <!-- ArkManager -->
                 <% if(userHelper.hasPermissions(userID, "config/show_arkmanager", serverName)) { %>
                     <!-- GameUserSettings -->
                     <div class="tab-pane fade" id="pills-arkmanager" role="tabpanel" aria-labelledby="pills-llog-tab">
                         <table class="table table-striped mb-0" style="border: 0!important;">
-                            <tbody>
+                            <thead>
                             <tr class="bg-dark">
                                 <th colspan="2" class="p-0" style="border: 0!important;">
                                     <div class="list-group-item bg-dark">
@@ -130,16 +139,91 @@
                                     </div>
                                 </th>
                             </tr>
+                            </thead>
+
+                            <tbody>
+                            <!-- EVENTS -->
+                            <tr>
+                                <td class="p-2">{{ globalvars.lang_arr['servercenter_config'].arkManager['arkopt_ActiveEvent'] || 'arkopt_ActiveEvent' }}</td>
+                                <td class="p-2">
+                                    <select type="text" name="cfgsend[arkopt_ActiveEvent]" class="form-control form-control-sm">
+                                        <option v-for="item in events" :value="item" :selected="ArkManager.arkopt_ActiveEvent === item">{{ globalvars.lang_arr['servercenter_config'].events[item] || item }}</option>
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <!-- selfname -->
+                            <tr v-for="(value, key) in ArkManager" v-if="typeof value !== 'object' && !key.includes('arkflag_') && key !== 'arkopt_ActiveEvent'">
+
+
+                                <!-- Text -->
+                                <td class="p-2">{{ globalvars.lang_arr['servercenter_config'].arkManager[key] || key }}</td>
+
+                                <!-- default Maps -->
+                                <td v-if="key === 'serverMap'" class="p-2" colspan="2" style="max-width: 400px!important;">
+                                    <div class="input-group mb-0">
+                                        <input type="text" class="form-control form-control-sm" :name="`cfgsend[${key}]`" :value="value">
+                                        <div class="input-group-append">
+                                            <select class="form-control form-control-sm" @change="handleMapChange">
+                                                <option v-for="(item, name) in maps" :id="name" v-bind:value="name" :data-mod="item.mod" :data-modid="item.modid" :selected="value === item.name">
+                                                    {{ item.name }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <!-- default Bool -->
+                                <td v-else-if="value.toString().toLowerCase() === 'true' || value.toString().toLowerCase() === 'false' || typeof value === 'boolean'" class="p-2" colspan="2" style="max-width: 400px!important;">
+                                    <select class="form-control form-control-sm" :name="`cfgsend[${key}]`">
+                                        <option value="True" :selected="value || value.toString().toLowerCase() === 'true'">{{ globalvars.lang_arr['servercenter_config'].true }}</option>
+                                        <option value="False" :selected="!value || value.toString().toLowerCase() === 'false'">{{ globalvars.lang_arr['servercenter_config'].false }}</option>
+                                    </select>
+                                </td>
+
+                                <!-- default Int -->
+                                <td v-else-if="typeof value === 'number' || (!isNaN(value) && value !== '')" class="p-2" colspan="2" style="max-width: 400px!important;">
+                                    <div class="input-group-sm mb-0">
+                                        <input type="number" class="form-control form-control-sm" :name="`cfgsend[${key}]`" :value="value">
+                                    </div>
+                                </td>
+
+                                <!-- default Text -->
+                                <td v-else class="p-2" colspan="2" style="max-width: 400px!important;">
+                                    <div class="input-group-sm mb-0">
+                                        <input type="text" class="form-control form-control-sm" :name="`cfgsend[${key}]`" :value="value" :readonly="ArkManagerReadOnly.includes(key)">
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="p-2">{{ globalvars.lang_arr['servercenter_config'].arkManager['arkflag_'] || 'arkflag_' }}</td>
+                                <td class="p-2">
+                                    <div class="row">
+                                        <div v-for="(value) in flags" class="icheck-primary mb-3 col-lg-6 col-12">
+                                            <input type="checkbox" :name="`cfgsend[${value}]`" value="True" :id="value" :checked="`arkflag_${value}` in ArkManager">
+                                            <label :for="value">
+                                                {{ value }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
-                        <textarea class="p-3 m-0" style="max-height: 500px; width: 100%; overflow-y: scroll; overflow-x: hidden; min-height: 500px" id="ArkManager">Loading...</textarea>
-                        <button class="btn btn-primary" style="width: 100%" onclick="serverSave('#ArkManager', '<%- serverName %>')"><%- lang[page].save %></button>
+
+                        <input type="hidden" name="saveArkManager" class="form-control form-control-sm" value="true">
+                        <input type="hidden" name="cfg" class="form-control form-control-sm" value="<%- serverName %>">
+                        <button class="btn btn-primary" style="width: 100%" onclick="saveCfg('#pills-arkmanager')" type="button"><%- lang[page].save %></button>
                     </div>
                 <% } %>
 
+
+
+
                 <!-- KADMIN -->
                 <% if(userHelper.hasPermissions(userID, "config/show_kadmin", serverName)) { %>
-                    <form class="tab-pane fade" id="pills-server" role="tabpanel" aria-labelledby="pills-llog-tab">
+                    <form class="tab-pane fade" id="pills-server" role="tabpanel" aria-labelledby="pills-server-tab">
                         <table class="table table-striped mb-0" style="border: 0!important;">
                             <thead>
                                 <tr class="bg-dark">
@@ -222,7 +306,7 @@
 
                         <input type="hidden" name="saveServer" class="form-control form-control-sm" value="true">
                         <input type="hidden" name="cfg" class="form-control form-control-sm" value="<%- serverName %>">
-                        <button class="btn btn-primary" style="width: 100%" onclick="saveCfg()" type="button"><%- lang[page].save %></button>
+                        <button class="btn btn-primary" style="width: 100%" onclick="saveCfg('#pills-server')" type="button"><%- lang[page].save %></button>
                     </form>
 
                 </div>

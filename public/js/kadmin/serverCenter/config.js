@@ -11,11 +11,30 @@ let VUE_configContainer = new Vue({
     el      : '#configContainer',
     data    : {
         cfg                 : {},
+        ArkManager          : {},
+        ArkManagerReadOnly  : [],
+        maps                : {},
+        flags               : {},
+        events              : {},
         parameters          : [],
         game_exsists        : false,
         engine_exsists      : false,
-        gus_exsists         : false
-    }
+        gus_exsists         : false,
+        game                : "",
+        engine              : "",
+        gus                 : ""
+    },
+   methods: {
+      handleMapChange(e) {
+         let datas   = e.target.options[e.target.options.selectedIndex].dataset
+         let mapName = e.target.value
+         let isMod   = +datas.mod !== 0
+         let modId   = datas.modid
+
+         VUE_configContainer.ArkManager.serverMap        = mapName
+         VUE_configContainer.ArkManager.serverMapModId   = isMod ? modId : ''
+      }
+   }
 })
 
 $.get('/json/sites/serverCenterActions.cfg.json', (datas) => {
@@ -31,9 +50,40 @@ $.get('/json/sites/serverCenterActions.cfg.json', (datas) => {
 
         array.push(parameter)
     })
-    console.log(array)
     VUE_configContainer.parameters = array
 })
+
+
+// Maps
+$.get('/json/sites/maps.json')
+   .done((data) => {
+      try {
+         VUE_configContainer.maps    = data
+      }
+      catch (e) {
+         console.log(e)
+      }
+   })
+// Flags
+$.get('/json/sites/flags.json')
+   .done((data) => {
+        try {
+            VUE_configContainer.flags   = data
+        }
+        catch (e) {
+            console.log(e)
+        }
+   })
+// Events
+$.get('/json/sites/events.json')
+   .done((data) => {
+      try {
+         VUE_configContainer.events   = data
+      }
+      catch (e) {
+         console.log(e)
+      }
+   })
 
 let editor = {}
 function getInis() {
@@ -43,34 +93,22 @@ function getInis() {
     })
        .done((data) => {
            data                                 = JSON.parse(data)
-           console.log(data)
-           VUE_configContainer.cfg              = data.cfg
-           VUE_configContainer.game_exsists     = data.Game !== "false"
-           VUE_configContainer.engine_exsists   = data.Engine !== "false"
-           VUE_configContainer.gus_exsists      = data.GameUserSettings !== "false"
 
-           setTimeout(() => {
-               let Editors = [
-                   "GameUserSettings",
-                   "Game",
-                   "Engine",
-                   "ArkManager"
-               ]
-               Editors.forEach(item => {
-                   try {
-                       editor[`#${item}`] = CodeMirror.fromTextArea(document.getElementById(item), {
-                           lineNumbers: true,
-                           mode: "javascript",
-                           theme: "material"
-                       })
-
-                       editor[`#${item}`].setValue(data[item])
-                   }
-                   catch (e) {
-                       console.log(e)
-                   }
-               })
-           }, 1000)
+           VUE_configContainer.cfg                  = data.cfg
+           VUE_configContainer.ArkManager           = data.ArkManager
+           VUE_configContainer.ArkManagerReadOnly   = [
+               "arkserverroot",
+               "logdir",
+               "arkbackupdir",
+               "arkserverexec",
+               "arkautorestartfile"
+           ]
+           VUE_configContainer.game_exsists         = data.Game !== false
+           VUE_configContainer.engine_exsists       = data.Engine !== false
+           VUE_configContainer.gus_exsists          = data.GameUserSettings !== false
+           VUE_configContainer.game                 = data.Game
+           VUE_configContainer.engine               = data.Engine
+           VUE_configContainer.gus                  = data.GameUserSettings
        })
        .fail(
           () => setTimeout(
@@ -82,10 +120,11 @@ getInis()
 
 /**
  * Speicher Cfg
+ * @param {string} htmlID
  * @return {boolean}
  */
-function saveCfg() {
-    $.post('/ajax/serverCenterConfig', $('#pills-server').serialize(), (data) => {
+function saveCfg(htmlID) {
+    $.post('/ajax/serverCenterConfig', $(htmlID).serialize(), (data) => {
         try {
             data = JSON.parse(data)
             fireToast(data.success ? 1 : 19, data.success ? "success" : "error")
@@ -105,9 +144,10 @@ function saveCfg() {
  */
 function serverSave(htmlID, cfg) {
     $.post('/ajax/serverCenterConfig', {
-        iniText: editor[htmlID].getValue(),
-        cfg: cfg,
-        server: true
+        iniText   : $(htmlID).val(),
+        cfg       : cfg,
+        config    : htmlID.trim().replaceAll('#'),
+        server    : true
     }, (data) => {
         try {
             data = JSON.parse(data)

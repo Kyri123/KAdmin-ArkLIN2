@@ -97,7 +97,7 @@ router.route('/')
             let GameUserSettings    = userHelper.hasPermissions(SESS.uid, "config/show_gameuser", GET.server) ? serverData.getGameINI("GameUserSettings.ini", true) : false
             let Game                = userHelper.hasPermissions(SESS.uid, "config/show_gameuser", GET.server) ? serverData.getGameINI("Game.ini", true) : false
             let Engine              = userHelper.hasPermissions(SESS.uid, "config/show_gameuser", GET.server) ? serverData.getGameINI("Engine.ini", true) : false
-            let ArkManager          = userHelper.hasPermissions(SESS.uid, "config/show_gameuser", GET.server) ? serverData.getINI(true) : false
+            let ArkManager          = userHelper.hasPermissions(SESS.uid, "config/show_gameuser", GET.server) ? serverData.getINI() : false
 
             res.render('ajax/json', {
                 data: JSON.stringify({
