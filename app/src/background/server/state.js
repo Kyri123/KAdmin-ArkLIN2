@@ -82,9 +82,15 @@ module.exports = {
                 data.is_installed      = globalUtil.safeFileExsistsSync([serverPath, servINI.arkserverexec])
                 data.is_installing     = !globalUtil.safeFileExsistsSync([serverPath, servINI.arkserverexec]) && globalUtil.safeFileExsistsSync([serverPath, 'steamapps'])
                 data.selfname          = servCFG.selfname
-                data.icon              = globalUtil.safeFileExsistsSync([mainDir, '/img/maps', `${servINI.serverMap}.jpg`])
+
+                data.icon              = globalUtil.safeFileExsistsSync([mainDir, 'public/img/maps', `${servINI.serverMap}.jpg`])
                    ? `/img/maps/${servINI.serverMap}.jpg`
-                   : "/img/logo/logo.png"
+                   : `/img/logo/logo.png`
+
+                data.bgicon              = globalUtil.safeFileExsistsSync([mainDir, 'public/img/backgrounds', `${servINI.serverMap}.jpg`])
+                    ? `/img/backgrounds/${servINI.serverMap}.jpg`
+                    : `/img/backgrounds/sc.jpg`
+
                 data.isAction          = (
                     isBackupRunning,
                     !isPlayIn

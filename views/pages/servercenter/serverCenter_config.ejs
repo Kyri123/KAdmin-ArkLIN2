@@ -129,7 +129,7 @@
                 <!-- ArkManager -->
                 <% if(userHelper.hasPermissions(userID, "config/show_arkmanager", serverName)) { %>
                     <!-- GameUserSettings -->
-                    <div class="tab-pane fade" id="pills-arkmanager" role="tabpanel" aria-labelledby="pills-llog-tab">
+                    <form class="tab-pane fade" id="pills-arkmanager" role="tabpanel" aria-labelledby="pills-llog-tab">
                         <table class="table table-striped mb-0" style="border: 0!important;">
                             <thead>
                             <tr class="bg-dark">
@@ -201,7 +201,7 @@
                                 <td class="p-2">
                                     <div class="row">
                                         <div v-for="(value) in flags" class="icheck-primary mb-3 col-lg-6 col-12">
-                                            <input type="checkbox" :name="`cfgsend[${value}]`" value="True" :id="value" :checked="`arkflag_${value}` in ArkManager">
+                                            <input type="checkbox" :name="`cfgsend[arkflag_${value}]`" value="True" :id="value" :checked="`arkflag_${value}` in ArkManager">
                                             <label :for="value">
                                                 {{ value }}
                                             </label>
@@ -215,7 +215,7 @@
                         <input type="hidden" name="saveArkManager" class="form-control form-control-sm" value="true">
                         <input type="hidden" name="cfg" class="form-control form-control-sm" value="<%- serverName %>">
                         <button class="btn btn-primary" style="width: 100%" onclick="saveCfg('#pills-arkmanager')" type="button"><%- lang[page].save %></button>
-                    </div>
+                    </form>
                 <% } %>
 
 

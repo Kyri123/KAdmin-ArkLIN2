@@ -10,12 +10,36 @@
 
 const router            = require('express').Router()
 const serverClass       = require('./../../../app/src/util_server/class')
+const ini               = require('ini')
 
 router.route('/')
 
     .post((req,res)=>{
-        let POST        = req.body;
+        let POST        = req.body
 
+        if(POST.saveArkManager !== undefined && userHelper.hasPermissions(req.session.uid, "config/arkmanager", POST.cfg)) {
+            let serverData  = new serverClass(POST.cfg)
+            let serverIni   = serverData.getINI()
+
+            let sendetIni   = POST.cfgsend
+
+            sendetIni.arkserverroot         = serverIni.arkserverroot
+            sendetIni.logdir                = serverIni.logdir
+            sendetIni.arkbackupdir          = serverIni.arkbackupdir
+            sendetIni.arkserverexec         = serverIni.arkserverexec
+
+            if(sendetIni.arkopt_ActiveEvent === "none")
+                delete sendetIni.arkopt_ActiveEvent
+
+            let iniString   = ini.stringify(sendetIni)
+
+            res.render('ajax/json', {
+                data: JSON.stringify({
+                    success: serverData.saveINI(iniString)
+                })
+            })
+        }
+/*
         // Speicher Server
         if(POST.saveServer !== undefined && userHelper.hasPermissions(req.session.uid, "config/kadmin-mc", POST.cfg)) {
             let serverData  = new serverClass(POST.cfg)
@@ -68,7 +92,7 @@ router.route('/')
                 })
             })
             return true
-        }
+        }*/
 
         res.render('ajax/json', {
             data: `{"request":"failed"}`

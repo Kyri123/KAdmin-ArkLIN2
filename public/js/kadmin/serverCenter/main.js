@@ -20,6 +20,8 @@ const VUE_serverCenterHead = new Vue({
     el      : '#serverCenterHead',
     data    : {
         logoBorder      : "border-dark",
+        logo            : "/img/logo/logo.png",
+        bglogo          : "/img/backgrounds/sc.jpg",
         infoCounter     : 0,
         infoArray       : [],
         state           : "...",
@@ -69,6 +71,8 @@ function getSCState() {
 
         serverIsInstalled = serverInfos.is_installed
 
+        VUE_serverCenterHead.logo           = serverInfos.icon
+        VUE_serverCenterHead.bglogo           = serverInfos.bgicon
         VUE_serverCenterHead.state          = varser.lang_arr.forservers.state[stateColor]
         VUE_serverCenterHead.stateClass     = `description-header text-${stateColor}`
         VUE_serverCenterHead.logoBorder     = `border-${stateColor}`

@@ -8,7 +8,7 @@
  */
 "use strict"
 
-const CommandUtil           = require('./commands_util')
+//const CommandUtil           = require('./commands_util')
 const serverShell           = require('./shell')
 
 module.exports = {
@@ -16,6 +16,7 @@ module.exports = {
    /**
     * Sendet ein Arkmanager Befehl
     * @param server {string}
+    * @param action {string}
     * @param para {array} Parameters
     * <br>
     * - **--alwaysstart** (Server startet immer wenn dieser NICHT läuft) <br>
@@ -54,7 +55,7 @@ module.exports = {
     * Erstellt ein Backup vom Server
     * @param server {string}
     * @param para {array} Parameters
-    * @param fromPanel {bool}
+    * @param fromPanel {boolean}
     * <br>
     * - **Derzeit keine Parameter**
     */

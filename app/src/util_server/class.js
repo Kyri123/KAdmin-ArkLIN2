@@ -184,13 +184,13 @@ module.exports = class serverClass {
     */
    saveINI(prop) {
       if(this.serverExsists()) {
-         let path    = pathMod.join(this.cfg.path, `server.properties`)
-         if(!globalUtil.safeFileExsistsSync([path])) globalUtil.safeFileCreateSync([path])
-         try {
-            return globalUtil.safeFileSaveSync([path], prop)
-         }
-         catch (e) {
-            if(debug) console.log('[DEBUG_FAILED]', e)
+         let path    = this.serverIniPath
+         if(globalUtil.safeFileExsistsSync(path)) {
+            try {
+               return globalUtil.safeFileSaveSync(path, prop)
+            } catch (e) {
+               if (debug) console.log('[DEBUG_FAILED]', e)
+            }
          }
       }
       return false
