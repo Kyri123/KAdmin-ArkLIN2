@@ -72,7 +72,7 @@ function getSCState() {
         serverIsInstalled = serverInfos.is_installed
 
         VUE_serverCenterHead.logo           = serverInfos.icon
-        VUE_serverCenterHead.bglogo           = serverInfos.bgicon
+        VUE_serverCenterHead.bglogo         = serverInfos.bgicon
         VUE_serverCenterHead.state          = varser.lang_arr.forservers.state[stateColor]
         VUE_serverCenterHead.stateClass     = `description-header text-${stateColor}`
         VUE_serverCenterHead.logoBorder     = `border-${stateColor}`
