@@ -133,7 +133,7 @@ module.exports = {
                 data.aplayersarr       = []
                 data.ping              = 0
                 data.version           = globalUtil.safeFileReadSync(versionFile).toString().trim()
-                if(data.version === false || data.version === "false") data.version = '???.??'
+                if(data.version === false || data.version === "false" || data.version === "") data.version = '???.??'
 
                 // Alerts
                     data.alerts = []
@@ -194,7 +194,6 @@ module.exports = {
                                       data.cfg = name
                                       data.ServerName = state.name
                                       data.usePW = state.password
-                                      data.version = state.name.replaceAll(/[^0-9]/g, '') / 100
                                       data.lastGameding = state
 
                                       // Speichern
