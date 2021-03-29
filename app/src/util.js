@@ -320,9 +320,11 @@ module.exports = {
      */
     convertArray(array) {
         if(Array.isArray(array))
-            array.forEach((key) => {
+            array.forEach((value, key) => {
                 if(Array.isArray(array[key])) {
-                    array[key] = module.exports.convertArray(array[key])
+                    array[key] = obj[key].length > 0
+                       ? module.exports.convertArray(array[key])
+                       : []
                 }
                 else if(typeof array[key] === "object") {
                     array[key] = module.exports.convertArray(array[key])
@@ -349,7 +351,9 @@ module.exports = {
         if(typeof obj === "object")
             Object.keys(obj).forEach((key) => {
                 if(Array.isArray(obj[key])) {
-                    obj[key] = module.exports.convertArray(obj[key])
+                    obj[key] = obj[key].length > 0
+                       ? module.exports.convertArray(obj[key])
+                       : []
                 }
                 else if(typeof obj[key] === "object") {
                     obj[key] = module.exports.convertObject(obj[key])

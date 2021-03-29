@@ -246,13 +246,13 @@
                                     <!-- default Updates -->
                                     <td v-if="key === 'autoUpdate'" class="p-2" colspan="2" style="max-width: 400px!important;">
                                         <div class="input-group-sm mb-0">
-                                            <select class="form-control form-control-sm" name="cfgsend[autoBackup]">
+                                            <select class="form-control form-control-sm" name="cfgsend[autoUpdate]">
                                                 <option value="true" :selected="value">{{ globalvars.lang_arr['servercenter_config'].true }}</option>
                                                 <option value="false" :selected="!value">{{ globalvars.lang_arr['servercenter_config'].false }}</option>
                                             </select>
                                             <!-- autoBackupPara -->
                                             <div class="icheck-primary mb-3" v-for="item in parameters" v-if="item.type === 0">
-                                                <input :checked="cfg.autoBackupPara.includes(item.value)" type="checkbox" name="cfgsend[autoUpdatePara][]" :value="item.value" :id="'KONF_' + item.id.replace('#', '')">
+                                                <input :checked="cfg.autoUpdatePara.includes(item.value)" type="checkbox" name="cfgsend[autoUpdatePara][]" :value="item.value" :id="'KONF_' + item.id.replace('#', '')">
                                                 <label :for="'KONF_' + item.id.replace('#', '')">
                                                     {{ item.text }}
                                                 </label>

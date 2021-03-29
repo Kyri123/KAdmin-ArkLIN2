@@ -39,35 +39,30 @@ router.route('/')
                 })
             })
         }
-/*
+
         // Speicher Server
-        if(POST.saveServer !== undefined && userHelper.hasPermissions(req.session.uid, "config/kadmin-mc", POST.cfg)) {
+        if(POST.saveServer !== undefined && userHelper.hasPermissions(req.session.uid, "config/kadmin", POST.cfg)) {
             let serverData  = new serverClass(POST.cfg)
             let cfg         = globalUtil.safeFileReadSync([mainDir, "app/json/server/template", "default.json"], true)
             let forbidden   = globalUtil.safeFileReadSync([mainDir, "app/json/server/template", "forbidden.json"], true)
             let currCfg     = serverData.getConfig()
             let sendedCfg   = POST.cfgsend
 
-            delete POST.saveServer
-            delete POST.cfg
-
             // Erstelle Cfg
             for (const [key, value] of Object.entries(cfg)) {
-                cfg[key] = currCfg[key]
-
                 if(!forbidden[key]) {
-                    if(!(key === 'extrajava' &&
-                        (sendedCfg[key].toString().toLowerCase().includes('-xmx') || sendedCfg[key].toString().toLowerCase().includes('-xms'))
-                    )) {
-                        cfg[key] = sendedCfg[key]
-                    }
-                    else {
-                        cfg[key] = currCfg[key]
-                    }
+                    cfg[key] = sendedCfg[key]
+                }
+                else {
+                    cfg[key] = currCfg[key]
                 }
 
                 if(key === "autoBackupPara")
                     if(cfg[key] === undefined) cfg[key] = []
+
+                if(key === "autoBackupNext" || key === "autoUpdateNext") {
+                    if(isNaN(cfg[key])) cfg[key] = 0
+                }
             }
 
             // setzte alle Vars
@@ -78,26 +73,28 @@ router.route('/')
                     success: serverData.saveConfig(cfg)
                 })
             })
-            return true
+            return
         }
 
         // Server.Properties
         if(POST.server !== undefined) {
-            let serverData  = new serverClass(POST.cfg);
-            if(!userHelper.hasPermissions(req.session.uid, `config/server`, POST.cfg)) return true;
+            let iniTarget   = POST.config
+            let serverData  = new serverClass(POST.cfg)
 
-            res.render('ajax/json', {
-                data: JSON.stringify({
-                    success: serverData.saveINI(POST.iniText)
+            if(userHelper.hasPermissions(req.session.uid, `config/${iniTarget}`, POST.cfg)) {
+                res.render('ajax/json', {
+                    data: JSON.stringify({
+                        success: serverData.saveGameINI(`${iniTarget}.ini`, POST.iniText)
+                    })
                 })
-            })
-            return true
-        }*/
+                return
+            }
+        }
 
         res.render('ajax/json', {
             data: `{"request":"failed"}`
         })
-        return true
+        return
     })
 
     .get((req,res)=>{

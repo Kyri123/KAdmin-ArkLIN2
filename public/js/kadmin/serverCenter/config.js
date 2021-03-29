@@ -146,12 +146,11 @@ function serverSave(htmlID, cfg) {
     $.post('/ajax/serverCenterConfig', {
         iniText   : $(htmlID).val(),
         cfg       : cfg,
-        config    : htmlID.trim().replaceAll('#'),
+        config    : htmlID.trim().replaceAll('#', ''),
         server    : true
     }, (data) => {
         try {
             data = JSON.parse(data)
-            getCfg()
             fireToast(data.success ? 1 : 19, data.success ? "success" : "error")
         } catch (e) {
             console.log(e)

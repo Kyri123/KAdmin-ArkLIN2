@@ -219,6 +219,19 @@ module.exports = class serverClass {
    }
 
    /**
+    * Speichert eine Definierte CFG
+    * @param {string} ini
+    * @param {object} cfg Wert
+    * @return {boolean}
+    */
+   saveGameINI(ini = "GameUserSettings.ini", cfg) {
+      if(this.serverExsists())
+         return globalUtil.safeFileSaveSync([this.getIniDirLocation(), ini], cfg.toString())
+
+      return false
+   }
+
+   /**
     * Speichert eine Ini
     * @param {boolean} asString
     * @return {boolean}

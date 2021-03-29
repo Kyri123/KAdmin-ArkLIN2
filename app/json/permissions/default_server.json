@@ -8,9 +8,9 @@
   "config": {
     "show"                  : 0,
     "kadmin"                : 0,
-    "gameuser"              : 0,
-    "game"                  : 0,
-    "engine"                : 0,
+    "GameUserSettings"      : 0,
+    "Game"                  : 0,
+    "Engine"                : 0,
     "arkmanager"            : 0,
     "show_kadmin"           : 0,
     "show_gameuser"         : 0,

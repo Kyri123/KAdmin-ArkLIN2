@@ -65,6 +65,8 @@ module.exports = {
                    ? !isRunning(+globalUtil.safeFileReadSync(arkUpdatePidFile))
                    : true
 
+                //console.log(name, servINI)
+
                 data.isFree            = arkUpdateProcess && isBackupRunning && isPlayIn
                 data.aplayers          = 0
                 data.players           = 0
@@ -79,17 +81,16 @@ module.exports = {
                 data.ServerMap         = servINI.serverMap
                 data.ServerName        = servINI.ark_SessionName
                 data.connect           = `steam://connect/${ip.address()}:${servCFG.query}`
-                data.is_installed      = globalUtil.safeFileExsistsSync([serverPath, servINI.arkserverexec])
-                data.is_installing     = !globalUtil.safeFileExsistsSync([serverPath, servINI.arkserverexec]) && globalUtil.safeFileExsistsSync([serverPath, 'steamapps'])
+                data.is_installed      = globalUtil.safeFileExsistsSync([serverPath, servINI.arkserverexec !== undefined ? servINI.arkserverexec : 'ShooterGame/Binaries/Linux/ShooterGameServer'])
+                data.is_installing     = !globalUtil.safeFileExsistsSync([serverPath, servINI.arkserverexec !== undefined ? servINI.arkserverexec : 'ShooterGame/Binaries/Linux/ShooterGameServer']) && globalUtil.safeFileExsistsSync([serverPath, 'steamapps'])
                 data.selfname          = servCFG.selfname
 
                 data.icon              = globalUtil.safeFileExsistsSync([mainDir, 'public/img/maps', `${servINI.serverMap}.jpg`])
                    ? `/img/maps/${servINI.serverMap}.jpg`
                    : `/img/logo/logo.png`
-
                 data.bgicon              = globalUtil.safeFileExsistsSync([mainDir, 'public/img/backgrounds', `${servINI.serverMap}.jpg`])
-                    ? `/img/backgrounds/${servINI.serverMap}.jpg`
-                    : `/img/backgrounds/sc.jpg`
+                   ? `/img/backgrounds/${servINI.serverMap}.jpg`
+                   : `/img/backgrounds/sc.jpg`
 
                 data.isAction          = (
                     isBackupRunning,
@@ -158,27 +159,27 @@ module.exports = {
                     findProcess('pid', +globalUtil.safeFileReadSync(pifFileServer))
                        .then(async function (list) {
                            if (list.length) {
-                               let index = 0
-                               let pid = list[index].pid
-                               let ppid = list[index].ppid
-                               let cmd = list[index].cmd
-                               let bin = list[index].bin
+                               let index    = 0
+                               let pid      = list[index].pid
+                               let ppid     = list[index].ppid
+                               let cmd      = list[index].cmd
+                               let bin      = list[index].bin
                                try {
                                    let pidData = await pidusage(pid)
-                                   data.cpuUsage = Math.round(pidData.cpu / os.cpus().length * 100) / 100
-                                   data.memory = pidData.memory
-                                   data.elapsed = pidData.elapsed
-                                   data.epoch = pidData.timestamp
+                                   data.cpuUsage    = Math.round(pidData.cpu / os.cpus().length * 100) / 100
+                                   data.memory      = pidData.memory
+                                   data.elapsed     = pidData.elapsed
+                                   data.epoch       = pidData.timestamp
                                } catch (e) {
 
                                }
 
 
-                               data.run = true
-                               data.cmd = cmd
-                               data.pid = pid
-                               data.ppid = ppid
-                               data.bin = bin
+                               data.run     = true
+                               data.cmd     = cmd
+                               data.pid     = pid
+                               data.ppid    = ppid
+                               data.bin     = bin
 
                                Gamedig.query({
                                    type: 'arkse',
@@ -186,15 +187,22 @@ module.exports = {
                                    port: servINI.ark_QueryPort
                                })
                                   .then((state) => {
-                                      data.players = servINI.ark_MaxPlayers
-                                      data.aplayers = state.players.length
-                                      data.aplayersarr = state.players
-                                      data.listening = true
-                                      data.online = true
-                                      data.cfg = name
-                                      data.ServerName = state.name
-                                      data.usePW = state.password
-                                      data.lastGameding = state
+                                      data.players          = servINI.ark_MaxPlayers
+                                      data.aplayers         = 0
+                                      if(Array.isArray(state.players))
+                                          for(const item of state.players)
+                                              if(item.name !== undefine) {
+                                                  data.aplayers++
+                                              }
+
+                                      data.aplayersarr      = state.players
+                                      data.listening        = true
+                                      data.online           = true
+                                      data.cfg              = name
+                                      data.ServerName       = state.name
+                                      data.usePW            = state.password
+                                      data.version          = state.name.replaceAll(/[^0-9]/g, '') / 100
+                                      data.lastGameding     = state
 
                                       // Speichern
                                       save(data, name, state)
