@@ -251,7 +251,7 @@
                                                 <option value="false" :selected="!value">{{ globalvars.lang_arr['servercenter_config'].false }}</option>
                                             </select>
                                             <!-- autoBackupPara -->
-                                            <div class="icheck-primary mb-3" v-for="item in parameters" v-if="item.type === 0">
+                                            <div class="icheck-primary mb-3" v-for="item in parameters" v-if="item.type === 0 && item.for.includes('update')">
                                                 <input :checked="cfg.autoUpdatePara.includes(item.value)" type="checkbox" name="cfgsend[autoUpdatePara][]" :value="item.value" :id="'KONF_' + item.id.replace('#', '')">
                                                 <label :for="'KONF_' + item.id.replace('#', '')">
                                                     {{ item.text }}

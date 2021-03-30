@@ -47,6 +47,7 @@ $.get('/json/sites/serverCenterActions.cfg.json', (datas) => {
         parameter.text      = varser.lang_arr.forservers.parameter[val.id_js.replaceAll('#', '')]
         parameter.type      = val.type
         parameter.id        = val.id_js
+        parameter.for       = val.for
 
         array.push(parameter)
     })
