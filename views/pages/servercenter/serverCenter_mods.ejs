@@ -1,0 +1,108 @@
+<%- include('../../includes/head'); -%>
+<%- include('../../includes/top') -%>
+<%- include('../../includes/nav') -%>
+<%- include('../../includes/content') -%>
+<%- include('./head'); -%>
+<div class="row" id="modsContainer">
+    <div class="col-12">
+        <div class="d-flex bg-dark p-2">
+            <div class="btn-group">
+                <a href="javascript:void(0)" id="FB_upload" class="btn btn-sm btn-outline-success">
+                    <i aria-hidden="true" class="fas fa-plus"></i>
+                </a>
+            </div>
+            <!--<div class="btn-group btn-group-sm ml-auto">
+                <a href="javascript:void(0)" onclick="get()" id="FB_reload" class="btn btn-sm btn-outline-light">
+                    <i aria-hidden="true" class="fa fa-refresh"></i>
+                </a>
+            </div>-->
+        </div>
+    </div>
+
+    <div class="col-12">
+        <table class="table table-sm table-striped table-bordered">
+            <tbody>
+                <tr v-for="(mod, key) in mods">
+                    <td width="60px" class="p-0"><img :src="steamAPI[mod] !== undefined ? steamAPI[mod].preview_url : '/img/unknown.png'" style="width: 60px; height: 60px" /></td>
+                    <td>
+                        <b>[{{key}}] {{steamAPI[mod] !== undefined ? steamAPI[mod].title : mod}}</b> <br />
+                        <span class="text-sm">ModID: <a class="text-bold" href="#">{{ mod }}</a> | Last Updated: <b>{{ convertTime(steamAPI[mod].time_updated*1000) }}</b></span>
+                    </td>
+                    <td style="width: 1%">
+                        <div class="btn-group">
+                            <a v-if="!checkIsInstalled(mod)" href="javascript:void(0)" id="FB_upload" class="btn btn-sm btn-outline-success">
+                                <i class="fas fa-folder-plus"></i>
+                                <br /> Install
+                            </a>
+                            <a v-else href="javascript:void(0)" id="FB_upload" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-folder-minus"></i>
+                                <br /> Uninstall
+                            </a>
+
+                            <a href="javascript:void(0)" class="btn btn-sm btn-outline-danger">
+                                <i aria-hidden="true" class="fa fa-times"></i>
+                                <br /> Deactivate
+                            </a>
+
+                            <a href="javascript:void(0)" class="btn btn-sm btn-outline-danger">
+                                <i aria-hidden="true" class="fa fa-trash"></i>
+                                <br /> Remove
+                            </a>
+
+                            <a v-if="key !== 0" href="javascript:void(0)" id="FB_upload" class="btn btn-sm btn-outline-dark">
+                                <i class="fas fas fa-arrow-up"></i>
+                                <br /> Up
+                            </a>
+                            <a v-if="key !== mods.length-1" href="javascript:void(0)" id="FB_upload" class="btn btn-sm btn-outline-dark">
+                                <i class="fas fas fa-arrow-down"></i>
+                                <br /> Down
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+
+
+                <tr>
+                    <td colspan="3" class="text-center bg-secondary">Installed</td>
+                </tr>
+
+
+                <tr v-for="mod in mods" v-if="!checkIsInstalled(mod)">
+                    <td width="60px" class="p-0"><img src="/img/unknown.png" style="width: 60px; height: 60px" /></td>
+                    <td>
+                        ModTitle <br />
+                        <span class="text-sm">ModID: <a class="text-bold" href="#">123456789</a> | Last Updated: <b>xx.xx.xxxx</b></span>
+                    </td>
+                    <td style="width: 1%">
+                        <div class="btn-group">
+                            <a href="javascript:void(0)" class="btn btn-sm btn-outline-success">
+                                <i aria-hidden="true" class="fa fa-check"></i>
+                                <br /> Activate
+                            </a>
+
+                            <a href="javascript:void(0)" class="btn btn-sm btn-outline-danger">
+                                <i aria-hidden="true" class="fa fa-trash"></i>
+                                <br /> Remove
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+<script>
+    // Vars die zur JS übergeben werden
+    // Allgemeine Vars
+    let vars = {};
+    vars.cfg = '<%- serverName %>';
+</script>
+
+<script src="/js/kadmin/serverCenter/mods.js" type="application/javascript"></script>
+
+<%- include('../../includes/foother'); -%>

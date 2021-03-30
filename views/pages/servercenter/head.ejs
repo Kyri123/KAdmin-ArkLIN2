@@ -150,6 +150,14 @@
                                     </li>
                                 <% } %>
 
+                                <% if(userHelper.hasPermissions(user.id, "mods/show", serverName)) { %>
+                                    <li class="nav-item">
+                                        <a href="/servercenter/<%- serverName %>/mods" class="nav-link <%- page === "servercenter_mods" ? "active" : "" %> btn-dark p-3" <%- page === "servercenter_config" ? "" : `onmouseenter="$('#mods').toggleClass('d-lg-none', false)" onmouseleave="$('#mods').toggleClass('d-lg-none', true)"` %>>
+                                            <i class="nav-icon fas fa-cogs pr-1" aria-hidden="true"></i> <span id="mods" class="<%- page === "servercenter_mods" ? "" : "d-lg-none" %>"><%- lang["servercenter_any"].nav.mods %></span>
+                                        </a>
+                                    </li>
+                                <% } %>
+
                                 <% if(userHelper.hasPermissions(user.id, "backups/show", serverName)) { %>
                                     <li class="nav-item">
                                         <a href="/servercenter/<%- serverName %>/backups" class="nav-link <%- page === "servercenter_backups" ? "active" : "" %> btn-dark p-3" <%- page === "servercenter_backups" ? "" : `onmouseenter="$('#backups').toggleClass('d-lg-none', false)" onmouseleave="$('#backups').toggleClass('d-lg-none', true)"` %>>

@@ -269,6 +269,19 @@ module.exports = class serverClass {
    }
 
    /**
+    * holt das Modverzeichnis
+    * @param {boolean} absolute mit unterverzeichnis?
+    * @return {boolean|string}
+    */
+   getInstalledModDirLocation() {
+      if(this.serverExsists()) {
+         let ini = this.getINI()
+         return pathMod.join(ini.arkserverroot, 'ShooterGame/Content/Mods')
+      }
+      return false
+   }
+
+   /**
     * holt das Ini verzeichnis
     * @return {boolean|string}
     */

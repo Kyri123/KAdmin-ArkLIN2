@@ -234,9 +234,10 @@ module.exports = {
     /**
      * Liest ein Verzeichnis aus
      * @param {string[]} paths Pfade zur Datei
+     * @param {boolean} withSize Soll die größe von den Ordner mit erkannt werden?
      * @return {boolean|array}
      */
-    safeFileReadDirSync(paths) {
+    safeFileReadDirSync(paths, withSize = true) {
         // Prüfe Pfad
         if(module.exports.poisonNull(paths)) {
             // Lege Pfad fest
@@ -261,8 +262,8 @@ module.exports = {
                             "totalPath" : tPath,
                             "isDir"     : item.isDirectory(),
                             "isFile"    : item.isFile(),
-                            "size"      : module.exports.getSizeSync([tPath]),
-                            "sizebit"   : module.exports.getSizeSync([tPath], true)
+                            "size"      : (withSize && item.isDirectory()) || item.isFile() ? module.exports.getSizeSync([tPath]) : false,
+                            "sizebit"   : (withSize && item.isDirectory()) || item.isFile() ? module.exports.getSizeSync([tPath], true) : false
                         })
                     })
                     return dirArray

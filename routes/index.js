@@ -86,6 +86,11 @@ router.use(
    require('./pages/servercenter/serverCenter_filebrowser')
 )
 router.use(
+   '/servercenter/:name/mods',
+   isLoggedIn, isServerExsits,
+   require('./pages/servercenter/serverCenter_mods')
+)
+router.use(
    '/servercenter/:name',
    isLoggedIn, isServerExsits,
    require('./pages/servercenter/serverCenter')
@@ -148,6 +153,11 @@ router.use(
    '/ajax/serverCenterFilebrowser',
    isLoggedIn,
    require('./ajax/servercenter/serverCenterFilebrowser')
+)
+router.use(
+   '/ajax/serverCenterMods',
+   isLoggedIn,
+   require('./ajax/servercenter/serverCenterMods')
 )
 
 // Error seiten

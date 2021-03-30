@@ -78,6 +78,7 @@ module.exports = {
                 data.listening         = false
                 data.online            = false
                 data.cfg               = name
+                data.INI               = servINI
                 data.ServerMap         = servINI.serverMap
                 data.ServerName        = servINI.ark_SessionName
                 data.connect           = `steam://connect/${ip.address()}:${servCFG.query}`
