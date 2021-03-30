@@ -11,8 +11,10 @@ let VUE_modContainer = new Vue({
     el      : '#modsContainer',
     data    : {
         mods               : [],
+        installedMods      : [],
         installedFiles     : {},
-        steamAPI           : {}
+        steamAPI           : {},
+        listAktiveMods     : true
     },
    methods: {
       checkIsInstalled(modid) {
@@ -34,7 +36,14 @@ function getInfos() {
    })
       .done((data) => {
          try {
-            VUE_modContainer.installedFiles  = JSON.parse(data)
+             VUE_modContainer.installedFiles    = JSON.parse(data)
+
+             let installedModArray              = []
+             for(const file of VUE_modContainer.installedFiles) {
+                if(file.isFile && file.namePure !== "111111111" && file.FileExt === ".mod") installedModArray.push(file.namePure)
+             }
+             VUE_modContainer.installedMods     = installedModArray
+             VUE_modContainer.installedMods.sort()
          }
          catch (e) {
             console.log(e)
@@ -46,7 +55,7 @@ function getInfos() {
    })
       .done((data) => {
          try {
-            VUE_modContainer.mods  = JSON.parse(data)
+             VUE_modContainer.mods  = JSON.parse(data)
          }
          catch (e) {
             console.log(e)
@@ -56,7 +65,6 @@ function getInfos() {
       .done((data) => {
          try {
             VUE_modContainer.steamAPI  = data
-            console.log(VUE_modContainer.steamAPI["731604991"])
          }
          catch (e) {
             console.log(e)
