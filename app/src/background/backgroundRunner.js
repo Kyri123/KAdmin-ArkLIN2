@@ -227,7 +227,7 @@ module.exports = {
                         if(cfg.autoUpdate) {
                             if(Date.now() > cfg.autoUpdateNext) {
                                 serverCommands.doArkmanagerCommand(val[0], "update", cfg.autoUpdatePara);
-                                serv.writeConfig("autoBackupNext", (Date.now() + cfg.autoUpdateInterval))
+                                serv.writeConfig("autoUpdateNext", (Date.now() + cfg.autoUpdateInterval))
                                 if(debug) console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}][DEBUG]\x1b[36m run > doServerBackgrounder > autoUpdate > ${val[0]}`)
                             }
                         }
