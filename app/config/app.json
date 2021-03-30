@@ -4,6 +4,7 @@
   "pathBackup"      : "/home/steam/kadmin_arklin/servers/backups",
   "pathSteam"       : "/home/steam/Steam",
   "pathArkmanager"  : "/etc/arkmanager",
+  "steamAPIKey"     : "",
   "port"            : 20030,
   "useDebug"        : true
 }

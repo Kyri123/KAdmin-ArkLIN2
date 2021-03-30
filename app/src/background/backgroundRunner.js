@@ -15,7 +15,7 @@ const disk                  = require('check-disk-space')
 const AA_util               = require('../util')
 const server_state          = require('./server/state')
 const serverCommands        = require('./server/commands')
-const shell                 = require('./server/shell')
+const steamAPIhelper        = require('./../util_steam/steamAPI')
 const updater               = require('./updater')
 
 
@@ -29,7 +29,9 @@ module.exports = {
         setInterval(() => module.exports.getTraffic(),                  CONFIG.main.interval.getTraffic)
         setInterval(() => module.exports.getStateFromServers(),         CONFIG.main.interval.getStateFromServers)
         setInterval(() => module.exports.doServerBackgrounder(),        CONFIG.main.interval.doServerBackgrounder)
+        setInterval(() => module.exports.getDataFromSteamAPI(),         CONFIG.main.interval.getDataFromSteamAPI)
 
+        module.exports.getDataFromSteamAPI()
         module.exports.getTraffic()
         module.exports.getStateFromServers()
     },
@@ -93,6 +95,77 @@ module.exports = {
      */
     backgroundUpdater: () => {
         updater.check()
+    },
+
+    /**
+     * Startet Intervall > getDataFromSteamAPI
+     */
+    getDataFromSteamAPI: () => {
+        (async function() {
+            if(debug) console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}][DEBUG]\x1b[36m run > getDataFromSteamAPI`)
+
+            let serverList  = Object.entries(globalInfos.getServerList())
+            let playerIds   = []
+            let modIds      = []
+
+            for(const server of serverList) {
+                let serverData  = new serverClass(server[0])
+                let serverIni   = serverData.getINI()
+                let serverInfos = server[1]
+
+                //lese ModID's
+                try {
+                    let gameModIds              = serverIni.ark_GameModIds
+                    let totalConversionMod      = (serverIni.totalConversionMod !== "" && !isNaN(serverIni.totalConversionMod)) && serverIni.totalConversionMod !== undefined
+                       ? serverIni.totalConversionMod
+                       : false
+                    let serverMapModId          = serverIni.serverMapModId !== "" && !isNaN(serverIni.serverMapModId) && serverIni.serverMapModId !== undefined
+                       ? serverIni.serverMapModId
+                       : false
+                    let modArray                = (gameModIds !== "" && !isNaN(gameModIds)) || gameModIds !== undefined
+                       ? serverIni.ark_GameModIds.split(',')
+                       : []
+
+                    // füge Map hinzu
+                    if(!modIds.includes(serverMapModId) && serverMapModId !== false)
+                        modIds.push(serverMapModId)
+
+                    // füge TotalMod hinzu wenn nicht Primitiv+
+                    if(!modIds.includes(totalConversionMod) && totalConversionMod !== false && +totalConversionMod !== 111111111)
+                        modIds.push(totalConversionMod)
+
+                    for(const modId of modArray) {
+                        if(!modIds.includes(modId) && !isNaN(+modId) && modId !== '') modIds.push(modId)
+                    }
+                }
+                catch (e) {
+                    if(debug) console.log('[DEBUG_FAILED]', e)
+                }
+
+
+                //Lese Spieler
+                let saveGameDirArray   = globalUtil.safeFileReadDirSync([serverData.getSaveDirLocation(false)])
+                if(saveGameDirArray !== false) {
+                    for (const file of saveGameDirArray) {
+                        if(file.FileExt === ".arkprofile")
+                            if(!playerIds.includes(file.namePure)) playerIds.push(file.namePure)
+                    }
+
+                    // TODO: Wenn Features implementiert werden
+                    // auslesen von Whitelist
+                    // auslesen von Blacklist (Banlist)
+                    // auslesen von Adminlist
+                }
+            }
+
+            // erstelle modid.json
+            if(Array.isArray(modIds))
+                steamAPIhelper.getModList(modIds)
+
+            // erstelle player.json
+            if(Array.isArray(playerIds))
+                steamAPIhelper.getPlayerList(playerIds)
+        })()
     },
 
     /**
