@@ -137,6 +137,21 @@ function failed(type) {
     if(type === "FB")
         return `<div class="p-1 pl-2 pr-3 list-group-item border-left-0 text-danger bg-${typeof args[1] !== "undefined" ? args[1] : "dark"}"><i class="fas fa-times" aria-hidden="true"></i> ${globalvars.lang_arr.all.failed}</div>`
 }
+/**
+ * erstellt ein nicht Gefunden
+ * @param type
+ * @return {string}
+ */
+function nothingFound(type = "tr") {
+    let args    = Object.values(arguments)
+    if(type === "tr")
+        return `<tr>
+                    <td class="alert alert-info p-3" ${typeof args[1] !== "undefined" ? `colspan="${args[1]}"` : ""}>
+                        <h5><i class="icon fas fa-info"></i> ${globalvars.lang_arr.all.nothingFoundTitle}</h5>
+                        ${globalvars.lang_arr.all.nothingFoundText}
+                    </td>
+                </tr>`
+}
 
 /**
  * setzt diverse eingaben in id

@@ -22,7 +22,7 @@ module.exports = {
     * - **--alwaysstart** (Server startet immer wenn dieser NICHT läuft) <br>
     * @return {boolean}
     */
-   doArkmanagerCommand: (server,action , para) => {
+   doArkmanagerCommand: (server, action , para) => {
       let serv       = new serverClass(server)
       if(serv.serverExsists()) {
          let parameter  = Array.isArray(para) ? para : []

@@ -11,7 +11,7 @@
                 {{listAktiveMods ? 'Active mods' : 'Installed Mods'}}
             </h5>
             <div class="btn-group btn-group-sm ml-auto">
-                <a href="javascript:void(0)" id="FB_upload" class="btn btn-sm btn-outline-success">
+                <a v-if="hasPermissions(globalvars.perm, 'mods/addMod', vars.cfg)" href="javascript:void(0)" data-toggle="modal" data-target="#addmod" class="btn btn-sm btn-outline-success">
                     <i aria-hidden="true" class="fas fa-plus"></i>
                 </a>
                 <a href="javascript:void(0)" id="FB_upload" class="btn btn-sm btn-outline-light" @click="listAktiveMods = !listAktiveMods">
@@ -25,46 +25,88 @@
         <table class="table table-sm table-striped table-bordered">
             <tbody>
 
-                <tr v-for="(mod, key) in listAktiveMods ? mods : installedMods">
-                    <td width="20px" class="p-0">
-                        <a href="javascript:void(0)" id="FB_upload" v-bind:class="listAktiveMods && key !== 0 && mods.length !== 1 ? '' : 'disabled'" class="btn btn-sm btn-flat bg-dark m-0">
+                <tr v-for="(mod, key) in listAktiveMods ? mods : installedMods" v-if="mod !== ''">
+                    <td v-if="hasPermissions(globalvars.perm, 'mods/moveMod', vars.cfg)" width="20px" class="p-0">
+                        <a @click="listAktiveMods && key !== 0 && mods.length !== 1 ? sendRequest('move', mod, true)  : undefined" href="javascript:void(0)" id="FB_upload" v-bind:class="listAktiveMods && key !== 0 && mods.length !== 1 ? '' : 'disabled'" class="btn btn-sm btn-flat bg-dark m-0">
                             <i class="fas fas fa-arrow-up"></i>
                         </a>
-                        <a v-bind:class="listAktiveMods && key !== mods.length-1 ? '' : 'disabled'" href="javascript:void(0)" id="FB_upload" class="btn btn-sm btn-flat bg-dark m-0">
+                        <a @click="listAktiveMods && key !== mods.length-1 ? sendRequest('move', mod, false) : undefined" v-bind:class="listAktiveMods && key !== mods.length-1 ? '' : 'disabled'" href="javascript:void(0)" id="FB_upload" class="btn btn-sm btn-flat bg-dark m-0">
                             <i class="fas fas fa-arrow-down"></i>
                         </a>
                     </td>
                     <td width="62px" class="p-0"><img :src="steamAPI[mod] !== undefined ? steamAPI[mod].preview_url : '/img/unknown.png'" style="width: 62px; height: 62px" /></td>
                     <td>
                         <b>[{{key}}] {{steamAPI[mod] !== undefined ? steamAPI[mod].title : mod}}</b> <br />
-                        <span class="text-sm">ModID: <a class="text-bold" :href="`https://steamcommunity.com/sharedfiles/filedetails/?id=${mod}`" target="_blank">{{ mod }}</a> | Last Updated: <b>{{ convertTime(steamAPI[mod].time_updated*1000) }}</b></span>
+                        <span class="text-sm">ModID: <a class="text-bold" :href="`https://steamcommunity.com/sharedfiles/filedetails/?id=${mod}`" target="_blank">{{ mod }}</a> | Last Updated: <b>{{ steamAPI[mod] ? convertTime(steamAPI[mod].time_updated*1000) : '??.??.???? ??:??' }}</b></span>
                     </td>
                     <td style="width: 1%" class="p-0">
                         <div class="btn-group">
-                            <a v-if="!checkIsInstalled(mod)" href="javascript:void(0)" id="FB_upload" class="btn btn-app bg-success m-0">
+                            <a v-if="hasPermissions(globalvars.perm, 'mods/toggleInstallMod', vars.cfg) && !checkIsInstalled(mod)" @click="sendRequest('toggleInstall', mod, true)" href="javascript:void(0)" id="FB_upload" class="btn btn-app bg-success m-0">
                                 <i class="fas fa-folder-plus"></i> Install
                             </a>
-                            <a v-else href="javascript:void(0)" id="FB_upload" class="btn btn-app bg-danger m-0">
+                            <a v-else-if="hasPermissions(globalvars.perm, 'mods/toggleInstallMod', vars.cfg)" href="javascript:void(0)" @click="sendRequest('toggleInstall', mod, false)" id="FB_upload" class="btn btn-app bg-danger m-0">
                                 <i class="fas fa-folder-minus"></i> Uninstall
                             </a>
 
-                            <a v-if="mods.includes(mod)" href="javascript:void(0)" class="btn btn-app bg-danger m-0">
+                            <a v-if="hasPermissions(globalvars.perm, 'mods/toggleMod', vars.cfg) && mods.includes(mod)" @click="sendRequest('toggleActive', mod, false)" href="javascript:void(0)" class="btn btn-app bg-danger m-0">
                                 <i aria-hidden="true" class="fa fa-times"></i> Deactivate
                             </a>
 
-                            <a v-else href="javascript:void(0)" class="btn btn-app bg-success m-0">
+                            <a v-else-if="hasPermissions(globalvars.perm, 'mods/toggleMod', vars.cfg)" href="javascript:void(0)" href="javascript:void(0)" @click="sendRequest('toggleActive', mod, true)" class="btn btn-app bg-success m-0">
                                 <i aria-hidden="true" class="fa fa-check"></i> Activate
                             </a>
 
-                            <a href="javascript:void(0)" class="btn btn-app bg-danger m-0">
+                            <a v-if="hasPermissions(globalvars.perm, 'mods/removeMod', vars.cfg) && ((mods.includes(mod) && checkIsInstalled(mod)) || mods.includes(mod))" href="javascript:void(0)" @click="sendRequest('remove', mod, true)" class="btn btn-app bg-danger m-0">
                                 <i aria-hidden="true" class="fa fa-trash"></i> Remove
                             </a>
                         </div>
                     </td>
                 </tr>
 
+                <tr v-if="(listAktiveMods && mods.length === 0) || (!listAktiveMods && installedMods.length === 0)" v-html="nothingFound()"></tr>
+
             </tbody>
         </table>
+
+        <!-- addMod -->
+        <div v-if="hasPermissions(globalvars.perm, 'mods/addMod', vars.cfg)" class="d-none" id="addTPL">
+            <div class="input-group mb-0">
+                <input type="text" name="url[]" class="form-control rounded-0 form-control-sm" placeholder="Worshop URL / ModID">
+                <button type="button" class="btn btn-flat btn-sm btn-info" onclick="$('#addmodinput').append(`<tr><td class='p-2'>${$('#addTPL').html()}</td></tr>`)"><i class="fa fa-plus" aria-hidden="true"></i></button>
+            </div>
+        </div>
+        <form v-if="hasPermissions(globalvars.perm, 'mods/addMod', vars.cfg)" class="modal" id="addmod" method="post" action="#">
+            <div class="modal-dialog modal-xl" role="document" style="max-width: 700px">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark">
+                        <h5 class="modal-title">{{ globalvars.lang_arr.servercenter_mods.addMod.title }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body p-0">
+                        <table class="table table-striped mb-0">
+                            <tbody id="addmodinput">
+                                <tr>
+                                    <td class="p-2">
+                                        <div class="input-group mb-0">
+                                            <input type="text" name="url[]" class="form-control rounded-0 form-control-sm" placeholder="Worshop URL / ModID">
+                                            <button type="button" class="btn btn-flat btn-sm btn-info" onclick="$('#addmodinput').append(`<tr><td class='p-2'>${$('#addTPL').html()}</td></tr>`)"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="closeBTN" type="button" class="btn btn-secondary" data-dismiss="modal" @click="$('#addmodinput').html(`<tr><td class='p-2'>${$('#addTPL').html()}</td></tr>`)">{{ globalvars.lang_arr.servercenter_mods.addMod.cancel }}</button>
+                        <button @click="sendRequest('add', $('#addmod').serializeArray(), false); $('#addmodinput').html(`<tr><td class='p-2'>${$('#addTPL').html()}</td></tr>`); $('#closeBTN').click(); $('.modal-backdrop').remove(); $('.modal-backdrop').remove()" type="button" class="btn btn-success" name="addmod">{{ globalvars.lang_arr.servercenter_mods.addMod.add }}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
 
     </div>
 </div>

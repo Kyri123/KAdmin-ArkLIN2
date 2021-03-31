@@ -38,5 +38,13 @@
     "renameFiles"           : 0,
     "moveFiles"             : 0,
     "showFiles"             : 0
+  },
+  "mods": {
+    "show"                  : 0,
+    "moveMod"               : 0,
+    "removeMod"             : 0,
+    "toggleMod"             : 0,
+    "addMod"                : 0,
+    "toggleInstallMod"          : 0
   }
 }

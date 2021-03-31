@@ -144,7 +144,7 @@ module.exports = class serverClass {
     * @param {any} value Wert
     * @return {boolean}
     */
-   writeConfig( key, value) {
+   writeConfig(key, value) {
       if(this.serverExsists() && typeof this.cfg[key] !== "undefined") {
          this.cfg[key] = value
          try {
@@ -153,6 +153,21 @@ module.exports = class serverClass {
          catch (e) {
             if(debug) console.log('[DEBUG_FAILED]', e)
          }
+      }
+      return false
+   }
+
+   /**
+    * Speichert einen beliebigen Key in der Ini (Arkmanager.cfg)
+    * @param {string} key Option
+    * @param {string|int|float} value Wert
+    * @return {boolean}
+    */
+   writeIni(key, value) {
+      let Ini  = this.getINI()
+      if(this.serverExsists()) {
+         Ini[key] = value
+         return this.saveINI(ini.stringify(Ini))
       }
       return false
    }
