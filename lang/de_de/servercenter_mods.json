@@ -1,7 +1,7 @@
 {
   "pagename"      : "ServerCenter",
   "activeMods"    : "Aktive Mods",
-  "installedMods" : "Installierte Mods"
+  "installedMods" : "Installierte Mods",
   "addMod"        : {
     "cancel"        : "Schließen",
     "add"           : "Hinzufügen",
