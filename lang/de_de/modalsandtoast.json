@@ -69,6 +69,7 @@
     "50"  : "[PLATZHALTER] Mod wurde Entfernt",
     "51"  : "[PLATZHALTER] Mod(s) wurde Hinzugefügt",
     "52"  : "Mod wird Installiert (dies kann je nach Mod etwas dauern)",
-    "53"  : "Mod wird Deinstalliert (dies kann je nach Mod etwas dauern)"
+    "53"  : "Mod wird Deinstalliert (dies kann je nach Mod etwas dauern)",
+    "54"  : "es wurden keine Mods hinzugefügt da entweder die eingabe ungültig war oder die Mod bereits existiert"
   }
 }

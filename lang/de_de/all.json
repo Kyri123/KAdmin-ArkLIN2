@@ -23,6 +23,6 @@
   "logout"            : "Ausloggen",
   "profile"           : "Profil",
   "welcome"           : "Willkommen, ",
-  "nothingFoundTitle" : "Es wurde nicht gefunden!",
+  "nothingFoundTitle" : "Es wurde nichts gefunden!",
   "nothingFoundText"  : "Die Anfrage hat kein Ergebnis eventuell existiert noch nichts."
 }

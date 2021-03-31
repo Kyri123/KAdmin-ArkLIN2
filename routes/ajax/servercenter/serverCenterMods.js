@@ -21,9 +21,6 @@ router.route('/')
         let action      = POST.action
         let server      = new serverClass(POST.server)
 
-        console.
-           log(POST)
-
         // Prüfe ob server überhaupt Existiert
         if(server.serverExsists()) {
             let serverIni   = server.getINI()
@@ -70,7 +67,7 @@ router.route('/')
             if (action === "toggleActive" && userHelper.hasPermissions(SESS.uid, "mods/toggleMod", server.server)) {
                 let activeMod   = POST.indikator === "false"
                 let modSource   = POST.modId
-                console.log(!isNaN(+modSource))
+
                 if(!isNaN(+modSource)) {
                     let currentIndex    = activeMod ? modList.indexOf(modSource) : false
                     let save
@@ -168,6 +165,7 @@ router.route('/')
             // Mods Hinzufügen
             if (action === "add" && userHelper.hasPermissions(SESS.uid, "mods/addMod", server.server)) {
                 let modIds      = POST.modId
+                let success     = false
 
                 // ModIds lesen
                 let modsToAdd    = []
@@ -186,8 +184,7 @@ router.route('/')
                         }
                     }
 
-                let success = false
-
+                // Mods schreiben
                 if(modsToAdd.length !== 0) {
                     for (const modId of modsToAdd)
                         if (!modList.includes(modId.toString())) modList.push(modId.toString())
@@ -197,9 +194,9 @@ router.route('/')
 
                 res.render('ajax/json', {
                     data: JSON.stringify({
-                        code: success ? 51 : "FAIL",
+                        code: success ? 51 : 54,
                         success: success,
-                        sendToast: true
+                        sendToast: modsToAdd.length === 0
                     })
                 })
                 return
