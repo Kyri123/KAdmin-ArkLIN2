@@ -8,7 +8,7 @@
         <div class="d-flex bg-dark p-2">
             <h5 class="m-0 mt-1 ml-1">
                 <i aria-hidden="true" class="fas pr-1" v-bind:class="listAktiveMods ? 'fa-tasks' : 'fa-hdd'"></i>
-                {{listAktiveMods ? 'Active mods' : 'Installed Mods'}}
+                {{listAktiveMods ? globalvars.lang_arr.servercenter_mods.activeMods : globalvars.lang_arr.servercenter_mods.installedMods}}
             </h5>
             <div class="btn-group btn-group-sm ml-auto">
                 <a v-if="hasPermissions(globalvars.perm, 'mods/addMod', vars.cfg)" href="javascript:void(0)" data-toggle="modal" data-target="#addmod" class="btn btn-sm btn-outline-success">
