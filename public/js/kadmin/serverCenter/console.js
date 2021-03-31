@@ -101,7 +101,9 @@ function loadActionLog() {
                         .replaceAll(`\\\\033`, "")
                         .replaceAll(`\\\\e`, "")
                         .replaceAll(`7The`, "The")
+                        .replaceAll(`....`, "")
                         .replaceAll(`-/|\\\\`, "")
+                        .replaceAll(`\\u0000`, "")
 
                      if(item.trim() !== "" && item.trim() !== ">") {
                         logitem.text = item
