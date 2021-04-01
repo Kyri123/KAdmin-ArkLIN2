@@ -50,7 +50,7 @@ module.exports = class serverClass {
                   : file
          }
 
-         this.exsists    = this.cfg !== false
+         this.exsists    = this.cfg !== false && globalUtil.safeFileExsistsSync(this.serverIniPath)
       }
    }
 

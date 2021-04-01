@@ -35,6 +35,7 @@ module.exports = {
     getStateFromServers: async () => {
         let serverLocalPath     = CONFIG.app.pathArkmanager + "/instances"
         let dirArray            = fs.readdirSync(serverLocalPath)
+        let servers             = []
         // Scanne Instancen
         dirArray.forEach((ITEM) => {
             // Erstelle Abfrage wenn es eine .cfg Datei ist
@@ -43,6 +44,7 @@ module.exports = {
                 if(!globalUtil.safeFileExsistsSync([file])) globalUtil.safeFileMkdirSync([file])
                 let name               = ITEM.replace(".cfg", "")
                 let serverData         = new serverClass(name)
+                servers.push(serverData.server)
                 let data               = serverData.getServerInfos() !== false
                    ? serverData.getServerInfos()
                    : {}
@@ -222,5 +224,7 @@ module.exports = {
                 }
             }
         })
+
+        globalUtil.safeFileSaveSync([mainDir, "public/json/serverInfos/allServers.json"], JSON.stringify(servers))
     }
 };

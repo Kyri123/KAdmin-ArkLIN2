@@ -1,0 +1,90 @@
+[
+  {
+    "name"        :"Beispiel Cluster",
+    "clusterid"   :"678be22190fad95e419d48de8aa2e2e1",
+    "sync":{
+      "admin"       : false,
+      "whitelist"   : false,
+      "blacklist"   : false,
+      "mods"        : false,
+      "konfig"      : false,
+      "jobs"        : false
+    },
+    "opt":{
+      "NoTransferFromFiltering"   :false,
+      "NoTributeDownloads"        :false,
+      "PreventDownloadSurvivors"  :false,
+      "PreventUploadSurvivors"    :false,
+      "PreventDownloadItems"      :false,
+      "PreventUploadItems"        :false,
+      "PreventDownloadDinos"      :false,
+      "PreventUploadDinos"        :false
+    },
+    "servers":[
+      {
+        "server"  : "061b290be0",
+        "type"    : 0
+      },
+      {
+        "server"  : "0d2fe35b6b",
+        "type"    : 0
+      },
+      {
+        "server"  : "1c13676ab3",
+        "type"    : 0
+      },
+      {
+        "server"  : "2a71096e8e",
+        "type"    : 0
+      },
+      {
+        "server"  : "8252bf2c15",
+        "type"    : 0
+      },
+      {
+        "server"  : "8dce886149",
+        "type"    : 0
+      },
+      {
+        "server"  : "9cb4b36289",
+        "type"    : 1
+      },
+      {
+        "server"  : "b56b117e1b",
+        "type"    : 0
+      }
+    ]
+  },
+  {
+    "name"        :"Beispiel Cluster 2",
+    "clusterid"   :"cec0ee299719996dd4be7aa9af79293a",
+    "sync":{
+      "admin"       : false,
+      "whitelist"   : false,
+      "blacklist"   : false,
+      "mods"        : false,
+      "konfig"      : false,
+      "jobs"        : false
+    },
+    "opt":{
+      "NoTransferFromFiltering"   :true,
+      "NoTributeDownloads"        :true,
+      "PreventDownloadSurvivors"  :false,
+      "PreventUploadSurvivors"    :false,
+      "PreventDownloadItems"      :false,
+      "PreventUploadItems"        :false,
+      "PreventDownloadDinos"      :true,
+      "PreventUploadDinos"        :false
+    },
+    "servers":[
+      {
+        "server"  : "5f0e4054ad",
+        "type"    : 1
+      },
+      {
+        "server"  : "5c68f48w",
+        "type"    : 0
+      }
+    ]
+  }
+]
