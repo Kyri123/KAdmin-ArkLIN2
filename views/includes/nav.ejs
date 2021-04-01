@@ -33,6 +33,17 @@
                     </li>
                 <% } %>
 
+                <% if(userHelper.hasPermissions(userID, "cluster/show")) { %>
+                    <li class="nav-item">
+                        <a href="/cluster" class="nav-link <%- page === "cluster" ? " active" : "" %>">
+                            <i class="nav-icon fas fa-random" aria-hidden="true"></i>
+                            <p>
+                                <%- lang.cluster.pagename %>
+                            </p>
+                        </a>
+                    </li>
+                <% } %>
+
                 <% if(userHelper.hasPermissions(userID, "all/is_admin")) { %>
                     <li class="nav-item">
                         <a href="/config" class="nav-link <%- page === "config" ? " active" : "" %>">

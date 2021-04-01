@@ -44,24 +44,29 @@ router.use(
    require('./pages/usersettings')
 )
 router.use(
-   '/grouppanel',
+   '/grouppanel', checkPerm('all/is_admin'),
    isLoggedIn,
    require('./pages/groupPanel')
 )
 router.use(
    '/userpanel',
-   isLoggedIn,
+   isLoggedIn, checkPerm('cluster/show'),
    require('./pages/userPanel')
 )
 router.use(
    '/servercontrolcenter',
-   isLoggedIn,
+   isLoggedIn, checkPerm('servercontrolcenter/show'),
    require('./pages/serverControlCenter')
 )
 router.use(
    '/config',
    isLoggedIn, checkPerm('all/is_admin'),
    require('./pages/config')
+)
+router.use(
+   '/cluster',
+   isLoggedIn, checkPerm('cluster/show'),
+   require('./pages/cluster')
 )
 
 // Server Center
@@ -104,17 +109,17 @@ router.use(
 )
 router.use(
    '/ajax/userpanel',
-   isLoggedIn,
+   isLoggedIn, checkPerm('userpanel/show'),
    require('./ajax/userPanel')
 )
 router.use(
    '/ajax/grouppanel',
-   isLoggedIn,
+   isLoggedIn, checkPerm('all/is_admin'),
    require('./ajax/groupPanel')
 )
 router.use(
    '/ajax/servercontrolcenter',
-   isLoggedIn,
+   isLoggedIn, checkPerm('servercontrolcenter/show'),
    require('./ajax/serverControlCenter')
 )
 router.use(
@@ -126,6 +131,11 @@ router.use(
    '/ajax/config',
    isLoggedIn, checkPerm('all/is_admin'),
    require('./ajax/config')
+)
+router.use(
+   '/ajax/cluster',
+   isLoggedIn, checkPerm('cluster/show'),
+   require('./pages/cluster')
 )
 
 // ajax - ServerCenter

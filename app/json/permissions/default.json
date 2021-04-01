@@ -17,5 +17,14 @@
     "delete_user"       : 0,
     "ban_user"          : 0
   },
+  "cluster": {
+    "show"              : 0,
+    "createCluster"     : 0,
+    "editCluster"       : 0,
+    "removeCluster"     : 0,
+    "addServers"        : 0,
+    "removeServers"     : 0,
+    "toggleSlaves"      : 0
+  },
   "server": {}
 }

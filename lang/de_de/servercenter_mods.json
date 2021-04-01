@@ -2,6 +2,11 @@
   "pagename"      : "ServerCenter",
   "activeMods"    : "Aktive Mods",
   "installedMods" : "Installierte Mods",
+  "install"       : "Installieren",
+  "uninstall"     : "Deinstallieren",
+  "activate"      : "Aktivieren",
+  "deactivate"    : "Deaktivieren",
+  "remove"        : "Entfernen",
   "addMod"        : {
     "cancel"        : "Schließen",
     "add"           : "Hinzufügen",
