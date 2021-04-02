@@ -29,6 +29,7 @@ const VUE_serverCenterHead = new Vue({
         bglogo          : "/img/backgrounds/sc.jpg",
         infoCounter     : 0,
         infoArray       : [],
+        clusterInfos    : {},
         state           : "...",
         stateClass      : "description-header text-dark",
         action          : "...",
@@ -83,6 +84,11 @@ const VUE_serverCenterHead = new Vue({
 
                 // Versionserfassung
                 VUE_serverCenterHead.version        = serverInfos.version
+
+                // Cluster erfassung
+                VUE_serverCenterHead.clusterInfos.clusterIsIn        = serverInfos.clusterIsIn
+                VUE_serverCenterHead.clusterInfos.clusterType        = serverInfos.clusterType
+                VUE_serverCenterHead.clusterInfos.clusterName        = serverInfos.clusterName
 
                 // Action Card
                 let css         = 'danger'

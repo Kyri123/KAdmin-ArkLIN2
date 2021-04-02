@@ -1,8 +1,14 @@
 <span id="serverCenterHead">
     <div class="row">
+        <div v-if="clusterInfos.clusterIsIn" class="col-12">
+            <h6 href="/cluster" class="p-2 bg-dark text-center m-0" style="width: 100%">
+                <span v-bind:class="clusterInfos.clusterType === 1 ? 'text-danger' : 'text-olive'">[{{ clusterInfos.clusterType === 1 ? "Master" : "Slave"}}]</span> {{ clusterInfos.clusterName }}
+            </h6>
+        </div>
+
         <div class="col-12 mb-3">
             <div class="card card-widget widget-user item-box m-0">
-                <div class="widget-user-header text-white p-0" :style="`background: url('${bglogo}') center right;`">
+                <div class="widget-user-header rounded-0 text-white p-0" :style="`background: url('${bglogo}') center right;`">
                     <div style="background-color: rgba(66,66,66,0.30)!important; height: 100%" class="p-3">
                         <h3 class="widget-user-username text-center text-light left"><%- servcfg.selfname %></h3>
                         <h5 class="widget-user-desc text-center text-light"><%- ip.address() %>:<%- servini.ark_QueryPort %></h5>

@@ -364,7 +364,7 @@ module.exports = class serverClass {
             let clusterType   = false
             for(const i in this.clusterFile)
                for(const server of this.clusterFile[i].servers) {
-                  if(server.name === this.server) {
+                  if(server.server === this.server) {
                      clusterIndex   = i
                      clusterType    = server.type
                   }

@@ -90,6 +90,10 @@ module.exports = {
                 data.is_installed      = globalUtil.safeFileExsistsSync([serverPath, servINI.arkserverexec !== undefined ? servINI.arkserverexec : 'ShooterGame/Binaries/Linux/ShooterGameServer'])
                 data.is_installing     = !globalUtil.safeFileExsistsSync([serverPath, servINI.arkserverexec !== undefined ? servINI.arkserverexec : 'ShooterGame/Binaries/Linux/ShooterGameServer']) && globalUtil.safeFileExsistsSync([serverPath, 'steamapps'])
                 data.selfname          = servCFG.selfname
+                data.clusterIsIn       = serverData.isServerInCluster()
+                data.clusterName       = serverData.clusterGetName()
+                data.clusterType       = serverData.clusterGetType()
+                data.clusterId         = serverData.clusterGetID()
 
                 data.icon              = globalUtil.safeFileExsistsSync([mainDir, 'public/img/maps', `${servINI.serverMap}.jpg`])
                    ? `/img/maps/${servINI.serverMap}.jpg`

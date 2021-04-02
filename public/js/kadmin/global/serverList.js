@@ -56,12 +56,16 @@ function getServerList() {
                old_state[val[0]] = stateColor
             }
 
-            server.name = val[0]
-            server.url = `/servercenter/${val[0]}/home`
-            server.class = `float-right text-sm text-${stateColor}`
-            server.selfname = `${val[1].selfname.substring(0, 22)}${val[1].selfname.length > 22 ? "..." : ""}`
-            server.playerCountIS = val[1].aplayers
-            server.playerCountMAX = val[1].players
+            server.name             = val[0]
+            server.url              = `/servercenter/${val[0]}/home`
+            server.class            = `float-right text-sm text-${stateColor}`
+            server.selfname         = `${val[1].selfname.substring(0, 22)}${val[1].selfname.length > 22 ? "..." : ""}`
+            server.playerCountIS    = val[1].aplayers
+            server.playerCountMAX   = val[1].players
+            server.icon             = val[1].icon
+            server.inCluster        = val[1].clusterIsIn
+            server.clusterName      = val[1].clusterName
+            server.clusterRoll      = +val[1].clusterType === 1 ? "Master" : "Slave"
 
             newServerList.push(server)
 

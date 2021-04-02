@@ -56,9 +56,17 @@
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                             <!-- Serverliste -->
                             <span v-for="server in serverlist">
-                                <a v-bind:href="server.url" class="dropdown-item">
-                                    <i class="fas fa-server mr-2"></i> {{ server.selfname }}
-                                    <span v-bind:class="server.class"><b>{{ server.playerCountIS }}</b>/<b>{{ server.playerCountMAX }}</b></span>
+                                <a v-bind:href="server.url" class="dropdown-item p-0">
+                                    <div class="media">
+                                        <img :src="server.icon" class="img-size-50 mr-2">
+                                        <div class="media-body">
+                                            <h3 class="dropdown-item-title pt-1">
+                                                {{ server.selfname }}
+                                                <span class="float-right text-sm text-danger p-2"><b>{{ server.playerCountIS }}</b>/<b>{{ server.playerCountMAX }}</b></span>
+                                            </h3>
+                                            <p class="text-sm"><span v-if="server.inCluster" v-bind:class="server.clusterRoll.toLowerCase() === 'slave' ? 'text-olive' : 'text-danger'">[{{ server.clusterRoll }}]</span> <b>{{ server.clusterName || globalvars.lang_arr.forservers.notInCluster }}</b></p>
+                                      </div>
+                                    </div>
                                 </a>
                                 <div class="dropdown-divider"></div>
                             </span>

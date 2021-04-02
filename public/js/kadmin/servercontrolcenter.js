@@ -52,6 +52,10 @@ function getServers() {
                     server.datas        = val[1]
                     server.deleletePerm = hasPermissions(globalvars.perm, "servercontrolcenter/delete")
                     server.editPerm     = hasPermissions(globalvars.perm, "servercontrolcenter/editServer")
+                    console.log(val[0], val[1].clusterIsIn)
+                    server.inCluster    = val[1].clusterIsIn
+                    server.clusterName  = val[1].clusterName
+                    server.clusterRoll  = +val[1].clusterType === 1 ? "Master" : "Slave"
 
                     objServers[key] = server
                 }
