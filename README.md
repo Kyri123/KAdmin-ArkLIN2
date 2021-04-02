@@ -1,30 +1,22 @@
 KAdmin-ArkLIN2 
 =============
-Webbasiertes Admin Panel für Ark-Gameserver basierend auf Arkmanager (https://github.com/arkmanager/ark-server-tools)
+Webbasiertes Admin Panel für Ark-Gameserver basierend auf [Arkmanager](https://github.com/arkmanager/ark-server-tools)
 
 Features:
 - Serververwaltung (ServerCenter)
-  - RCON
-  - Adminverwaltung
-  - Whitelist
-  - Live-Log
   - Backupverwaltung
   - Konfiguration
   - Modifikationen
-  - Simple Banners
-  - Statistiken
-  - Logs
-  - Savegames (mit mehr Informationen)
-  - Cronjobs
-- Servereverwaltung
+  - Automatische Updates
+  - Automatische Backups (funktionieren anders als von Arkmanager)
+- Serververwaltung
 - Benutzer mit Benutzergruppen
 - Clustersystem
   - mit Syncronisierung der Einstellungen, wenn gewünscht und mehr!
-- und einiges Mehr!?
 
 **Geplante Features**
 
-- Ziehe Trello https://trello.com/b/8cKrUtSV
+- Ziehe [Trello](https://trello.com/b/8cKrUtSV)
 
 Wichtig
 =============
@@ -32,9 +24,9 @@ Wichtig
 - **[Test-Tree]** benutzten auf eigene **GEFAHR**: hier werden "Stabile" aber ungetestete Builds für das nächste Update veröffentlicht
 - Derzeitiger Status: **BETA**
 - `Links`
-  - Spenden? https://www.paypal.com/cgi-bin/webscr?shell=_s-xclick&hosted_button_id=68PT9KPRABVCU&source=url
-  - Discord: https://discord.gg/ykGnw49
-  - Trello: https://trello.com/b/8cKrUtSV
+  - [Spenden?](https://www.paypal.com/cgi-bin/webscr?shell=_s-xclick&hosted_button_id=68PT9KPRABVCU&source=url)
+  - [Discord](https://discord.gg/ykGnw49)
+  - [Trello](https://trello.com/b/8cKrUtSV)
 
 Installation
 =============
@@ -43,9 +35,9 @@ Installation
    2. Installiere NodeJS (min 15.6.0)
    3. gebe den Steam user rechte auf Arkmanager Verzeichnis
 2. Log dich in den Steam Benutzer ein `su steam`
-3. Downloade den letzten Release `cd ~ && mkdir kadmin_arklin && cd kadmin_arklin && wget https://api.arklin2.kadmin-panels.de/sh/installer.sh && chmod 755 ./installer.sh && ./installer.sh master`
+3. Downloade den letzten Release `cd ~ && mkdir ~/kadmin_arklin && cd ~/kadmin_arklin && wget https://api.arklin2.kadmin-panels.de/sh/installer.sh && chmod 755 ./installer.sh && ./installer.sh master`
    1. Hierbei kann `master` zu `dev` oder `test` geändert werden je nachdem welche branch man benutzen will
-4. Erstelle die eine Datenbank (MariaDB) und lade die Tabellen aus `./forInstaller` in diese (Todo automatisiertes erstellen von Tabellen)
+4. Erstelle die eine Datenbank (MariaDB) und lade die Tabellen aus `./forInstaller` in diese (ToDo: automatisiertes erstellen von Tabellen)
 5. Konfiguriere:
    - `app/config/app.json`
    - `app/config/mysql.json`
@@ -54,14 +46,15 @@ Installation
 Update
 =============
 - Funktioniert automatisch
+  - oder im Panel suchen und starten
 - Manuell: `cd ~ && wget https://api.arklin2.kadmin-panels.de/sh/updater.sh && chmod 755 ./updater.sh && ./updater.sh master`
   - Hierbei kann `master` zu `dev` oder `test` geändert werden je nachdem welche branch man benutzen will
 
 Autostart einrichten
 =============
-1. Logge dich in den benutzer `kadmin` ein `su kadmin`
+1. Logge dich in den benutzer `steam` ein `su steam`
 2. Öffne den Crontab `crontab -e`
-3. füge folgende Zeile hinzu: `@reboot sh chmod 755 ~/starter.sh && ~/starter.sh` **(Hierbei kann der Pfad `~/starter.sh` abweichen!)**
+3. füge folgende Zeile hinzu: `@reboot sh chmod 755 ~/kadmin_arklin/starter.sh && ~/kadmin_arklin/starter.sh` **(Hierbei kann der Pfad `~/starter.sh` abweichen!)**
 
 Standart Login
 =============
@@ -75,7 +68,8 @@ app.json
 | `servRoot`            | Pfad wo die Server liegen sollen |
 | `logRoot`             | Pfad wo die Logs liegen sollen |
 | `pathBackup`          | Pfad wo die Backups liegen sollen |
-| `lang`                | **wird nicht mehr verwendet** |
+| `pathSteam`           | Pfad wo die SteamCMD liegt |
+| `pathArkmanager`      | Pfad wo die Arkmanager liegt (normalerweise `/etc/arkmanager`) |
 | `useDebug`            | Debug modus für die Konsole (**true** = an / **false** = aus) |
 
 updater.json
@@ -97,9 +91,8 @@ main.json
 | `interval > doServerBackgrounder`     | Interval wo Server Hintergrund aktionen ausgeführt werden (sowas wie Backups) |
 | `interval > backgroundUpdater`        | Interval wo das Panel auf neue Updates prüft |
 | `interval > doJob`                    | WIP (für Cronjobs) |
-| `interval > getVersionList`           | Interval wo Die Versionsliste aktualisiert wird |
-| `interval > getChangelogList`         | Interval wo der Changelog vom Server gelesen wird |
-| `interval > getSpigotCraftbukkitList` | Interval wo Die Versionsliste **für Spigot & Craftbukkit** aktualisiert wird |
+| `interval > getDataFromSteamAPI`      | Interval wo die Infomationen von der SteamAPI geholt werden sollen |
+| `interval > doClusterStuff`           | Interval wo die Einstellungen von den Servern überpüft werden sollen (sowie Sync) |
 
 # Sprache Installieren
 
@@ -110,30 +103,27 @@ main.json
 # Benötigt
 - `Betriebssystem`
   - Linux | Getestet auf:
-    - Debain 9
     - Ubuntu Server 20
   - Administrator Rechte bzw genügend Rechte, um Daten in den jeweiligen Ordner zu lesen, & zu Schreiben sowie Auslastung lesen zu dürfen
 - `Node.JS` 
-  - Version >= 15.6.0
-    - Getestet auf:
-    - 15.8.0, 15.6.0
-  - NVM (empfohlen für Versionswechsel) > https://github.com/nvm-sh/nvm
+  - [Version >= 15.0.0](https://nodejs.org/en/download/package-manager/)
+  - [NVM (empfohlen für Versionswechsel)](https://github.com/nvm-sh/nvm)
 - `MariaDB` 
   - Server   
   
 # Andere Projekte:
-| Projekt                     | Status            | URL | 
-| :---                        | :---              | :--- |
-| KAdmin-ArkLIN               | Release           | https://github.com/Kyri123/KAdmin-ArkLIN      |
-| KAdmin-Minecraft            | Beta              | https://github.com/Kyri123/KAdmin-Minecraft   |
-| KAdmin-ArkWIN               | Alpha (gestoppt)  | https://github.com/Kyri123/KAdmin-ArkWIN      |
-| Kleines Minecraft Plugin    | Beta              | https://github.com/Kyri123/KPlugins-1.12.2    |
+| Projekt                                                                     | Status            |       
+| :---                                                                        | :---              |         
+| [KAdmin-ArkLIN](https://github.com/Kyri123/KAdmin-ArkLIN)                   | Release           |    
+| [KAdmin-Minecraft](https://github.com/Kyri123/KAdmin-Minecraft)             | Beta              |   
+| [KAdmin-ArkWIN](https://github.com/Kyri123/KAdmin-ArkWIN)                   | Alpha (gestoppt)  |       
+| [Kleines Minecraft Plugin](https://github.com/Kyri123/KPlugins-1.12.2)      | Beta              |  
 
 # Danke
-- Danke an **JetBrains** für die bereitstellung der IDE's für die Entwicklung dieser Open-Source-Software
-  - Link: https://www.jetbrains.com
+- Danke an [**JetBrains**](https://www.jetbrains.com) für die bereitstellung der IDE's für die Entwicklung dieser Open-Source-Software
 - Sowie allen Testern und jeden gemeldeten BUG!
 
 # Links
- 
-- Frontend by **AdminLTE 3.1** (https://github.com/ColorlibHQ/AdminLTE)
+
+- [Frontend by **AdminLTE 3.1**](https://github.com/ColorlibHQ/AdminLTE)
+- [Arkmanager](https://github.com/arkmanager/ark-server-tools)
