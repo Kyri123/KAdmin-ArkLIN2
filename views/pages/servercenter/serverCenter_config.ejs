@@ -152,46 +152,80 @@
                                 </td>
                             </tr>
 
-                            <!-- selfname -->
-                            <tr v-for="(value, key) in ArkManager" v-if="typeof value !== 'object' && !key.includes('arkflag_') && key !== 'arkopt_ActiveEvent'">
+                            <!-- Neue Optionen -->
+                            <tr>
+                                <td class="p-2"><input type="text" class="form-control form-control-sm" id="addOption"></td>
+                                <td class="p-2">
+                                    <div class="input-group input-group-sm m-0">
+                                        <input type="text" class="form-control rounded-0" id="addValue">
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-info" id="sendOption" @click="addOption()">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
 
+                            <!-- selfname -->
+                            <tr v-for="(value, key) in ArkManager" v-if="!key.includes('arkflag_') && key !== 'arkopt_ActiveEvent'">
 
                                 <!-- Text -->
                                 <td class="p-2">{{ globalvars.lang_arr['servercenter_config'].arkManager[key] || key }}</td>
 
                                 <!-- default Maps -->
                                 <td v-if="key === 'serverMap'" class="p-2" colspan="2" style="max-width: 400px!important;">
-                                    <div class="input-group mb-0">
+                                    <div class="input-group input-group-sm mb-0">
                                         <input type="text" class="form-control form-control-sm" :name="`cfgsend[${key}]`" :value="value">
-                                        <div class="input-group-append">
-                                            <select class="form-control form-control-sm" @change="handleMapChange">
-                                                <option v-for="(item, name) in maps" :id="name" v-bind:value="name" :data-mod="item.mod" :data-modid="item.modid" :selected="value === item.name">
-                                                    {{ item.name }}
-                                                </option>
-                                            </select>
-                                        </div>
+                                        <select class="form-control form-control-sm" @change="handleMapChange">
+                                            <option v-for="(item, name) in maps" :id="name" v-bind:value="name" :data-mod="item.mod" :data-modid="item.modid" :selected="value === item.name">
+                                                {{ item.name }}
+                                            </option>
+                                        </select>
+                                        <span class="input-group-append">
+                                            <button type="button" v-bind:class="!(ArkManagerReadOnly.includes(key) || dontRemove.includes(key)) ? '' : 'disabled'" class="btn btn-danger" @click="(ArkManagerReadOnly.includes(key) || dontRemove.includes(key)) ? undefined : removeOption(key)">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </span>
                                     </div>
                                 </td>
 
                                 <!-- default Bool -->
                                 <td v-else-if="value.toString().toLowerCase() === 'true' || value.toString().toLowerCase() === 'false' || typeof value === 'boolean'" class="p-2" colspan="2" style="max-width: 400px!important;">
-                                    <select class="form-control form-control-sm" :name="`cfgsend[${key}]`">
-                                        <option value="True" :selected="value || value.toString().toLowerCase() === 'true'">{{ globalvars.lang_arr['servercenter_config'].true }}</option>
-                                        <option value="False" :selected="!value || value.toString().toLowerCase() === 'false'">{{ globalvars.lang_arr['servercenter_config'].false }}</option>
-                                    </select>
+                                    <div class="input-group input-group-sm mb-0">
+                                        <select class="form-control form-control-sm" :name="`cfgsend[${key}]`">
+                                            <option value="True" :selected="value || value.toString().toLowerCase() === 'true'">{{ globalvars.lang_arr['servercenter_config'].true }}</option>
+                                            <option value="False" :selected="!value || value.toString().toLowerCase() === 'false'">{{ globalvars.lang_arr['servercenter_config'].false }}</option>
+                                        </select>
+                                        <span class="input-group-append">
+                                            <button type="button" v-bind:class="!(ArkManagerReadOnly.includes(key) || dontRemove.includes(key)) ? '' : 'disabled'" class="btn btn-danger" @click="(ArkManagerReadOnly.includes(key) || dontRemove.includes(key)) ? undefined : removeOption(key)">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </span>
+                                    </div>
                                 </td>
 
                                 <!-- default Int -->
                                 <td v-else-if="typeof value === 'number' || (!isNaN(value) && value !== '')" class="p-2" colspan="2" style="max-width: 400px!important;">
-                                    <div class="input-group-sm mb-0">
-                                        <input type="number" class="form-control form-control-sm" :name="`cfgsend[${key}]`" :value="value">
+                                    <div class="input-group input-group-sm mb-0">
+                                        <input type="number" class="input-group form-control form-control-sm" :name="`cfgsend[${key}]`" :value="value">
+                                        <span class="input-group-append">
+                                            <button type="button" v-bind:class="!(ArkManagerReadOnly.includes(key) || dontRemove.includes(key)) ? '' : 'disabled'" class="btn btn-danger" @click="(ArkManagerReadOnly.includes(key) || dontRemove.includes(key)) ? undefined : removeOption(key)">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </span>
                                     </div>
                                 </td>
 
                                 <!-- default Text -->
                                 <td v-else class="p-2" colspan="2" style="max-width: 400px!important;">
-                                    <div class="input-group-sm mb-0">
+                                    <div class="input-group input-group-sm mb-0">
                                         <input type="text" class="form-control form-control-sm" :name="`cfgsend[${key}]`" :value="value" :readonly="ArkManagerReadOnly.includes(key)">
+                                        <span class="input-group-append">
+                                            <button type="button" v-bind:class="!(ArkManagerReadOnly.includes(key) || dontRemove.includes(key)) ? '' : 'disabled'" class="btn btn-danger" @click="(ArkManagerReadOnly.includes(key) || dontRemove.includes(key)) ? undefined : removeOption(key)">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </span>
                                     </div>
                                 </td>
                             </tr>
