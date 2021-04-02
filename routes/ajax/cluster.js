@@ -114,6 +114,15 @@ router.route('/')
          if(clusterFile[clusterIndex]) {
             if(clusterFile[clusterIndex].servers[serverIndex]) {
                // Suche nach bestehenden Master
+               let serverData   = new serverClass(clusterFile[clusterIndex].servers[serverIndex].server)
+               if(serverData.serverExsists()) {
+                  serverData.removeFromIni(`arkopt_clusterid`)
+                  serverData.removeFromIni(`arkopt_ClusterDirOverride`)
+                  for (const option of Object.entries(clusterFile[clusterIndex].opt)) {
+                     serverData.removeFromIni(`ark_${option[0]}`)
+                  }
+               }
+
                clusterFile[clusterIndex].servers.splice(serverIndex, 1)
 
                success = globalUtil.safeFileSaveSync(clusterFilePath, JSON.stringify(clusterFile))
@@ -160,6 +169,16 @@ router.route('/')
          let success       = false
 
          if(clusterFile[clusterIndex]) {
+            for(const server of clusterFile[clusterIndex].servers) {
+               let serverData = new serverClass(server.server)
+               if (serverData.serverExsists()) {
+                  serverData.removeFromIni(`arkopt_clusterid`)
+                  serverData.removeFromIni(`arkopt_ClusterDirOverride`)
+                  for (const option of Object.entries(clusterFile[clusterIndex].opt)) {
+                     serverData.removeFromIni(`ark_${option[0]}`)
+                  }
+               }
+            }
             clusterFile.splice(clusterIndex, 1)
             success = globalUtil.safeFileSaveSync(clusterFilePath, JSON.stringify(clusterFile))
          }

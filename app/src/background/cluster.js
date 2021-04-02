@@ -17,6 +17,8 @@ module.exports = {
       let clusterFile   = globalUtil.safeFileReadSync([mainDir, "public/json/cluster/clusters.json"], true)
 
       for(const cluster of clusterFile) {
+         module.exports.setClusterOptions(cluster)
+
          if(
             cluster.sync.GameUserSettings
             || cluster.sync.Game
@@ -32,7 +34,7 @@ module.exports = {
     * Synct Inis
     * @param cluster
     */
-   syncInis: (cluster) => {
+   syncInis: async function(cluster) {
       const inis  = [
          "GameUserSettings",
          "Game",
@@ -46,7 +48,7 @@ module.exports = {
                if(server.type === 1)
                   master = server.server
 
-            let masterClass   = new serverClass(master)
+            let masterClass   = new serverClass(master.toString())
             if(masterClass.serverExsists()) {
                let masterIni = masterClass.getGameINI(`${ini}.ini`, true)
                for (const server of cluster.servers) {
@@ -65,7 +67,30 @@ module.exports = {
     * Synct Mods
     * @param cluster
     */
-   syncMods: (cluster) => {
+   setClusterOptions: async function(cluster) {
+      // Suche nach bestehenden Master
+      for (const server of cluster.servers) {
+         let serverData = new serverClass(server.server)
+         if (serverData.serverExsists()) {
+            serverData.writeIni(`arkopt_clusterid`, cluster.clusterid)
+            serverData.writeIni(`arkopt_ClusterDirOverride`, pathMod.join(CONFIG.app.servRoot, "cluster"))
+            for (const option of Object.entries(cluster.opt)) {
+               if(option[1]) {
+                  serverData.writeIni(`ark_${option[0]}`, "True")
+               }
+               else {
+                  serverData.removeFromIni(`ark_${option[0]}`)
+               }
+            }
+         }
+      }
+   },
+
+   /**
+    * Synct Mods
+    * @param cluster
+    */
+   syncMods: async function(cluster) {
       // Suche nach bestehenden Master
       let master = false
       for(const server of cluster.servers)

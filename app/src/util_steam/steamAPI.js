@@ -19,15 +19,20 @@ module.exports = {
 
    getModList: (mods) => {
       if (Array.isArray(mods)) {
+
          // Post Infos
          let post_data_obj = {
-            key: CONFIG.app.steamAPIKey,
-            itemcount: mods.length
+            key: CONFIG.app.steamAPIKey
          }
 
-         mods.forEach((val, key) => {
-            post_data_obj[`publishedfileids[${key}]`] = val
+         let i = 0
+         mods.forEach((val) => {
+            if(val !== null && !isNaN(+val)) {
+               post_data_obj[`publishedfileids[${i}]`] = val
+               i++
+            }
          })
+         post_data_obj.itemcount = i
 
          let post_data = querystring.stringify(post_data_obj)
 
