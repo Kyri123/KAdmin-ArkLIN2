@@ -1,0 +1,28 @@
+{
+  "nav" : {
+    "userAndGroups"   : "Benutzer und Gruppen",
+    "createServer"    : "Server Erstellen"
+  },
+  "panelControler"  : {
+    "isUpdate"        : "UPDATE",
+    "updateNow"       : "Update starten",
+    "log"             : "Aktuellen Log anzeigen",
+    "config"          : "Panel Konfiguration",
+    "checkUpdate"     : "Prüfe auf Update",
+    "shutdown"        : "Panel Ausschalten / Neustarten "
+  },
+  "cpu"               : "CPU Traffic",
+  "ram"               : "Arbeitsspeicher",
+  "mem"               : "Festplatten Speicher",
+  "server"            : "Server",
+  "sc"                : "Server Center",
+  "createServer"      : "Server Erstellen",
+  "select_default"    : "Aktion wählen",
+  "loading"           : "Wird geladen bitte warten...",
+  "failed"            : "Aktion fehlgeschlagen...",
+  "logout"            : "Ausloggen",
+  "profile"           : "Profil",
+  "welcome"           : "Willkommen, ",
+  "nothingFoundTitle" : "Es wurde nichts gefunden!",
+  "nothingFoundText"  : "Die Anfrage hat kein Ergebnis eventuell existiert noch nichts."
+}

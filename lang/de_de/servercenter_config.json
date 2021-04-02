@@ -1,0 +1,27 @@
+{
+  "pagename"      : "ServerCenter",
+  "save"          : "Speichern",
+  "true"          : "An",
+  "false"         : "Aus",
+  "cfg": {
+    "path"                  : "Server Pfad",
+    "pathBackup"            : "Backup Pfad",
+    "pathLogs"              : "Logs Pfad",
+    "autoBackup"            : "Automatisches Backup",
+    "autoBackupInterval"    : "Automatisches Backup Intervall",
+    "autoUpdate"            : "Automatisches Update",
+    "autoUpdateInterval"    : "Automatisches Update Intervall",
+    "selfname"              : "Serverbezeichnung (im Panel)",
+    "autoBackupMaxCount"    : "Maximale Anzahl an Backups (0 = unendlich; die ältesten backups werden gelöscht)",
+    "autoBackupMaxDirSize"  : "Maximale Größe des Backup Ordners (0 = unendlich; die ältesten backups werden gelöscht)"
+  },
+  "ini": {
+    "ark_Port"              : "Spiel Port",
+    "ark_QueryPort"         : "Query Port (auch der Port zum Beitreten des Servers",
+    "ark_RCONPort"          : "RCON Port"
+  },
+  "arkManager": {},
+  "events": {
+    "none"                  : "Kein Event"
+  }
+}

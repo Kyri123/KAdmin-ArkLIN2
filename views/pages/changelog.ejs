@@ -1,0 +1,66 @@
+<%- include('../includes/head'); -%>
+<%- include('../includes/top') -%>
+<%- include('../includes/nav') -%>
+<%- include('../includes/content') -%>
+
+<div class="row" id="changelogContainer">
+    <div class="col-12 rounded-0 border-0 row m-0 p-0" style="margin-bottom: 5px;margin-right: 0px;background-color: transparent; box-shadow: 0 0 1px rgba(0,0,0,0), 0 1px 3px rgba(0,0,0,0);">
+        <div class="col-md-4 p-md-0 pt-md-0 pb-md-2 p-0 pt-0">
+            <div style="background-color: #2ecc71" class="p-2 pl-3 pr-3 text-light border">
+                Neuerungen
+            </div>
+        </div>
+        <div class="col-md-4 pt-md-0 p-md-2 p-0 pt-0" style="padding-top: 0px!important;">
+            <div style="background-color: #3498db" class="p-2 pl-3 pr-3 text-light border">
+                Änderungen
+            </div>
+        </div>
+        <div class="col-md-4 p-md-0 pt-md-0 pb-md-2 p-0 pb-2 pt-0">
+            <div style="background-color: #9b59b6" class="p-2 pl-3 pr-3 text-light border">
+                Bugfixes
+            </div>
+        </div>
+    </div>
+
+    <div class="card col-12 p-0" v-for="(item, index) in changelogs">
+        <div class="card-header pt-0 pb-0 pr-3 bg-dark card-dark">
+            <h3 v-bind:class="item.datestring !== '--.--.----' ? 'text-success' : ''" class="card-title pt-2">
+                <i class="fas fa-book pr-2"></i>
+                Version {{ item.version }}
+                <span v-if="item.datestring !== '--.--.----'" class="text-sm"> - {{ item.datestring }}</span>
+            </h3>
+
+            <div class="card-tools">
+                <ul class="nav ml-auto m-0" style="margin: 0 0 0 0!important;">
+                    <li v-if="item.datestring !== '--.--.----'" class="nav-item">
+                        <a target="_blank" class="btn btn-dark rounded-0" v-bind:href="`https://github.com/Kyri123/KAdmin-ArkLIN2/releases/tag/${item.version}`">
+                            <i class="nav-icon fab fa-github" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                    <li v-if="item.datestring !== '--.--.----'" class="nav-item">
+                        <a download class="btn btn-dark rounded-0" v-bind:href="`https://github.com/Kyri123/KAdmin-ArkLIN2/archive/${item.version}`">
+                            <i class="nav-icon fa fa-download" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-dark rounded-0" v-on:click='item.isOpen = !item.isOpen'>
+                            <i class="fas fa-chevron-down" v-bind:class="!item.isOpen ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card-content p-0" v-bind:id="item.version" v-show="item.isOpen">
+            <div class="card-body p-0" v-html="item.new"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentVersion  = '<%- panelVersion %>'
+</script>
+<script src="/js/kadmin/home.js"></script>
+
+
+<%- include('../includes/foother'); -%>

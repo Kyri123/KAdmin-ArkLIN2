@@ -1,0 +1,315 @@
+<span id="serverCenterHead">
+    <div class="row">
+        <div v-if="clusterInfos.clusterIsIn" class="col-12">
+            <h6 href="/cluster" class="p-2 bg-dark text-center m-0" style="width: 100%">
+                <span v-bind:class="clusterInfos.clusterType === 1 ? 'text-danger' : 'text-olive'">[{{ clusterInfos.clusterType === 1 ? "Master" : "Slave"}}]</span> {{ clusterInfos.clusterName }}
+            </h6>
+        </div>
+
+        <div class="col-12 mb-3">
+            <div class="card card-widget widget-user item-box m-0">
+                <div class="widget-user-header rounded-0 text-white p-0" :style="`background: url('${bglogo}') center right;`">
+                    <div style="background-color: rgba(66,66,66,0.30)!important; height: 100%" class="p-3">
+                        <h3 class="widget-user-username text-center text-light left"><%- servcfg.selfname %></h3>
+                        <h5 class="widget-user-desc text-center text-light"><%- ip.address() %>:<%- servini.ark_QueryPort %></h5>
+                        <div class="d-none" id="secretInfo"><%- ip.address() %>:<%- servini.ark_QueryPort %></div>
+                    </div>
+                </div>
+                <div class="widget-user-image" style="z-index: 1000">
+                    <img v-bind:class="logoBorder" :src="logo" style="border-radius: 0rem !important;border-top-width: 3px!important;height: 100px;width: 100px;background-color: #001f3f">
+                </div>
+                <div class="d-flex bd-highlight">
+                    <div class="p-0 flex-fill bd-highlight">
+                        <button style="width: 100%" class="rounded-0 btn btn-dark" onclick="copyToClipboard('info')" id="btnCopy"><i class="fas fa-copy" aria-hidden="true"></i></button>
+                    </div>
+
+                    <% if(userHelper.hasPermissions(user.id, "showalerts", serverName)) { %>
+                        <div class="p-0 flex-fill bd-highlight">
+                            <a style="width: 100%" data-toggle="modal" data-target="#alert" href="#" class="rounded-0 text-white btn btn-info">
+                                <i class="fa fa-info" aria-hidden="true"></i>
+                                <span class="pl-1 text-bold">{{ infoCounter }}</span>
+                            </a>
+                        </div>
+                    <% } else { %>
+                        <div class="p-0 flex-fill bd-highlight">
+                            <a style="width: 100%" href="#" class="rounded-0 text-white btn btn-dark">&nbsp;</a>
+                        </div>
+                    <% } %>
+                </div>
+                <div class="card-footer p-0">
+                    <div class="row">
+                        <div class="col-12 col-md-3 pr-md-0">
+                            <div class="info-box mb-0 p-0 rounded-0" style="height: 100%;">
+                                <div class="info-box-content pt-2 pl-3">
+                                    <span class="description-text"><%- lang["servercenter_any"].state %></span>
+                                    <h6 v-bind:class="stateClass" style="font-weight: bold!important;">{{ state }}</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3 p-md-0">
+                            <div class="info-box mb-0 p-0 rounded-0" style="height: 100%;">
+                                <div class="info-box-content pt-2 pl-3">
+                                    <span class="description-text"><%- lang["servercenter_any"].player %></span>
+                                    <h6 class="description-header" v-html="player"></h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3 p-md-0">
+                            <div class="info-box mb-0 p-0 rounded-0" style="height: 100%;">
+                                <div class="info-box-content pt-2 pl-3">
+                                    <span class="description-text"><%- lang["servercenter_any"].action %></span>
+                                    <h6 class="description-header text-success" v-bind:class="actionClass" v-html="action"></h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3 pl-md-0">
+                            <div class="info-box mb-0 p-0 rounded-0" style="height: 100%;">
+                                <div class="info-box-content pt-2 pl-3">
+                                    <span class="description-text">Version</span>
+                                    <h6 class="description-header" style="font-weight: bold!important;" v-html="version"></h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer p-0">
+                    <div class="row">
+                        <div class="col-12 col-md-3 pr-md-0">
+                            <div class="info-box mb-0 p-0 rounded-0 pb-2" style="height: 100%;">
+                                <div class="info-box-content pt-2 pl-3">
+                                    <span class="info-box-text">CPU</span>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-danger" :style="`width: ${cpuUsage}%`"></div>
+                                    </div>
+                                    <span id="mem" class="info-box-number text-sm">
+                                        {{ `${cpuUsage}% / 100%` }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-3 p-md-0">
+                            <div class="info-box mb-0 p-0 rounded-0 pb-2" style="height: 100%;">
+                                <div class="info-box-content pt-2 pl-3">
+                                    <span class="info-box-text">{{ globalvars.lang_arr.servercenter_any.mem }}</span>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-danger" :style="max === 0 ? 'width: 0%' : `width: ${Math.round(memory / maxmemory * 100 * 100) / 100}%`"></div>
+                                    </div>
+                                    <span id="mem" class="info-box-number text-sm">
+                                        {{ `${memory.convertBytes()} / ${maxmemory.convertBytes()}` }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-3 p-md-0">
+                            <div class="info-box mb-0 p-0 rounded-0 pb-2" style="height: 100%;">
+                                <div class="info-box-content pt-2 pl-3">
+                                    <span class="info-box-text">{{ globalvars.lang_arr.servercenter_any.free }}</span>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-danger" :style="max === 0 ? 'width: 0%' : `width: ${Math.round(maxis / max * 100 * 100) / 100}%`"></div>
+                                    </div>
+                                    <span id="mem" class="info-box-number text-sm">
+                                        {{ max === 0 ? globalvars.lang_arr.servercenter_any.inv : `${maxis.convertBytes()} / ${max.convertBytes()}` }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-3 pl-md-0">
+                            <div class="info-box mb-0 p-0 rounded-0 pb-2" style="height: 100%;">
+                                <div class="info-box-content pt-2 pl-3">
+                                    <span class="info-box-text">{{ globalvars.lang_arr.servercenter_any.max }}</span>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-danger" :style="maxfiles === 0 ? 'width: 0%' : `width: ${Math.round(maxfilesis / maxfiles * 100 * 100) / 100}%`"></div>
+                                    </div>
+                                    <span id="mem" class="info-box-number text-sm">
+                                        {{ maxfiles === 0 ? globalvars.lang_arr.servercenter_any.inv : `${maxfilesis} / ${maxfiles}` }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer p-0">
+                    <nav class="navbar navbar-expand-lg navbar-dark p-0">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHead" aria-controls="navbarHead" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse navbar-secondary" id="navbarHead">
+                            <ul class="nav navbar-nav mr-auto" id="pills-tab">
+
+                                <li class="nav-item">
+                                    <a href="/servercenter/<%- serverName %>/home" class="nav-link <%- page === "servercenter_home" ? "active" : "" %> btn-dark p-3" <%- page === "servercenter_home" ? "" : `onmouseenter="$('#home').toggleClass('d-lg-none', false)" onmouseleave="$('#home').toggleClass('d-lg-none', true)"` %>>
+                                        <i class="nav-icon fas fa-home pr-1" aria-hidden="true"></i> <span id="home" class="<%- page === "servercenter_home" ? "" : "d-lg-none" %>"><%- lang["servercenter_any"].nav.home %></span>
+                                    </a>
+                                </li>
+
+                                <% if(userHelper.hasPermissions(user.id, "config/show", serverName)) { %>
+                                    <li class="nav-item">
+                                        <a href="/servercenter/<%- serverName %>/config" class="nav-link <%- page === "servercenter_config" ? "active" : "" %> btn-dark p-3" <%- page === "servercenter_config" ? "" : `onmouseenter="$('#config').toggleClass('d-lg-none', false)" onmouseleave="$('#config').toggleClass('d-lg-none', true)"` %>>
+                                            <i class="nav-icon fas fa-edit pr-1" aria-hidden="true"></i> <span id="config" class="<%- page === "servercenter_config" ? "" : "d-lg-none" %>"><%- lang["servercenter_any"].nav.config %></span>
+                                        </a>
+                                    </li>
+                                <% } %>
+
+                                <% if(userHelper.hasPermissions(user.id, "mods/show", serverName)) { %>
+                                    <li class="nav-item">
+                                        <a href="/servercenter/<%- serverName %>/mods" class="nav-link <%- page === "servercenter_mods" ? "active" : "" %> btn-dark p-3" <%- page === "servercenter_config" ? "" : `onmouseenter="$('#mods').toggleClass('d-lg-none', false)" onmouseleave="$('#mods').toggleClass('d-lg-none', true)"` %>>
+                                            <i class="nav-icon fas fa-cogs pr-1" aria-hidden="true"></i> <span id="mods" class="<%- page === "servercenter_mods" ? "" : "d-lg-none" %>"><%- lang["servercenter_any"].nav.mods %></span>
+                                        </a>
+                                    </li>
+                                <% } %>
+
+                                <% if(userHelper.hasPermissions(user.id, "backups/show", serverName)) { %>
+                                    <li class="nav-item">
+                                        <a href="/servercenter/<%- serverName %>/backups" class="nav-link <%- page === "servercenter_backups" ? "active" : "" %> btn-dark p-3" <%- page === "servercenter_backups" ? "" : `onmouseenter="$('#backups').toggleClass('d-lg-none', false)" onmouseleave="$('#backups').toggleClass('d-lg-none', true)"` %>>
+                                            <i class="nav-icon fas fa-hdd pr-1" aria-hidden="true"></i> <span id="backups" class="<%- page === "servercenter_backups" ? "" : "d-lg-none" %>"><%- lang["servercenter_any"].nav.backups %></span>
+                                        </a>
+                                    </li>
+                                <% } %>
+
+                                <% if(userHelper.hasPermissions(user.id, "filebrowser/show", serverName)) { %>
+                                    <li class="nav-item d-none d-md-block">
+                                        <a href="/servercenter/<%- serverName %>/filebrowser" class="nav-link <%- page === "servercenter_filebrowser" ? "active" : "" %> btn-dark p-3" <%- page === "servercenter_filebrowser" ? "" : `onmouseenter="$('#filebrowser').toggleClass('d-lg-none', false)" onmouseleave="$('#filebrowser').toggleClass('d-lg-none', true)"` %>>
+                                            <i class="nav-icon fas fa-folder-open pr-1" aria-hidden="true"></i> <span id="filebrowser" class="<%- page === "servercenter_filebrowser" ? "" : "d-lg-none" %>"><%- lang["servercenter_any"].nav.filebrowser %></span>
+                                        </a>
+                                    </li>
+                                <% } %>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Meldungen -->
+    <div id="all_resp"><%- response %></div>
+    <% if(userHelper.hasPermissions(user.id, "actions", serverName)) { %>
+    <!-- MODAL AKTION -->
+        <div class="modal" id="action" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
+            <form id="action_form" class="modal-dialog modal-xl" role="document" style="max-width: 700px" method="POST">
+                <div class="modal-content border-0">
+                    <div class="modal-header bg-dark text-white">
+                        <h5 class="modal-title"><%- lang["servercenter_any"].actionsTitle %></h5>
+                    </div>
+                    <div class="modal-body p-0">
+                        <table class="table table-striped m-0">
+                            <tr>
+                                <td colspan="2">
+                                    <select name="action" id="action_sel" class="form-control">
+                                        <option><%- lang.all.select_default %></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr v-for="item in actionParam">
+                                <td class="p-1" :colspan="item.type === 0 ? '2' : '1'">
+                                    <div class="icheck-primary m-0 pl-2 col-12" v-if="item.type === 0">
+                                        <input type="checkbox" name="para[]" :value="item.value" :id="item.id">
+                                        <label :for="item.id">
+                                            {{ item.text }}
+                                        </label>
+                                    </div>
+                                    <div class="icheck-primary m-0 pl-2 col-12" v-else>
+                                        <b>{{ item.text }}</b>
+                                    </div>
+                                </td>
+                                <td class="p-2 text-sm" v-if="item.type === 1">
+                                    <div class="input-group-sm mb-0">
+                                        <input type="text" :name="`para[${item.value}]`" class="form-control form-control-sm" value="">
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="actions" value="sendcommand">
+                        <input type="hidden" name="cfg" value="<%- serverName %>">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="VUE_serverCenterHead.actionParam = {}"><%- lang["servercenter_any"].actionsClose %></button>
+                        <button type="submit" class="btn btn-primary" id="sendaction"><%- lang["servercenter_any"].actionsSend %></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    <% } %>
+
+    <!-- MODAL Players -->
+    <div class="modal" id="playerlist_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-xl" style="max-width: 700px">
+            <div class="modal-content border-0">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title"><%- lang["servercenter_any"].playermodal.title %></h5>
+                </div>
+                <div class="modal-body p-0">
+                    <span v-html="playerAlert"></span>
+                    <table class="table m-0">
+                        <tbody>
+                            <!-- Spielerliste -->
+                            <tr v-for="item in playerArray">
+                                <td class="p-0">
+                                    <div class="media">
+                                        <img :src="item.img" class="mr-3" style="height: 75px">
+                                        <div class="media-body">
+                                            <h3 class="dropdown-item-title text-bold pt-2">
+                                                <i class="fas fa-clock"></i> {{ secondsTimeSpanToHM(Math.round(item.time)) }} | {{ item.name }}
+                                                <a target="_blank" :href="item.url" class="float-right text-sm btn btn-sm btn-outline-info mr-2"><i class="fa fa-link" aria-hidden="true"></i></a>
+                                                <span v-if="item.canSendCommands">
+                                                    <button v-on:click="playeraction(item.id, item.name, 'ban')" class="float-right text-sm btn btn-sm btn-outline-danger mr-1"><i class="fas fa-lock"></i></button>
+                                                    <button v-on:click="playeraction(item.id, item.name, 'kick')" class="float-right text-sm btn btn-sm btn-outline-danger mr-1"><i class="fa fa-times"></i></button>
+                                                </span>
+                                            </h3>
+                                            <p class="text-sm m-0"><b>ADMIN:</b> <span v-bind:class="item.isOPColor">{{ item.isOPText }}</span>[TODO]</p>
+                                            <p class="text-sm m-0"><b>ID:</b> {{ item.id }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><%- lang["servercenter_any"].alertClose %></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <% if(userHelper.hasPermissions(user.id, "showalerts", serverName)) { %>
+        <!-- MODAL ALERTS -->
+        <div class="modal" id="alert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-xl" style="max-width: 700px">
+                <div class="modal-content border-0">
+                    <div class="modal-header bg-info text-white">
+                        <h5 class="modal-title"><%- lang["servercenter_any"].title_alert %></h5>
+                    </div>
+                    <div class="modal-body p-0" id="AlertBody">
+                        <span v-for="info in infoArray">
+                            <span v-html="info.alert"></span>
+                        </span>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="actions" value="sendcommand">
+                        <input type="hidden" name="cfg" value="<%- serverName %>">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%- lang["servercenter_any"].alertClose %></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %>
+</span>
+
+<script>
+    // Vars die zur JS übergeben werden
+    // Allgemeine Vars
+    let varser = {};
+    varser.lang_arr = <%- JSON.stringify(lang) %>;
+    varser.data = <%- JSON.stringify(servinfos) %>;
+    varser.cfg = '<%- serverName %>';
+    varser.installed = <%- servinfos.is_installed ? 1 : 2 %>;
+</script>
+
+<script src="/js/kadmin/serverCenter/main.js" type="application/javascript"></script>

@@ -1,0 +1,11 @@
+{
+  "welcome"   : "Willkommen bei KAdmin-ArkLIN2!",
+  "pagename"  : "Willkommen bei KAdmin-ArkLIN2!",
+  "toreg"     : "Account Erstellen",
+  "input": {
+    "remember"      : "Eingeloggt bleiben",
+    "password"      : "Passwort",
+    "username"      : "Benutzername / E-Mail",
+    "btn_login"     : "Einloggen"
+  }
+}

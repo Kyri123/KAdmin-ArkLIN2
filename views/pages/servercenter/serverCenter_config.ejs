@@ -1,0 +1,364 @@
+<%- include('../../includes/head'); -%>
+<%- include('../../includes/top') -%>
+<%- include('../../includes/nav') -%>
+<%- include('../../includes/content') -%>
+<%- include('./head'); -%>
+<div class="row" id="configContainer">
+    <div class="col-12 mb-4">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark p-0">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse navbar-secondary" id="navbarColor03">
+                <ul class="nav navbar-nav mr-auto aa-nav" id="pills-tab">
+                    <% if(userHelper.hasPermissions(userID, "config/show_gameuser", serverName)) { %>
+                        <li v-if="gus_exsists" class="nav-item">
+                            <a class="nav-link btn-dark p-3" id="pills-gus-tab" data-toggle="pill" href="#pills-gus" role="tab" aria-controls="pills-gus" aria-selected="false">
+                                GameUserSettings.ini
+                            </a>
+                        </li>
+                    <% } %>
+
+                    <% if(userHelper.hasPermissions(userID, "config/show_game", serverName)) { %>
+                        <li v-if="game_exsists" class="nav-item">
+                            <a class="nav-link btn-dark p-3" id="pills-game-tab" data-toggle="pill" href="#pills-game" role="tab" aria-controls="pills-game" aria-selected="false">
+                                Game.ini
+                            </a>
+                        </li>
+                    <% } %>
+
+                    <% if(userHelper.hasPermissions(userID, "config/show_engine", serverName)) { %>
+                        <li v-if="engine_exsists" class="nav-item">
+                            <a class="nav-link btn-dark p-3" id="pills-engine-tab" data-toggle="pill" href="#pills-engine" role="tab" aria-controls="pills-engine" aria-selected="false">
+                                Engine.ini
+                            </a>
+                        </li>
+                    <% } %>
+
+                    <% if(userHelper.hasPermissions(userID, "config/show_arkmanager", serverName)) { %>
+                        <li class="nav-item">
+                            <a class="nav-link btn-dark p-3" id="pills-arkmanager-tab" data-toggle="pill" href="#pills-arkmanager" role="tab" aria-controls="pills-arkmanager" aria-selected="false">
+                                ArkManager
+                            </a>
+                        </li>
+                    <% } %>
+
+                    <% if(userHelper.hasPermissions(userID, "config/show_kadmin", serverName)) { %>
+                        <li class="nav-item">
+                            <a class="nav-link btn-dark p-3" id="pills-server-tab" data-toggle="pill" href="#pills-server" role="tab" aria-controls="pills-server" aria-selected="false">
+                                KAdmin-ArkLIN2
+                            </a>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+        </nav>
+        <hr>
+        <!-- Cards -->
+        <div class="card shadow">
+            <div class="tab-content" id="pills-tabContent">
+
+                <% if(userHelper.hasPermissions(userID, "config/show_gameuser", serverName)) { %>
+                    <!-- GameUserSettings -->
+                    <div v-if="gus_exsists" class="tab-pane fade" id="pills-gus" role="tabpanel" aria-labelledby="pills-llog-tab">
+                        <table class="table table-striped mb-0" style="border: 0!important;">
+                            <tbody>
+                                <tr class="bg-dark">
+                                    <th colspan="2" class="p-0" style="border: 0!important;">
+                                        <div class="list-group-item bg-dark">
+                                            <h4 class="m-0">GameUserSettings.ini</h4>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <textarea class="p-3 m-0" style="max-height: 500px; width: 100%; overflow-y: scroll; overflow-x: hidden; min-height: 500px" id="GameUserSettings">{{ gus }}</textarea>
+                        <button class="btn btn-primary" style="width: 100%" onclick="serverSave('#GameUserSettings', '<%- serverName %>')"><%- lang[page].save %></button>
+                    </div>
+                <% } %>
+
+
+
+
+                <% if(userHelper.hasPermissions(userID, "config/show_game", serverName)) { %>
+                    <!-- GameUserSettings -->
+                    <div v-if="game_exsists" class="tab-pane fade" id="pills-game" role="tabpanel" aria-labelledby="pills-llog-tab">
+                        <table class="table table-striped mb-0" style="border: 0!important;">
+                            <tbody>
+                            <tr class="bg-dark">
+                                <th colspan="2" class="p-0" style="border: 0!important;">
+                                    <div class="list-group-item bg-dark">
+                                        <h4 class="m-0">Game.ini</h4>
+                                    </div>
+                                </th>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <textarea class="p-3 m-0" style="max-height: 500px; width: 100%; overflow-y: scroll; overflow-x: hidden; min-height: 500px" id="Game">{{ game }}</textarea>
+                        <button class="btn btn-primary" style="width: 100%" onclick="serverSave('#Game', '<%- serverName %>')"><%- lang[page].save %></button>
+                    </div>
+                <% } %>
+
+
+
+
+                <% if(userHelper.hasPermissions(userID, "config/show_engine", serverName)) { %>
+                    <!-- GameUserSettings -->
+                    <div v-if="engine_exsists" class="tab-pane fade" id="pills-engine" role="tabpanel" aria-labelledby="pills-llog-tab">
+                        <table class="table table-striped mb-0" style="border: 0!important;">
+                            <tbody>
+                            <tr class="bg-dark">
+                                <th colspan="2" class="p-0" style="border: 0!important;">
+                                    <div class="list-group-item bg-dark">
+                                        <h4 class="m-0">Engine.ini</h4>
+                                    </div>
+                                </th>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <textarea class="p-3 m-0" style="max-height: 500px; width: 100%; overflow-y: scroll; overflow-x: hidden; min-height: 500px" id="Engine">{{ engine }}</textarea>
+                        <button class="btn btn-primary" style="width: 100%" onclick="serverSave('#Engine', '<%- serverName %>')"><%- lang[page].save %></button>
+                    </div>
+                <% } %>
+
+
+
+
+                <!-- ArkManager -->
+                <% if(userHelper.hasPermissions(userID, "config/show_arkmanager", serverName)) { %>
+                    <!-- GameUserSettings -->
+                    <form class="tab-pane fade" id="pills-arkmanager" role="tabpanel" aria-labelledby="pills-llog-tab">
+                        <table class="table table-striped mb-0" style="border: 0!important;">
+                            <thead>
+                            <tr class="bg-dark">
+                                <th colspan="2" class="p-0" style="border: 0!important;">
+                                    <div class="list-group-item bg-dark">
+                                        <h4 class="m-0">ArkManager</h4>
+                                    </div>
+                                </th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <!-- EVENTS -->
+                            <tr>
+                                <td class="p-2">{{ globalvars.lang_arr['servercenter_config'].arkManager['arkopt_ActiveEvent'] || 'arkopt_ActiveEvent' }}</td>
+                                <td class="p-2">
+                                    <select type="text" name="cfgsend[arkopt_ActiveEvent]" class="form-control form-control-sm">
+                                        <option v-for="item in events" :value="item" :selected="ArkManager.arkopt_ActiveEvent === item">{{ globalvars.lang_arr['servercenter_config'].events[item] || item }}</option>
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <!-- Neue Optionen -->
+                            <tr>
+                                <td class="p-2"><input type="text" class="form-control form-control-sm" id="addOption"></td>
+                                <td class="p-2">
+                                    <div class="input-group input-group-sm m-0">
+                                        <input type="text" class="form-control rounded-0" id="addValue">
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-info" id="sendOption" @click="addOption()">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- selfname -->
+                            <tr v-for="(value, key) in ArkManager" v-if="!key.includes('arkflag_') && key !== 'arkopt_ActiveEvent'">
+
+                                <!-- Text -->
+                                <td class="p-2">{{ globalvars.lang_arr['servercenter_config'].arkManager[key] || key }}</td>
+
+                                <!-- default Maps -->
+                                <td v-if="key === 'serverMap'" class="p-2" colspan="2" style="max-width: 400px!important;">
+                                    <div class="input-group input-group-sm mb-0">
+                                        <input type="text" class="form-control form-control-sm" :name="`cfgsend[${key}]`" :value="value">
+                                        <select class="form-control form-control-sm" @change="handleMapChange">
+                                            <option v-for="(item, name) in maps" :id="name" v-bind:value="name" :data-mod="item.mod" :data-modid="item.modid" :selected="value === item.name">
+                                                {{ item.name }}
+                                            </option>
+                                        </select>
+                                        <span class="input-group-append">
+                                            <button type="button" v-bind:class="!(ArkManagerReadOnly.includes(key) || dontRemove.includes(key)) ? '' : 'disabled'" class="btn btn-danger" @click="(ArkManagerReadOnly.includes(key) || dontRemove.includes(key)) ? undefined : removeOption(key)">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <!-- default Bool -->
+                                <td v-else-if="value.toString().toLowerCase() === 'true' || value.toString().toLowerCase() === 'false' || typeof value === 'boolean'" class="p-2" colspan="2" style="max-width: 400px!important;">
+                                    <div class="input-group input-group-sm mb-0">
+                                        <select class="form-control form-control-sm" :name="`cfgsend[${key}]`">
+                                            <option value="True" :selected="value || value.toString().toLowerCase() === 'true'">{{ globalvars.lang_arr['servercenter_config'].true }}</option>
+                                            <option value="False" :selected="!value || value.toString().toLowerCase() === 'false'">{{ globalvars.lang_arr['servercenter_config'].false }}</option>
+                                        </select>
+                                        <span class="input-group-append">
+                                            <button type="button" v-bind:class="!(ArkManagerReadOnly.includes(key) || dontRemove.includes(key)) ? '' : 'disabled'" class="btn btn-danger" @click="(ArkManagerReadOnly.includes(key) || dontRemove.includes(key)) ? undefined : removeOption(key)">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <!-- default Int -->
+                                <td v-else-if="typeof value === 'number' || (!isNaN(value) && value !== '')" class="p-2" colspan="2" style="max-width: 400px!important;">
+                                    <div class="input-group input-group-sm mb-0">
+                                        <input type="number" class="input-group form-control form-control-sm" :name="`cfgsend[${key}]`" :value="value">
+                                        <span class="input-group-append">
+                                            <button type="button" v-bind:class="!(ArkManagerReadOnly.includes(key) || dontRemove.includes(key)) ? '' : 'disabled'" class="btn btn-danger" @click="(ArkManagerReadOnly.includes(key) || dontRemove.includes(key)) ? undefined : removeOption(key)">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <!-- default Text -->
+                                <td v-else class="p-2" colspan="2" style="max-width: 400px!important;">
+                                    <div class="input-group input-group-sm mb-0">
+                                        <input type="text" class="form-control form-control-sm" :name="`cfgsend[${key}]`" :value="value" :readonly="ArkManagerReadOnly.includes(key)">
+                                        <span class="input-group-append">
+                                            <button type="button" v-bind:class="!(ArkManagerReadOnly.includes(key) || dontRemove.includes(key)) ? '' : 'disabled'" class="btn btn-danger" @click="(ArkManagerReadOnly.includes(key) || dontRemove.includes(key)) ? undefined : removeOption(key)">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="p-2">{{ globalvars.lang_arr['servercenter_config'].arkManager['arkflag_'] || 'arkflag_' }}</td>
+                                <td class="p-2">
+                                    <div class="row">
+                                        <div v-for="(value) in flags" class="icheck-primary mb-3 col-lg-6 col-12">
+                                            <input type="checkbox" :name="`cfgsend[arkflag_${value}]`" value="True" :id="value" :checked="`arkflag_${value}` in ArkManager">
+                                            <label :for="value">
+                                                {{ value }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <input type="hidden" name="saveArkManager" class="form-control form-control-sm" value="true">
+                        <input type="hidden" name="cfg" class="form-control form-control-sm" value="<%- serverName %>">
+                        <button class="btn btn-primary" style="width: 100%" onclick="saveCfg('#pills-arkmanager')" type="button"><%- lang[page].save %></button>
+                    </form>
+                <% } %>
+
+
+
+
+                <!-- KADMIN -->
+                <% if(userHelper.hasPermissions(userID, "config/show_kadmin", serverName)) { %>
+                    <form class="tab-pane fade" id="pills-server" role="tabpanel" aria-labelledby="pills-server-tab">
+                        <table class="table table-striped mb-0" style="border: 0!important;">
+                            <thead>
+                                <tr class="bg-dark">
+                                    <th colspan="2" class="p-0" style="border: 0!important;">
+                                        <div class="list-group-item bg-dark">
+                                            <h4 class="m-0">KAdmin-ArkLIN2</h4>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <!-- selfname -->
+                                <tr v-for="(value, key) in cfg" v-if="typeof value !== 'object' && globalvars.lang_arr['servercenter_config'].cfg[key]">
+
+
+                                    <!-- Text -->
+                                    <td class="p-2">{{ globalvars.lang_arr['servercenter_config'].cfg[key] || key }}</td>
+
+                                    <!-- default Updates -->
+                                    <td v-if="key === 'autoUpdate'" class="p-2" colspan="2" style="max-width: 400px!important;">
+                                        <div class="input-group-sm mb-0">
+                                            <select class="form-control form-control-sm" name="cfgsend[autoUpdate]">
+                                                <option value="true" :selected="value">{{ globalvars.lang_arr['servercenter_config'].true }}</option>
+                                                <option value="false" :selected="!value">{{ globalvars.lang_arr['servercenter_config'].false }}</option>
+                                            </select>
+                                            <!-- autoBackupPara -->
+                                            <div class="icheck-primary mb-3" v-for="item in parameters" v-if="item.type === 0 && item.for.includes('update')">
+                                                <input :checked="cfg.autoUpdatePara.includes(item.value)" type="checkbox" name="cfgsend[autoUpdatePara][]" :value="item.value" :id="'KONF_' + item.id.replace('#', '')">
+                                                <label :for="'KONF_' + item.id.replace('#', '')">
+                                                    {{ item.text }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- default Time -->
+                                    <td v-else-if="key.toString().toLowerCase().includes('interval')" class="p-2" colspan="2" style="max-width: 400px!important;">
+                                        <div class="input-group input-group-sm mb-0">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">SEC</span>
+                                            </div>
+
+                                            <input type="number" step="0" class="form-control form-control-sm" :value="Math.round(value / 1000)" :id="key + 'SEC'"
+                                                   @change="VUE_configContainer.cfg[key] = Math.round(+document.getElementById(key + 'SEC').value * 1000)">
+                                            <input type="number" step="0.01" class="form-control form-control-sm" :value="Math.round(value / 1000 / 60 * 100) / 100" :id="key + 'MIN'"
+                                                   @change="VUE_configContainer.cfg[key] = Math.round(+document.getElementById(key + 'MIN').value * 60 * 1000)">
+
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">MIN</span>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" class="form-control form-control-sm" :name="`cfgsend[${key}]`" :id="key + 'Value'" :value="value">
+                                    </td>
+
+                                    <!-- default Bool -->
+                                    <td v-else-if="typeof value === 'boolean'" class="p-2" colspan="2" style="max-width: 400px!important;">
+                                        <select class="form-control form-control-sm" :name="`cfgsend[${key}]`">
+                                            <option value="true" :selected="value">{{ globalvars.lang_arr['servercenter_config'].true }}</option>
+                                            <option value="false" :selected="!value">{{ globalvars.lang_arr['servercenter_config'].false }}</option>
+                                        </select>
+                                    </td>
+
+                                    <!-- default Int -->
+                                    <td v-else-if="typeof value === 'number'" class="p-2" colspan="2" style="max-width: 400px!important;">
+                                        <div class="input-group-sm mb-0">
+                                            <input type="number" class="form-control form-control-sm" :name="`cfgsend[${key}]`" :value="value">
+                                        </div>
+                                    </td>
+
+                                    <!-- default Text -->
+                                    <td v-else class="p-2" colspan="2" style="max-width: 400px!important;">
+                                        <div class="input-group-sm mb-0">
+                                            <input type="text" class="form-control form-control-sm" :name="`cfgsend[${key}]`" :value="value">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <input type="hidden" name="saveServer" class="form-control form-control-sm" value="true">
+                        <input type="hidden" name="cfg" class="form-control form-control-sm" value="<%- serverName %>">
+                        <button class="btn btn-primary" style="width: 100%" onclick="saveCfg('#pills-server')" type="button"><%- lang[page].save %></button>
+                    </form>
+
+                </div>
+            <% } %>
+
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Vars die zur JS übergeben werden
+    // Allgemeine Vars
+    let vars = {};
+    vars.cfg = '<%- serverName %>';
+</script>
+
+<script src="/js/kadmin/serverCenter/config.js" type="application/javascript"></script>
+
+<%- include('../../includes/foother'); -%>

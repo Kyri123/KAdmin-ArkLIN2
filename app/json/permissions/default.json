@@ -1,0 +1,30 @@
+{
+  "all": {
+    "is_admin"          : 0,
+    "show_traffic"      : 0
+  },
+  "servercontrolcenter": {
+    "show"              : 0,
+    "create"            : 0,
+    "delete"            : 0,
+    "editServer"       : 0
+  },
+  "userpanel": {
+    "show"              : 0,
+    "show_codes"        : 0,
+    "create_code"       : 0,
+    "delete_code"       : 0,
+    "delete_user"       : 0,
+    "ban_user"          : 0
+  },
+  "cluster": {
+    "show"              : 0,
+    "createCluster"     : 0,
+    "editCluster"       : 0,
+    "removeCluster"     : 0,
+    "addServers"        : 0,
+    "removeServers"     : 0,
+    "toggleSlaves"      : 0
+  },
+  "server": {}
+}

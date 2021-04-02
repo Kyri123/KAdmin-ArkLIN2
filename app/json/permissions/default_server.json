@@ -1,0 +1,50 @@
+{
+  "is_server_admin"       : 0,
+  "show"                  : 0,
+  "actions"               : 0,
+  "sendCommands"          : 0,
+  "showplayers"           : 0,
+  "showalerts"            : 0,
+  "config": {
+    "show"                  : 0,
+    "kadmin"                : 0,
+    "GameUserSettings"      : 0,
+    "Game"                  : 0,
+    "Engine"                : 0,
+    "arkmanager"            : 0,
+    "show_kadmin"           : 0,
+    "show_gameuser"         : 0,
+    "show_game"             : 0,
+    "show_engine"           : 0,
+    "show_arkmanager"       : 0
+  },
+  "backups": {
+    "show"                  : 0,
+    "remove"                : 0,
+    "playin"                : 0,
+    "download"              : 0,
+    "upload"                : 0
+  },
+  "filebrowser": {
+    "show"                  : 0,
+    "removeFolder"          : 0,
+    "createFolder"          : 0,
+    "moveFolder"            : 0,
+    "renameFolder"          : 0,
+    "removeFiles"           : 0,
+    "editFiles"             : 0,
+    "downloadFiles"         : 0,
+    "uploadFiles"           : 0,
+    "renameFiles"           : 0,
+    "moveFiles"             : 0,
+    "showFiles"             : 0
+  },
+  "mods": {
+    "show"                  : 0,
+    "moveMod"               : 0,
+    "removeMod"             : 0,
+    "toggleMod"             : 0,
+    "addMod"                : 0,
+    "toggleInstallMod"          : 0
+  }
+}

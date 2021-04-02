@@ -1,0 +1,21 @@
+{
+  "path"                    : true,
+  "pathLogs"                : true,
+  "pathBackup"              : true,
+  "autoBackup"              : false,
+  "autoBackupPara"          : false,
+  "autoBackupInterval"      : false,
+  "autoUpdate"              : false,
+  "autoUpdatePara"          : false,
+  "autoUpdateInterval"      : false,
+  "autoBackupNext"          : true,
+  "autoBackupMaxCount"      : true,
+  "autoBackupMaxDirSize"    : true,
+  "shouldRun"               : true,
+  "selfname"                : false,
+  "currversion"             : true,
+  "xmx"                     : true,
+  "xms"                     : true,
+  "extrajava"               : false,
+  "jar"                     : false
+}

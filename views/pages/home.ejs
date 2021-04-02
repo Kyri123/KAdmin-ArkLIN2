@@ -1,0 +1,77 @@
+<%- include('../includes/head'); -%>
+<%- include('../includes/top') -%>
+<%- include('../includes/nav') -%>
+<%- include('../includes/content') -%>
+
+<div class="row" id="changelogContainer">
+
+    <!-- CHANGELOGS -->
+    <div class="col-12">
+
+        <div class="card">
+            <div class="card-header border-transparent bg-dark">
+                <h3 class="card-title"><i class="fa fa-book mr-1" aria-hidden="true"></i> KAdmin-ArkLIN2 Versionen :: V.<%- panelVersion %></h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table m-0">
+                        <thead>
+                            <tr>
+                                <th class="pt-2 pb-2"><%- lang[page].t_version %></th>
+                                <th class="pt-2 pb-2"><%- lang[page].t_date %></th>
+                                <th class="pt-2 pb-2"><%- lang[page].t_state %></th>
+                                <th class="pt-2 pb-2"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in changelogs">
+                                <td>
+                                    Version {{ item.version }}
+                                </td>
+                                <td>
+                                    {{ item.datestring !== '--.--.----' ? item.datestring : 'WIP' }}
+                                </td>
+                                <td>
+                                    <span v-bind:class="item.version === currentVersion ? 'badge-success' : parseInt(item.version.replaceAll(/[^0-9]/g, '')) < parseInt(currentVersion.replaceAll(/[^0-9]/g, '')) ? 'badge-info' : 'badge-danger'" class="badge rounded-0">
+                                        {{ item.version === currentVersion ? globalvars.lang_arr.home.curr : parseInt(item.version.replaceAll(/[^0-9]/g, "")) < parseInt(currentVersion.replaceAll(/[^0-9]/g, "")) ? globalvars.lang_arr.home.old : globalvars.lang_arr.home.new }}
+                                    </span>
+                                </td>
+                                <td class="text-right">
+                                    <a :href="`/changelog#${item.version}`" class="btn btn-xs btn-primary rounded-0">
+                                        <i class="nav-icon fa fa-book" aria-hidden="true"></i>
+                                    </a>
+                                    <a v-if="item.datestring !== '--.--.----'" :href="`https://github.com/Kyri123/KAdmin-ArkLIN2/releases/tag/${item.version}`" target="_blank" class="btn btn-xs btn-dark rounded-0">
+                                        <i class="nav-icon fab fa-github" aria-hidden="true"></i>
+                                    </a>
+                                    <a v-if="item.datestring !== '--.--.----'" :href="`https://github.com/Kyri123/KAdmin-ArkLIN2/archive/${item.version}`" download class="btn btn-xs btn-dark rounded-0">
+                                        <i class="nav-icon fa fa-download" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="card-footer clearfix">
+                <a href="https://github.com/Kyri123/KAdmin-ArkLIN2" target="_blank" class="btn btn-sm btn-dark float-left rounded-0"><i class="fab fa-github" aria-hidden="true"></i> Github</a>
+                <a href="/changelog" class="btn btn-sm btn-primary float-right rounded-0"><%- lang[page].readall %></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentVersion  = '<%- panelVersion %>'
+</script>
+<script src="/js/kadmin/home.js"></script>
+
+<%- include('../includes/foother') -%>
