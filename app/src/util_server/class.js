@@ -159,6 +159,19 @@ module.exports = class serverClass {
    }
 
    /**
+    * Entfernt einen beliebigen Key in der CFG
+    * @param {string} key Option
+    * @return {boolean}
+    */
+   writeConfig(key) {
+      if(this.serverExsists() && typeof this.cfg[key] !== "undefined") {
+         delete this.cfg[key]
+         return globalUtil.safeFileSaveSync(this.cfgPath, JSON.stringify(this.cfg))
+      }
+      return false
+   }
+
+   /**
     * Speichert einen beliebigen Key in der Ini (Arkmanager.cfg)
     * @param {string} key Option
     * @param {string|int|float} value Wert
@@ -168,6 +181,20 @@ module.exports = class serverClass {
       let Ini  = this.getINI()
       if(this.serverExsists()) {
          Ini[key] = value
+         return this.saveINI(ini.stringify(Ini))
+      }
+      return false
+   }
+
+   /**
+    * Entfernt einen beliebigen Key in der Ini (Arkmanager.cfg)
+    * @param {string} key Option
+    * @return {boolean}
+    */
+   removeFromIni(key) {
+      let Ini  = this.getINI()
+      if(this.serverExsists()) {
+         delete Ini[key]
          return this.saveINI(ini.stringify(Ini))
       }
       return false
@@ -237,7 +264,7 @@ module.exports = class serverClass {
    /**
     * Speichert eine Definierte CFG
     * @param {string} ini
-    * @param {object} cfg Wert
+    * @param {string} cfg
     * @return {boolean}
     */
    saveGameINI(ini = "GameUserSettings.ini", cfg) {
@@ -360,5 +387,29 @@ module.exports = class serverClass {
          this.initClusterRead()
       }
       return this.isInCluster
+   }
+
+   /**
+    * gibt den Cluster Namen aus
+    * @return {string|boolean}
+    */
+   clusterGetName() {
+      return this.isServerInCluster() ? this.clusterFile[this.clusterIndex].name : false
+   }
+
+   /**
+    * gibt die ClusterID aus
+    * @return {string|boolean}
+    */
+   clusterGetID() {
+      return this.isServerInCluster() ? this.clusterFile[this.clusterIndex].name : false
+   }
+
+   /**
+    * gibt den Cluster Typen aus
+    * @return {number|boolean}
+    */
+   clusterGetType() {
+      return this.isServerInCluster() ? this.serverClustertype : false
    }
 }

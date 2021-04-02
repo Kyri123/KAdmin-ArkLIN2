@@ -54,5 +54,6 @@
       "now"     : "Server stoppt oder Startet jetzt neu (Welt wird gespeichert)",
       "nownos"  : "Server stoppt oder Startet jetzt neu"
     }
-  }
+  },
+  "notInCluster"  : "kein Cluster"
 }

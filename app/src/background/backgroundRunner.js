@@ -17,6 +17,7 @@ const server_state          = require('./server/state')
 const serverCommands        = require('./server/commands')
 const steamAPIhelper        = require('./../util_steam/steamAPI')
 const updater               = require('./updater')
+const cluster               = require('./cluster')
 
 
 module.exports = {
@@ -30,10 +31,20 @@ module.exports = {
         setInterval(() => module.exports.getStateFromServers(),         CONFIG.main.interval.getStateFromServers)
         setInterval(() => module.exports.doServerBackgrounder(),        CONFIG.main.interval.doServerBackgrounder)
         setInterval(() => module.exports.getDataFromSteamAPI(),         CONFIG.main.interval.getDataFromSteamAPI)
+        setInterval(() => module.exports.doClusterStuff(),              CONFIG.main.interval.doClusterStuff)
 
         module.exports.getDataFromSteamAPI()
         module.exports.getTraffic()
         module.exports.getStateFromServers()
+        module.exports.doClusterStuff()
+    },
+
+    /**
+     * Arbeitet Clusteraufgaben (sync etc ab)
+     */
+    doClusterStuff: () => {
+        if(debug) console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}][DEBUG]\x1b[36m run > doClusterStuff`)
+        cluster.startWork()
     },
 
     /**
@@ -123,8 +134,10 @@ module.exports = {
                        ? serverIni.serverMapModId
                        : false
                     let modArray                = (gameModIds !== "" && !isNaN(gameModIds)) || gameModIds !== undefined
-                       ? serverIni.ark_GameModIds.split(',')
-                       : []
+                       ? (serverIni.ark_GameModIds
+                          ? serverIni.ark_GameModIds.split(',')
+                         : []
+                       ) : []
 
                     // füge Map hinzu
                     if(!modIds.includes(serverMapModId) && serverMapModId !== false)

@@ -67,6 +67,9 @@ module.exports = {
                    ? !isRunning(+globalUtil.safeFileReadSync(arkUpdatePidFile))
                    : true
 
+                if(!globalUtil.safeFileExsistsSync([servCFG.path])) globalUtil.safeFileMkdirSync([servCFG.path])
+                if(!globalUtil.safeFileExsistsSync([servCFG.pathLogs])) globalUtil.safeFileMkdirSync([servCFG.pathLogs])
+                if(!globalUtil.safeFileExsistsSync([servCFG.pathBackup])) globalUtil.safeFileMkdirSync([servCFG.pathBackup])
                 //console.log(name, servINI)
 
                 data.isFree            = arkUpdateProcess && isBackupRunning && isPlayIn

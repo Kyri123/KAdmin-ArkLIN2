@@ -8,6 +8,7 @@
     "doJob"                     : 60000,
     "getVersionList"            : 3600000,
     "getSpigotCraftbukkitList"  : 3600000,
-    "getDataFromSteamAPI"       : 300000
+    "getDataFromSteamAPI"       : 600000,
+    "doClusterStuff"            : 60000
   }
 }

@@ -7,7 +7,10 @@
       "logRoot"           : "Verzeichnis wo die Logs liegen (ACHTUNG: Änderungen hieran \"entfernt\" alle Logs!!)",
       "pathBackup"        : "Verzeichnis wo die Backups liegen (ACHTUNG: Änderungen hieran \"entfernt\" alle Backups!!)",
       "port"              : "Port der für das Panel bestimmt ist",
-      "useDebug"          : "Sollen Debugs im Log angezeigt werden"
+      "useDebug"          : "Sollen Debugs im Log angezeigt werden",
+      "pathSteam"         : "Verzeichnis wo SteamCMD liegt",
+      "pathArkmanager"    : "Verzeichnis wo Arkmanager liegt",
+      "steamAPIKey"       : "SteamAPI key von Stream"
     },
     "updater.json"    : {
       "useBranch"         : "Welche Branch soll für Updates verwendet werden",
