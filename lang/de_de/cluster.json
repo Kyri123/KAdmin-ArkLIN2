@@ -1,3 +1,25 @@
 {
-  "pagename"      : "Clustersystem"
+  "pagename"      : "Clustersystem",
+  "addCluster"    : "Wie soll der neue Cluster heißen? (Cluster ID wird aus dem Namen erzeugt)",
+  "sync"          : "Synchronisierungen",
+  "opt"           : "Optionen",
+  "addServer"     : "Server Hinzufügen",
+  "removeCluster" : "Cluster Löschen",
+  "addServerPick" : "Du musst einen Server auswählen",
+  "table" : {
+    "server"        : "Servername",
+    "player"        : "Aktuelle Spieler",
+    "state"         : "Server Status",
+    "rank"          : "Cluster Rolle"
+  },
+  "sync": {
+    "mods"              : "Modifikationen",
+    "GameUserSettings"  : "GameUserSettings.ini",
+    "Game"              : "Game.ini",
+    "Engine"            : "Engine.ini",
+    "admin"             : "[ToDo] Administratoren",
+    "whitelist"         : "[ToDo] Whitelist",
+    "blacklist"         : "[ToDo] Banliste",
+    "jobs"              : "[ToDo] Cronjobs"
+  }
 }

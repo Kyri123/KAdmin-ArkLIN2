@@ -23,6 +23,7 @@ module.exports = class serverClass {
    constructor(servername) {
       // Erstelle this Vars
       this.exsists            = false
+      this.isClusterReaded    = false
       this.server             = servername
       this.cfgPath            = [mainDir, '/app/json/server/', `${this.server}.json`]
       this.defaultCfgPath     = [mainDir, '/app/json/server/template/', `default.json`]
@@ -318,5 +319,46 @@ module.exports = class serverClass {
          return ini.ark_GameModIds.split(',')
       }
       return false
+   }
+
+   /*************************************************************
+    * Clustersystem
+    *************************************************************/
+
+   /**
+    * Liest Cluster infos aus und suche nach dem Cluster wo der Server sich befindet
+    */
+   initClusterRead() {
+      if(!this.isClusterReaded) {
+         this.clusterFile   = globalUtil.safeFileReadSync([mainDir, "public/json/cluster/clusters.json"], true)
+         if(this.clusterFile !== false) {
+            // suche Server indem sich der Cluster befindet
+            let clusterIndex  = false
+            let clusterType   = false
+            for(const i in this.clusterFile)
+               for(const server of this.clusterFile[i].servers) {
+                  if(server.name === this.server) {
+                     clusterIndex   = i
+                     clusterType    = server.type
+                  }
+               }
+
+            this.isClusterReaded    = true
+            this.clusterIndex       = clusterIndex
+            this.isInCluster        = clusterIndex !== false
+            this.serverClustertype  = clusterType
+         }
+      }
+   }
+
+   /**
+    * gibt aus ob der Server in einem Cluster ist
+    * @return {boolean}
+    */
+   isServerInCluster() {
+      if(!this.isClusterReaded) {
+         this.initClusterRead()
+      }
+      return this.isInCluster
    }
 }

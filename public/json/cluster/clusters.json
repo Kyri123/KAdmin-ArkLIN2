@@ -3,12 +3,14 @@
     "name"        :"Beispiel Cluster",
     "clusterid"   :"678be22190fad95e419d48de8aa2e2e1",
     "sync":{
-      "admin"       : false,
-      "whitelist"   : false,
-      "blacklist"   : false,
-      "mods"        : false,
-      "konfig"      : false,
-      "jobs"        : false
+      "GameUserSettings"    : false,
+      "Game"                : false,
+      "Engine"              : false,
+      "mods"                : false,
+      "admin"               : false,
+      "whitelist"           : false,
+      "blacklist"           : false,
+      "jobs"                : false
     },
     "opt":{
       "NoTransferFromFiltering"   :false,
@@ -51,38 +53,6 @@
       },
       {
         "server"  : "b56b117e1b",
-        "type"    : 0
-      }
-    ]
-  },
-  {
-    "name"        :"Beispiel Cluster 2",
-    "clusterid"   :"cec0ee299719996dd4be7aa9af79293a",
-    "sync":{
-      "admin"       : false,
-      "whitelist"   : false,
-      "blacklist"   : false,
-      "mods"        : false,
-      "konfig"      : false,
-      "jobs"        : false
-    },
-    "opt":{
-      "NoTransferFromFiltering"   :true,
-      "NoTributeDownloads"        :true,
-      "PreventDownloadSurvivors"  :false,
-      "PreventUploadSurvivors"    :false,
-      "PreventDownloadItems"      :false,
-      "PreventUploadItems"        :false,
-      "PreventDownloadDinos"      :true,
-      "PreventUploadDinos"        :false
-    },
-    "servers":[
-      {
-        "server"  : "5f0e4054ad",
-        "type"    : 1
-      },
-      {
-        "server"  : "5c68f48w",
         "type"    : 0
       }
     ]

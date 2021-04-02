@@ -135,7 +135,7 @@ router.use(
 router.use(
    '/ajax/cluster',
    isLoggedIn, checkPerm('cluster/show'),
-   require('./pages/cluster')
+   require('./ajax/cluster')
 )
 
 // ajax - ServerCenter

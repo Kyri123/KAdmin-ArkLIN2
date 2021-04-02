@@ -1,22 +1,25 @@
-[
-  {
-    "name"        : null,
-    "clusterid"   : null,
-    "sync":{
-      "admin"   :false,
-      "mods"    :false,
-      "konfig"  :false
-    },
-    "opt":{
-      "NoTransferFromFiltering"   :false,
-      "NoTributeDownloads"        :false,
-      "PreventDownloadSurvivors"  :false,
-      "PreventUploadSurvivors"    :false,
-      "PreventDownloadItems"      :false,
-      "PreventUploadItems"        :false,
-      "PreventDownloadDinos"      :false,
-      "PreventUploadDinos"        :false
-    },
-    "servers":[]
-  }
-]
+{
+  "name"        : null,
+  "clusterid"   : null,
+  "sync":{
+    "GameUserSettings"    : false,
+    "Game"                : false,
+    "Engine"              : false,
+    "mods"                : false,
+    "admin"               : false,
+    "whitelist"           : false,
+    "blacklist"           : false,
+    "jobs"                : false
+  },
+  "opt":{
+    "NoTransferFromFiltering"   :false,
+    "NoTributeDownloads"        :false,
+    "PreventDownloadSurvivors"  :false,
+    "PreventUploadSurvivors"    :false,
+    "PreventDownloadItems"      :false,
+    "PreventUploadItems"        :false,
+    "PreventDownloadDinos"      :false,
+    "PreventUploadDinos"        :false
+  },
+  "servers":[]
+}

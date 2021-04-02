@@ -15,6 +15,7 @@
     "info"          : "Bei dem Server {server} läuft eine Installation",
 
     "FAIL"          : "Anfrage konnte nicht verarbeitet werden",
+    "noServerFound" : "Es konnten keine Server gefunden werden für diese Aktion.",
 
     "0"   : "Datei konnte nicht gespeichert werden",
     "1"   : "Änderungen wurden gespeichert",

@@ -5,40 +5,49 @@
 
 <div class="row" id="clusterControler">
 
-   <div class="col-md-12" v-for="cluster in clusters">
+   <div class="col-md-12" v-for="(cluster, i) in clusters">
       <div class="card collapsed-card">
 
          <div class="card-header card-widget widget-user p-0">
             <div class="card-title0" style="width: 100%">
-               <div class="widget-user-header text-white p-0" :style="`background: url('${servers[cluster.servers[0].server] ? servers[cluster.servers[0].server].bgicon : '/img/backgrounds/Ragnarok.jpg'}') center center;`">
+               <div class="widget-user-header text-white p-0" :style="`background: url('${cluster.servers[0] ? servers[cluster.servers[0].server] ? servers[cluster.servers[0].server].bgicon : '/img/backgrounds/Ragnarok.jpg' : '/img/backgrounds/Ragnarok.jpg'}') center center;`">
                   <div style="background-color: rgba(66,66,66,0.30)!important; height: 100%" class="p-3">
                      <h3 class="widget-user-username text-center text-light left">{{ cluster.name }}</h3>
                      <h5 class="widget-user-desc text-center text-light">{{ cluster.clusterid }}</h5>
                   </div>
                </div>
 
-               <div class="widget-user-image" id="serv_img" style="z-index: 1000"><img :src="servers[cluster.servers[0].server] ? servers[cluster.servers[0].server].icon : '/img/maps/Ragnarok.jpg'" style="border-radius: 25rem !important;border-top-width: 3px!important;height: 90px;width: 90px;background-color: #001f3f" class="border-dark"></div>
+               <div class="widget-user-image" id="serv_img" style="z-index: 1000"><img :src="cluster.servers[0] ? servers[cluster.servers[0].server] ? servers[cluster.servers[0].server].icon : '/img/maps/Ragnarok.jpg' : '/img/maps/Ragnarok.jpg'" style="border-radius: 25rem !important;border-top-width: 3px!important;height: 90px;width: 90px;background-color: #001f3f" class="border-dark"></div>
                <div class="widget-user mb-0 row">
                   <div class="col-6 pr-0 text-left left d-inline" style="width:50%">
                      <button style="width: 100%" class="btn btn-flat btn-dark" data-card-widget="collapse">
                         <i class="fas fa-plus" aria-hidden="true"></i>
                      </button>
                   </div>
-                  <div class="col-6 pl-0 right-no-top ml-auto d-inline" style="width:50%">
-                     <button aria-hidden="true" style="width: 100%" class="text-white btn-flat btn btn-danger ">
+
+                  <div v-if="hasPermissions(globalvars.perm, 'cluster/removeCluster')" class="col-6 pl-0 right-no-top ml-auto d-inline" style="width:50%">
+                     <button @click="sendRequest('removeCluster', i, true)" aria-hidden="true" style="width: 100%" class="text-white btn-flat btn btn-danger ">
                         <i class="nav-icon fa fa-trash" aria-hidden="true"></i>
-                        Cluster Löschen
+                        {{ globalvars.lang_arr.cluster.removeCluster }}
                      </button>
                   </div>
+
+                  <div v-else class="col-6 pl-0 right-no-top ml-auto d-inline" style="width:50%">
+                     <button aria-hidden="true" style="width: 100%" class="text-white btn-flat btn btn-danger disabled">
+                        <i class="nav-icon fa fa-trash" aria-hidden="true"></i>
+                        {{ globalvars.lang_arr.cluster.removeCluster }}
+                     </button>
+                  </div>
+
                </div>
             </div>
          </div>
 
          <div class="card-body" style="display: none">
 
-            <a style="width: 100%" href="#" class="nav-link btn btn-flat btn-dark">
+            <a style="width: 100%" href="javascript:void(0)" class="nav-link btn btn-flat btn-dark" @click="fireAddServerModal(i)">
                <i class="nav-icon fa fa-plus" aria-hidden="true"></i>
-               Server Hinzufügen
+               {{ globalvars.lang_arr.cluster.addServer }}
             </a>
 
             <div class="row">
@@ -46,16 +55,16 @@
                   <table class="table table-striped table-valign-middle border" style="width: 100%">
                      <thead>
                      <tr>
-                        <th>Server</th>
-                        <th>Spieler</th>
-                        <th>Status</th>
-                        <th>Rang</th>
+                        <th>{{ globalvars.lang_arr.cluster.table.server }}</th>
+                        <th>{{ globalvars.lang_arr.cluster.table.player }}</th>
+                        <th>{{ globalvars.lang_arr.cluster.table.state }}</th>
+                        <th>{{ globalvars.lang_arr.cluster.table.rank }}</th>
                         <th></th>
                      </tr>
                      </thead>
                      <tbody>
 
-                     <tr v-for="server in cluster.servers" class="p-1" v-if="servers[server.server]">
+                     <tr v-for="(server, iS) in cluster.servers" class="p-1" v-if="cluster.servers.length > 0 && servers[server.server]">
                         <td>{{ servers[server.server].selfname }}</td>
 
                         <td class="text-dark"><b>{{ servers[server.server].aplayers }}</b> / {{ servers[server.server].players }}</td>
@@ -67,11 +76,11 @@
 
                         <td style="width: 1%">
                            <div class="btn-group btn-group-sm">
-                              <a v-if="server.type === 0" data-toggle="tooltip" href="javascript:void(0)" class="btn btn-primary btn-sm">
+                              <a v-if="hasPermissions(globalvars.perm, 'cluster/toggleSlaves') && server.type === 0" @click="sendRequest('promote', i, true, {serverIndex:iS})" data-toggle="tooltip" href="javascript:void(0)" class="btn btn-primary btn-sm">
                                  <i class="fas fa-angle-double-up" aria-hidden="true"></i>
                               </a>
 
-                              <a href="javascript:void(0)" class="btn btn-danger btn-sm"><i class="far fa-trash-alt" aria-hidden="true"></i></a>
+                              <a v-if="hasPermissions(globalvars.perm, 'cluster/removeServers')" href="javascript:void(0)" @click="sendRequest('remove', i, true, {serverIndex:iS})" class="btn btn-danger btn-sm"><i class="far fa-trash-alt" aria-hidden="true"></i></a>
                            </div>
                         </td>
                      </tr>
@@ -91,10 +100,11 @@
                         </tr>
                         <tr v-for="(item, key) in cluster.sync">
                            <td class="p-1">
-                              <button style="min-width: 32px" class="btn mr-2 btn-sm" v-bind:class="item ? 'btn-success' : 'btn-danger'">
+                              <button v-if="hasPermissions(globalvars.perm, 'cluster/editCluster')" @click="sendRequest('edit', i, !item, {type:'sync', key:key})" style="min-width: 32px" class="btn mr-2 btn-sm" v-bind:class="item ? 'btn-success' : 'btn-danger'">
                                  <i v-bind:class="item ? 'fas fa-check' : 'fas fa-times'"></i>
                               </button>
-                              {{ key }}
+                              <i v-else v-bind:class="item ? 'fas fa-check text-success mr-1 ml-2' : 'fas fa-times text-danger mr-1 ml-1'"></i>
+                              {{ globalvars.lang_arr.cluster.sync[key] }}
                            </td>
                         </tr>
                      </tbody>
@@ -110,9 +120,10 @@
                         </tr>
                         <tr v-for="(item, key) in cluster.opt">
                            <td class="p-1">
-                              <button style="min-width: 32px" class="btn mr-2 btn-sm" v-bind:class="item ? 'btn-success' : 'btn-danger'">
+                              <button v-if="hasPermissions(globalvars.perm, 'cluster/editCluster')" @click="sendRequest('edit', i, !item, {type:'opt', key:key})" style="min-width: 32px" class="btn mr-2 btn-sm" v-bind:class="item ? 'btn-success' : 'btn-danger'">
                                  <i v-bind:class="item ? 'fas fa-check' : 'fas fa-times'"></i>
                               </button>
+                              <i v-else v-bind:class="item ? 'fas fa-check text-success mr-1 ml-2' : 'fas fa-times text-danger mr-1 ml-1'"></i>
                               {{ key }}
                            </td>
                         </tr>
@@ -124,6 +135,11 @@
       </div>
    </div>
 
+   <a v-if="hasPermissions(globalvars.perm, 'cluster/createCluster')" data-toggle="modal" class="col-12" @click="fireAddModal()">
+      <div class="border border-success text-success align-content-center justify-content-center align-items-center d-flex card" style="font-size: 75px; width: 100%; height: 173px; border: 2px solid !important; cursor: pointer;">
+         <i aria-hidden="true" class="fas fa-plus"></i>
+      </div>
+   </a>
 </div>
 
 <script>
