@@ -146,7 +146,7 @@ module.exports = class serverClass {
     * @return {boolean}
     */
    writeConfig(key, value) {
-      if(this.serverExsists() && typeof this.cfg[key] !== "undefined") {
+      if(this.serverExsists()) {
          this.cfg[key] = value
          try {
             return globalUtil.safeFileSaveSync(this.cfgPath, JSON.stringify(this.cfg))
@@ -163,7 +163,7 @@ module.exports = class serverClass {
     * @param {string} key Option
     * @return {boolean}
     */
-   writeConfig(key) {
+   removeFromConfig(key) {
       if(this.serverExsists() && typeof this.cfg[key] !== "undefined") {
          delete this.cfg[key]
          return globalUtil.safeFileSaveSync(this.cfgPath, JSON.stringify(this.cfg))

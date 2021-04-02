@@ -299,3 +299,11 @@ let icon = (FileExt) => {
     //default
     return "fas fa-file"
 }
+
+function secondsTimeSpanToHM(s) {
+    let h = Math.floor(s/3600)
+    s -= h*3600
+    let m = Math.floor(s/60)
+    s -= m*60
+    return h+":"+(m < 10 ? '0'+m : m)
+}

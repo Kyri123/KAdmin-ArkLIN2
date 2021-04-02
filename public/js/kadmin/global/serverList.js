@@ -58,7 +58,7 @@ function getServerList() {
 
             server.name             = val[0]
             server.url              = `/servercenter/${val[0]}/home`
-            server.class            = `float-right text-sm text-${stateColor}`
+            server.stateColor       = stateColor
             server.selfname         = `${val[1].selfname.substring(0, 22)}${val[1].selfname.length > 22 ? "..." : ""}`
             server.playerCountIS    = val[1].aplayers
             server.playerCountMAX   = val[1].players

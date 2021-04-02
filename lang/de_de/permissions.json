@@ -8,7 +8,8 @@
     "config"                  : "Konfiguration",
     "backups"                 : "Backups",
     "logs"                    : "Logs",
-    "filebrowser"             : "Filebrowser"
+    "filebrowser"             : "Filebrowser",
+    "mods"                    : "Modifikationen"
   },
   "perm": {
     "is_admin"                : "Ist Admin (Hat Rechte auf alles)",
@@ -48,6 +49,25 @@
     "moveFiles"               : "Darf Dateien verschieben",
     "showFiles"               : "Darf Dateien ansehen",
     "upload"                  : "Darf Backups hochladen",
-    "download"                : "Darf Backups runterladen"
+    "download"                : "Darf Backups runterladen",
+    "createCluster"           : "Darf Cluster erstellen",
+    "editCluster"             : "Darf Cluster einstellungen ändern",
+    "removeCluster"           : "Darf Cluster entfernen",
+    "addServers"              : "Darf Server zum Cluster hinzufügen",
+    "removeServers"           : "Darf Server vom Cluster entfernen",
+    "toggleSlaves"            : "Darf Master von Clustern ändern",
+    "GameUserSettings"        : "Darf GameUserSettings.ini bearbeiten",
+    "Game"                    : "Darf Game.ini bearbeiten",
+    "Engine"                  : "Darf Engine.ini bearbeiten",
+    "arkmanager"              : "Darf Arkmanager.cfg bearbeiten",
+    "show_gameuser"           : "Darf GameUserSettings.ini sehen",
+    "show_game"               : "Darf Game.ini sehen",
+    "show_engine"             : "Darf Engine.ini sehen",
+    "show_arkmanager"         : "Darf Arkmanager.cfg sehen",
+    "moveMod"                 : "Darf Mod Positionen ändern",
+    "removeMod"               : "Darf Mods entfernen",
+    "toggleMod"               : "Darf Mods (De-)Aktivieren",
+    "addMod"                  : "Darf Mods Hinzufügen",
+    "toggleInstallMod"        : "Darf Mods (De-)Installieren"
   }
 }

@@ -105,7 +105,7 @@ const VUE_serverCenterHead = new Vue({
                 // Spielerliste
                 // Button & Anzeige
                 VUE_serverCenterHead.player = `${serverInfos.aplayers} / ${serverInfos.players}`
-                if(stateColor === "success") {
+                if(serverInfos.online) {
                     VUE_serverCenterHead.player = hasPermissions(globalvars.perm, "showplayers", varser.cfg)
                        ? `<a href="#" data-toggle="modal" data-target="#playerlist_modal" class="btn btn-sm btn-primary">${serverInfos.aplayers} / ${serverInfos.players}</a>`
                        : `${serverInfos.aplayers} / ${serverInfos.players}`
@@ -116,18 +116,10 @@ const VUE_serverCenterHead = new Vue({
                 let steamInfos  = steamAPI_Players.nameList ? steamAPI_Players.nameList : {}
                 serverInfos.aplayersarr.sort((a, b) => (a.name < b.name) ? 1 : -1)
                 for(let item of serverInfos.aplayersarr) {
-                    let isOP    = "false"
-                    for(let op of opList)
-                        if(op.uuid === item.id) isOP = true
-
-                    item.img                = steamInfos[item.name] ? steamInfos[item.name].avatar : '/img/unknown.png'
+                    item.img                = steamInfos[item.name] ? steamInfos[item.name].avatarfull : '/img/unknown.png'
                     item.url                = steamInfos[item.name] ? steamInfos[item.name].profileurl : '#'
-                    // todo: WIP
-                    /*item.isOP               = isOP
-                    item.isOPIcon           = isOP ? "fas fa-angle-double-down" : "fas fa-angle-double-up"
-                    item.isOPText           = globalvars.lang_arr["servercenter_any"].playermodal[isOP]
-                    item.isOPColor          = `text-${isOP ? "success" : "danger"}`
-                    item.canSendCommands    = hasPermissions(globalvars.perm, "sendCommands", varser.cfg)*/
+                    item.id                 = steamInfos[item.name] ? steamInfos[item.name].steamid : '0'
+
                     VUE_serverCenterHead.playerArray.push(item)
                 }
 

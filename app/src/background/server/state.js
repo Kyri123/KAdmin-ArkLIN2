@@ -86,7 +86,7 @@ module.exports = {
                 data.INI               = servINI
                 data.ServerMap         = servINI.serverMap
                 data.ServerName        = servINI.ark_SessionName
-                data.connect           = `steam://connect/${ip.address()}:${servCFG.query}`
+                data.connect           = `steam://connect/${ip.address()}:${servINI.ark_QueryPort}`
                 data.is_installed      = globalUtil.safeFileExsistsSync([serverPath, servINI.arkserverexec !== undefined ? servINI.arkserverexec : 'ShooterGame/Binaries/Linux/ShooterGameServer'])
                 data.is_installing     = !globalUtil.safeFileExsistsSync([serverPath, servINI.arkserverexec !== undefined ? servINI.arkserverexec : 'ShooterGame/Binaries/Linux/ShooterGameServer']) && globalUtil.safeFileExsistsSync([serverPath, 'steamapps'])
                 data.selfname          = servCFG.selfname
@@ -199,9 +199,10 @@ module.exports = {
                                   .then((state) => {
                                       data.players          = servINI.ark_MaxPlayers
                                       data.aplayers         = 0
+
                                       if(Array.isArray(state.players))
                                           for(const item of state.players)
-                                              if(item.name !== undefine) {
+                                              if(item.name !== undefined) {
                                                   data.aplayers++
                                               }
 
@@ -211,7 +212,6 @@ module.exports = {
                                       data.cfg              = name
                                       data.ServerName       = state.name
                                       data.usePW            = state.password
-                                      data.version          = state.name.replaceAll(/[^0-9]/g, '') / 100
                                       data.lastGameding     = state
 
                                       // Speichern

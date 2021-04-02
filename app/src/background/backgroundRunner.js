@@ -229,18 +229,21 @@ module.exports = {
                         let cfg = serv.getConfig()
                         // Auto Backup system
                         if(cfg.autoBackup) {
+                            if(!cfg.autoBackupNext) cfg.autoBackupNext = 0
                             if(Date.now() > cfg.autoBackupNext) {
                                 serverCommands.doBackup(val[0], cfg.autoBackupPara);
-                                serv.writeConfig("autoBackupNext", (Date.now() + cfg.autoBackupInterval))
+                                serv.writeConfig("autoBackupNext", (Date.now() + +cfg.autoBackupInterval))
                                 if(debug) console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}][DEBUG]\x1b[36m run > doServerBackgrounder > autoBackup > ${val[0]}`)
                             }
                         }
 
                         // Auto Update system
                         if(cfg.autoUpdate) {
+                            if(!cfg.autoUpdateNext) cfg.autoUpdateNext = 0
+                            console.log(Date.now())
                             if(Date.now() > cfg.autoUpdateNext) {
                                 serverCommands.doArkmanagerCommand(val[0], "update", cfg.autoUpdatePara);
-                                serv.writeConfig("autoUpdateNext", (Date.now() + cfg.autoUpdateInterval))
+                                serv.writeConfig("autoUpdateNext", (Date.now() + +cfg.autoUpdateInterval))
                                 if(debug) console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}][DEBUG]\x1b[36m run > doServerBackgrounder > autoUpdate > ${val[0]}`)
                             }
                         }
