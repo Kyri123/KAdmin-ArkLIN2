@@ -240,7 +240,6 @@ module.exports = {
                         // Auto Update system
                         if(cfg.autoUpdate) {
                             if(!cfg.autoUpdateNext) cfg.autoUpdateNext = 0
-                            console.log(Date.now())
                             if(Date.now() > cfg.autoUpdateNext) {
                                 serverCommands.doArkmanagerCommand(val[0], "update", cfg.autoUpdatePara);
                                 serv.writeConfig("autoUpdateNext", (Date.now() + +cfg.autoUpdateInterval))

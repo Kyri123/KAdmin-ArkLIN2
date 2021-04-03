@@ -96,7 +96,6 @@ let VUE_modContainer = new Vue({
             indikator   : indikator
          })
             .done((data) => {
-               console.log(data)
                let response   = JSON.parse(data)
                if(response.sendToast) fireToast(response.code, response.success ? "success" : "error")
                this.getInfos()
