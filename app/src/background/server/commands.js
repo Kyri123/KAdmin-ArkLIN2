@@ -63,6 +63,7 @@ module.exports = {
       let serv       = new serverClass(server)
       if(serv.serverExsists()) {
          let servCFG          = serv.getConfig()
+         let servINI          = serv.getINI()
          let zipPath          = pathMod.join(servCFG.pathBackup, `${Date.now()}.zip`)
          let backuprun        = pathMod.join(servCFG.pathBackup, `backuprun`)
          let paths            = ['*']
@@ -70,21 +71,21 @@ module.exports = {
          globalUtil.safeFileMkdirSync([servCFG.pathBackup])
 
          if(
-            !globalUtil.checkValidatePath(servCFG.path) ||
-            !globalUtil.checkValidatePath(servCFG.pathBackup)
+            !globalUtil.checkValidatePath(servINI.arkserverroot) ||
+            !globalUtil.checkValidatePath(servINI.arkbackupdir)
          ) return false
 
          if(paths.length !== 0) {
             if(fromPanel) globalUtil.safeFileCreateSync([backuprun])
             // prüfe backupverzeichnis
             let checkBackupPath = function () {
-            let haveRm          = false
+               let haveRm          = false
 
-            let maxSize   = servCFG.autoBackupMaxDirSize
-            let maxCount  = servCFG.autoBackupMaxCount
+               let maxSize   = servCFG.autoBackupMaxDirSize
+               let maxCount  = servCFG.autoBackupMaxCount
             if(maxCount !== 0 || maxSize !== 0) {
                maxSize              = maxSize * 1e+6
-               let backupDirInfos   = globalUtil.safeFileReadDirSync([servCFG.pathBackup])
+               let backupDirInfos   = globalUtil.safeFileReadDirSync([servINI.arkserverroot])
                let totalSize        = 0
                let totalCount       = 0
                let oldestFile       = false
@@ -106,7 +107,7 @@ module.exports = {
                      (maxCount !== 0 && maxCount <= totalCount) ||
                      (maxSize !== 0 && maxSize <= totalSize)
                   ) {
-                     globalUtil.safeFileRmSync([servCFG.pathBackup, `${oldestFile}.zip`])
+                     globalUtil.safeFileRmSync([servINI.arkserverroot, `${oldestFile}.zip`])
                      haveRm = true
                   }
                }
@@ -116,7 +117,7 @@ module.exports = {
             }
 
             if(checkBackupPath()) {
-               serverShell.runSHELLInScreen(`cd ${servCFG.path}/ShooterGame/Saved && zip -9 -r ${zipPath} ${paths.join(" ")} ${fromPanel ? `> ${logPath}` : ''} ${fromPanel ? `&& rm ${backuprun}` : ''}`, `kadmin_arklin_backupsystem_${server}`)
+               serverShell.runSHELLInScreen(`cd ${servINI.arkserverroot}/ShooterGame/Saved && zip -9 -r ${zipPath} ${paths.join(" ")} ${fromPanel ? `> ${logPath}` : ''} ${fromPanel ? `&& rm ${backuprun}` : ''}`, `kadmin_arklin_backupsystem_${server}`)
                return true
             }
          }
