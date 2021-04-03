@@ -9,6 +9,7 @@
 "use strict"
 
 const router            = require('express').Router()
+const commander         = require('./../../app/src/background/server/commands')
 
 router.route('/')
 
@@ -62,6 +63,13 @@ router.route('/')
                            server.writeConfig("path", pathMod.join(data.servRoot, serverName))
                            server.writeConfig("pathBackup", pathMod.join(data.pathBackup, serverName))
                            server.writeConfig("pathLogs", pathMod.join(data.logRoot, serverName))
+
+                           server.writeIni("arkserverroot", pathMod.join(data.servRoot, serverName))
+                           server.writeIni("arkbackupdir", pathMod.join(data.pathBackup, serverName))
+                           server.writeIni("logdir", pathMod.join(data.logRoot, serverName))
+
+                           if(server.isrun() || server.online())
+                              commander.doArkmanagerCommand(server.server, "stop", ["--warn"])
                         }
                      }
                   })
