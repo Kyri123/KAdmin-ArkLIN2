@@ -26,14 +26,14 @@ router.route('/')
                 FILES
             ) if(userHelper.hasPermissions(req.session.uid,`backups/upload`, POST.server)) {
                 let serverData      = new serverClass(POST.server)
-                let serverCFG       = serverData.getConfig()
+                let INI             = serverData.getINI()
                 let success         = true
                 let file            = FILES['files[]']
 
                 // lade Datei hoch
                 try {
                     if(file.name.includes(".zip") && /^[0-9]+$/.test(file.name.replaceAll(".zip", ""))) {
-                        let path = pathMod.join(serverCFG.pathBackup, file.name)
+                        let path = pathMod.join(INI.arkbackupdir, file.name)
                         globalUtil.safeFileRmSync([path])
                         file.mv(pathMod.join(path))
                         success = true
@@ -63,7 +63,7 @@ router.route('/')
             POST.remove     !== undefined
         ) if(userHelper.hasPermissions(req.session.uid, "backups/remove", POST.server)) {
             let serverData  = new serverClass(POST.server)
-            let serverCFG   = serverData.getConfig()
+            let INI         = serverData.getINI()
             let success     = false
             try {
                 if(Array.isArray(POST.file)) {
@@ -71,7 +71,7 @@ router.route('/')
                     for(let file of POST.file) {
                         if(!file.includes("/")) {
                             if (globalUtil.poisonNull(file) && !file.includes("..")) {
-                                if (!globalUtil.safeFileRmSync([serverCFG.pathBackup, file]))
+                                if (!globalUtil.safeFileRmSync([INI.arkbackupdir, file]))
                                     tmpSuccess = false
                             }
                             else {
@@ -86,7 +86,7 @@ router.route('/')
                 }
                 else {
                     if (globalUtil.poisonNull(POST.file) && !POST.file.includes("..") && !POST.file.includes("/")) {
-                        success = globalUtil.safeFileRmSync([serverCFG.pathBackup, POST.file])
+                        success = globalUtil.safeFileRmSync([INI.arkbackupdir, POST.file])
                     }
                 }
             }
@@ -164,9 +164,10 @@ router.route('/')
         if(GET.getDir !== undefined && GET.server !== undefined) {
             let serverData  = new serverClass(GET.server)
             let CFG         = serverData.getConfig()
-            if(globalUtil.safeFileExsistsSync([CFG.pathBackup]) && serverData.serverExsists()) {
+            let INI         = serverData.getINI()
+            if(globalUtil.safeFileExsistsSync([INI.arkbackupdir]) && serverData.serverExsists()) {
                 res.render('ajax/json', {
-                    data: JSON.stringify(globalUtil.safeFileReadDirSync([CFG.pathBackup]))
+                    data: JSON.stringify(globalUtil.safeFileReadDirSync([INI.arkbackupdir]))
                 })
                 return true
             }
