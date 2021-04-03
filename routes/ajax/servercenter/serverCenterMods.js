@@ -48,8 +48,10 @@ router.route('/')
                         save                            = true
                     }
 
+
                     // Änderungen übernehmen und Response
                     if(save) {
+                        modList = globalUtil.removeEmtpyElementsFromArray(modList)
                         let success     = server.writeIni("ark_GameModIds", modList.join(','))
                         res.render('ajax/json', {
                             data: JSON.stringify({
@@ -84,6 +86,7 @@ router.route('/')
 
                     // Änderungen übernehmen und Response
                     if(save) {
+                        modList = globalUtil.removeEmtpyElementsFromArray(modList)
                         let success     = server.writeIni("ark_GameModIds", modList.join(','))
                         res.render('ajax/json', {
                             data: JSON.stringify({
@@ -140,6 +143,7 @@ router.route('/')
                     // Prüfe Mod position und entferne diese
                     if(isModActive) {
                         modList.splice(modList.indexOf(modSource), 1)
+                        modList = globalUtil.removeEmtpyElementsFromArray(modList)
                         success = server.writeIni("ark_GameModIds", modList.join(','))
                     }
 
@@ -189,6 +193,7 @@ router.route('/')
                     for (const modId of modsToAdd)
                         if (!modList.includes(modId.toString())) modList.push(modId.toString())
 
+                    modList = globalUtil.removeEmtpyElementsFromArray(modList)
                     success = server.writeIni("ark_GameModIds", modList.join(','))
                 }
 

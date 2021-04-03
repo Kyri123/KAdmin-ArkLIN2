@@ -444,5 +444,21 @@ module.exports = {
                 return inBit ? bits : module.exports.convertBytes(bits)
             }
         }
-    }
+    },
+
+    /**
+     * Entfernt alle leeren Elemente vom Array
+     * @param {array} array Array die ausgelesen werden soll
+     * @return {array}
+     */
+    removeEmtpyElementsFromArray(array) {
+        // Durchlaufe den Array
+        for(const i in array) {
+            if(typeof array[i] === "string") {
+                if(array[i].trim() === "")
+                    array.splice(i, 1)
+            }
+        }
+        return array
+    },
 }
