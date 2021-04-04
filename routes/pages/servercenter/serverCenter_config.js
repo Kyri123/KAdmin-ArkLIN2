@@ -30,18 +30,13 @@ router.route('/')
        let serverName    = req.baseUrl.split('/')[2]
 
       if(!userHelper.hasPermissions(req.session.uid, "config/show", serverName) || !userHelper.hasPermissions(req.session.uid, "show", serverName)) {
-         res.redirect("/401");
-         return true;
+         res.redirect("/401")
+         return true
       }
 
-       let serverData    = new serverClass(serverName);
-       let servCfg       = serverData.getConfig();
-       let servIni       = serverData.getINI();
-       let jars          = []
-
-       if(fs.existsSync(servCfg.path)) fs.readdirSync(servCfg.path).forEach(file => {
-          if(file.includes(".jar")) jars.push(file)
-       })
+       let serverData    = new serverClass(serverName)
+       let servCfg       = serverData.getConfig()
+       let servIni       = serverData.getINI()
 
       // Render Seite
       res.render('pages/servercenter/serverCenter_config', {
@@ -56,13 +51,12 @@ router.route('/')
           servcfg                 : servCfg,
           sclass                  : serverData,
           serverName              : serverName,
-          jars                    : jars,
           breadcrumb      : [
               lang.breadcrumb["servercenter"],
               serverName,
-              lang.breadcrumb["servercenter_config"],
+              lang.breadcrumb["servercenter_config"]
           ]
-      });
+      })
  })
 
 module.exports = router;

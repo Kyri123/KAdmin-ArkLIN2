@@ -1,7 +1,4 @@
 {
-  "path"                    : "{SERVROOT}/{SERVERNAME}",
-  "pathLogs"                : "{LOGROOT}/{SERVERNAME}",
-  "pathBackup"              : "{BACKUPROOT}/{SERVERNAME}",
   "autoUpdate"              : false,
   "autoUpdateInterval"      : 1800000,
   "autoUpdatePara"          : [],
@@ -14,5 +11,5 @@
   "autoBackupMaxDirSize"    : 0,
   "shouldRun"               : false,
   "selfname"                : "[KAdmin] ArkServer",
-  "currversion"             : "0.0.0"
+  "currversion"             : "0.0"
 }

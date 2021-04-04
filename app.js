@@ -12,6 +12,8 @@ global.pathMod                        = require('path')
 global.util                           = require('util')
 global.dateFormat                     = require('dateformat')
 
+global.panelIsStartUp                 = true
+
 // überschreibe console.log
 let logDir          = pathMod.join(__dirname, "latest_logs")
 let logFile         = pathMod.join(logDir, "current.log")
@@ -78,7 +80,7 @@ global.htmlspecialchars               = require('htmlspecialchars')
 global.mysql                          = require('mysql')
 //global.mode                         = "dev"
 global.buildID                        = fs.readFileSync(pathMod.join(mainDir, "build"), 'utf-8')
-global.panelVersion                   = "0.0.1"
+global.panelVersion                   = fs.readFileSync(pathMod.join(mainDir, "version"), 'utf-8')
 global.globalUtil                     = require('./app/src/util')
 global.Installed                      = true
 global.serverClass                    = require('./app/src/util_server/class')

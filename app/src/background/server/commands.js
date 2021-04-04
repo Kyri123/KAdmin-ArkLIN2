@@ -40,8 +40,8 @@ module.exports = {
          }
 
          let info       = serv.getServerInfos()
-         let serverCfg  = serv.getConfig()
-         let logPath    = pathMod.join(serverCfg.pathLogs, "latest.log")
+         let serverIni  = serv.getINI()
+         let logPath    = pathMod.join(serverIni.logdir, "latest.log")
 
          if(info.isFree) {
             globalUtil.safeFileSaveSync([logPath], `arkmanager ${action} @${server} ${parameter.join(' ')} \n`)
@@ -64,11 +64,11 @@ module.exports = {
       if(serv.serverExsists()) {
          let servCFG          = serv.getConfig()
          let servINI          = serv.getINI()
-         let zipPath          = pathMod.join(servCFG.pathBackup, `${Date.now()}.zip`)
-         let backuprun        = pathMod.join(servCFG.pathBackup, `backuprun`)
+         let zipPath          = pathMod.join(servINI.arkbackupdir, `${Date.now()}.zip`)
+         let backuprun        = pathMod.join(servINI.arkbackupdir, `backuprun`)
          let paths            = ['*']
-         let logPath          = pathMod.join(servCFG.pathLogs, "latest.log")
-         globalUtil.safeFileMkdirSync([servCFG.pathBackup])
+         let logPath          = pathMod.join(servINI.logdir, "latest.log")
+         globalUtil.safeFileMkdirSync([servINI.arkbackupdir])
 
          if(
             !globalUtil.checkValidatePath(servINI.arkserverroot) ||

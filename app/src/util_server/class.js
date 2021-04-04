@@ -22,37 +22,64 @@ module.exports = class serverClass {
     */
    constructor(servername) {
       // Erstelle this Vars
-      this.exsists            = false
-      this.isClusterReaded    = false
-      this.server             = servername
-      this.cfgPath            = [mainDir, '/app/json/server/', `${this.server}.json`]
-      this.defaultCfgPath     = [mainDir, '/app/json/server/template/', `default.json`]
-      this.serverInfoPath     = [mainDir, '/public/json/server/', `${this.server}.json`]
-      this.serverIniPath      = [CONFIG.app.pathArkmanager, 'instances', `${this.server}.cfg`]
-      this.cfg                = {}
+      this.exsists               = false
+      this.isClusterReaded       = false
+      this.server                = servername
+      this.cfgPath               = [mainDir, '/app/json/server/', `${this.server}.json`]
+      this.defaultCfgPath        = [mainDir, '/app/json/server/template/', `default.json`]
+      this.serverInfoPath        = [mainDir, '/public/json/server/', `${this.server}.json`]
+      this.serverIniPath         = [CONFIG.app.pathArkmanager, 'instances', `${this.server}.cfg`]
+      this.serverDefaultIniPath  = [mainDir, '/app/json/server/template/', `default.cfg`]
+      this.cfg                   = false
+      this.INI                   = false
 
+      // Prüfe Arkmanager.cfg
+      if(globalUtil.poisonNull(this.serverIniPath)) {
+         let iniArkmanager          = globalUtil.safeFileReadSync(this.serverIniPath)
+         let iniArkmanagerDefault   = globalUtil.safeFileReadSync(this.serverDefaultIniPath)
+         if (iniArkmanager !== false && iniArkmanagerDefault !== false) {
+            try {
+               iniArkmanager     = ini.parse(iniArkmanager)
+               let endIni        = ini.parse(iniArkmanagerDefault)
+
+               if(!iniArkmanager.arkserverroot)    iniArkmanager.arkserverroot   = pathMod.join(CONFIG.app.servRoot, this.server)
+               if(!iniArkmanager.logdir)           iniArkmanager.logdir          = pathMod.join(CONFIG.app.logRoot, this.server)
+               if(!iniArkmanager.arkbackupdir)     iniArkmanager.arkbackupdir    = pathMod.join(CONFIG.app.pathBackup, this.server)
+
+               for(const option of Object.entries(iniArkmanager)) {
+                  endIni[option[0]] = option[1]
+               }
+
+               this.INI = endIni
+            }
+            catch (e) {
+               if(debug) console.log('[DEBUG_FAILED]', e)
+            }
+         }
+      }
+
+      // prüfe oder Erzeuge .json
       if(globalUtil.poisonNull(this.server)) {
-         let ini         = this.getINI()
          let file        = globalUtil.safeFileReadSync(this.cfgPath, true)
          let dfile       = globalUtil.safeFileReadSync(this.defaultCfgPath, true)
 
          if(file === false) {
-            dfile.path        = ini.arkserverroot
-            dfile.pathLogs    = ini.logdir
-            dfile.pathBackup  = ini.arkbackupdir
-            dfile.selfname    = ini.ark_SessionName
+            dfile.path        = this.INI.arkserverroot
+            dfile.pathLogs    = this.INI.logdir
+            dfile.pathBackup  = this.INI.arkbackupdir
+            dfile.selfname    = this.INI.ark_SessionName
 
             this.cfg          = dfile
             globalUtil.safeFileCreateSync(this.cfgPath, JSON.stringify(dfile))
          }
          else {
             this.cfg          =  dfile !== false
-                  ? array_replace_recursive(dfile, file)
-                  : file
+               ? array_replace_recursive(dfile, file)
+               : file
          }
-
-         this.exsists    = this.cfg !== false && globalUtil.safeFileExsistsSync(this.serverIniPath)
       }
+
+      this.exsists    = this.cfg !== false && this.INI !== false
    }
 
    /**
@@ -178,10 +205,9 @@ module.exports = class serverClass {
     * @return {boolean}
     */
    writeIni(key, value) {
-      let Ini  = this.getINI()
       if(this.serverExsists()) {
-         Ini[key] = value
-         return this.saveINI(ini.stringify(Ini))
+         this.INI[key] = value
+         return this.saveINI(ini.stringify(this.INI))
       }
       return false
    }
@@ -192,10 +218,9 @@ module.exports = class serverClass {
     * @return {boolean}
     */
    removeFromIni(key) {
-      let Ini  = this.getINI()
       if(this.serverExsists()) {
-         delete Ini[key]
-         return this.saveINI(ini.stringify(Ini))
+         delete this.INI[key]
+         return this.saveINI(ini.stringify(this.INI))
       }
       return false
    }
@@ -280,18 +305,12 @@ module.exports = class serverClass {
     * @return {boolean}
     */
    getINI(asString = false) {
-      let file    = globalUtil.safeFileReadSync(this.serverIniPath)
-      if(file === false)
-         file     = globalUtil.safeFileReadSync([mainDir, `/app/data/cfg`, `default.cfg`])
-      if(file !== false && !asString) {
-         try {
-            return ini.parse(file)
-         } catch (e) {
-            if (debug) console.log('[DEBUG_FAILED]', e)
+      if(this.serverExsists()) {
+         if (asString) {
+            return ini.stringify(this.INI)
+         } else {
+            return this.INI
          }
-      }
-      else if(file !== false && asString) {
-         return file
       }
       return false
    }

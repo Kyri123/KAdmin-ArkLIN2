@@ -60,10 +60,6 @@ router.route('/')
                         let serverName = target.name.replace('.json', '')
                         let server = new serverClass(serverName)
                         if (server.serverExsists()) {
-                           server.writeConfig("path", pathMod.join(data.servRoot, serverName))
-                           server.writeConfig("pathBackup", pathMod.join(data.pathBackup, serverName))
-                           server.writeConfig("pathLogs", pathMod.join(data.logRoot, serverName))
-
                            server.writeIni("arkserverroot", pathMod.join(data.servRoot, serverName))
                            server.writeIni("arkbackupdir", pathMod.join(data.pathBackup, serverName))
                            server.writeIni("logdir", pathMod.join(data.logRoot, serverName))

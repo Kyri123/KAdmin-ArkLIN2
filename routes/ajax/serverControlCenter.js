@@ -30,7 +30,7 @@ router.route('/')
             // Erstellen
             if(POST.action === 'add' && createPerm) {
                 let curr            = fs.readdirSync(pathMod.join(mainDir, '/app/json/server/'))
-                let defaultString   = globalUtil.safeFileReadSync([mainDir, "app/json/server/template", "default.cfg"])
+                let defaultString   = globalUtil.safeFileReadSync([mainDir, "app/json/server/template", "template.cfg"])
                 let success         = false
 
                 if(defaultString !== false) {

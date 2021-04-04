@@ -51,7 +51,7 @@ router.route('/')
           servcfg                 : servCfg,
           sclass                  : serverData,
           serverName              : serverName,
-          defaultPath             : servCfg.path,
+          defaultPath             : servIni.arkserverroot,
           breadcrumb      : [
               lang.breadcrumb["servercenter"],
               serverName,
