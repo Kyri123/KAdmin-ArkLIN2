@@ -27,26 +27,30 @@ router.route('/')
          // wenn es nicht die app.json ist
          if(
             path.includes(".json") &&
-            path.includes(mainPath) &&
-            !path.includes("app.json")
+            path.includes(mainDir) &&
+            !path.includes("main.json")
          ) canWrite = true
 
          // wenn es die app.json ist
          if(
             path.includes(".json") &&
-            path.includes(mainPath) &&
+            path.includes(mainDir) &&
             path.includes("app.json")
          ) {
+            let current             = globalUtil.safeFileReadSync([path], true)
             let pathArray           = [
                pathMod.join(data.servRoot),
                pathMod.join(data.logRoot),
                pathMod.join(data.pathBackup)
             ]
+
             // prüfe ob es innerhalb des Panel ist und ob keine Pfade sich überschneiden
             if (
-               pathArray[0].includes(mainDir) &&
-               pathArray[1].includes(mainDir) &&
-               pathArray[2].includes(mainDir) &&
+               (
+                  (pathArray[0].includes(mainDir) && pathArray[0] !== current.servRoot) ||
+                  (pathArray[1].includes(mainDir) && pathArray[1] !== current.logRoot) ||
+                  (pathArray[2].includes(mainDir) && pathArray[2] !== current.pathBackup)
+               ) &&
                findDuplicates(pathArray).length === 0
             ) {
                try {
@@ -82,8 +86,8 @@ router.route('/')
                fs.writeFileSync(path, JSON.stringify(data), {
                   encoding: 'utf-8'
                })
-               success = true
-               global.needRestart = true
+               success              = true
+               global.needRestart   = true
             }
          }
          catch (e) {
