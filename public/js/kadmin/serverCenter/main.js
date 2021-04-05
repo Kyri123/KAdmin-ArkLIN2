@@ -38,6 +38,7 @@ const VUE_serverCenterHead = new Vue({
         player          : "...",
         playerArray     : [],
         playerAlert     : alerter(2000, "", 3, false, 3, 3, 3, true),
+        serverIsOnline  : false,
         max             : 0,
         maxis           : 0,
         maxfiles        : 0,
@@ -76,6 +77,7 @@ const VUE_serverCenterHead = new Vue({
 
                 serverIsInstalled = serverInfos.is_installed
 
+                VUE_serverCenterHead.serverIsOnline = serverInfos.online
                 VUE_serverCenterHead.logo           = serverInfos.icon
                 VUE_serverCenterHead.bglogo         = serverInfos.bgicon
                 VUE_serverCenterHead.state          = varser.lang_arr.forservers.state[stateColor]

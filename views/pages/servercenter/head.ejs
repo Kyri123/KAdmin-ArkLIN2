@@ -11,7 +11,15 @@
                 <div class="widget-user-header rounded-0 text-white p-0" :style="`background: url('${bglogo}') center right;`">
                     <div style="background-color: rgba(66,66,66,0.30)!important; height: 100%" class="p-3">
                         <h3 class="widget-user-username text-center text-light left"><%- servcfg.selfname %></h3>
-                        <h5 class="widget-user-desc text-center text-light"><%- ip.address() %>:<%- servini.ark_QueryPort %></h5>
+
+                        <h5 v-if="serverIsOnline" class="widget-user-desc text-center">
+                            <a href="steam://connect/<%- ip.address() %>:<%- servini.ark_QueryPort %>" class="text-light">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <%- ip.address() %>:<%- servini.ark_QueryPort %>
+                            </a>
+                        </h5>
+                        <h5 v-else class="widget-user-desc text-center text-light"><%- ip.address() %>:<%- servini.ark_QueryPort %></h5>
+
                         <div class="d-none" id="secretInfo"><%- ip.address() %>:<%- servini.ark_QueryPort %></div>
                     </div>
                 </div>
