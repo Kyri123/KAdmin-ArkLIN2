@@ -453,12 +453,11 @@ module.exports = {
      */
     removeEmtpyElementsFromArray(array) {
         // Durchlaufe den Array
-        for(const i in array) {
-            if(typeof array[i] === "string") {
-                if(array[i].trim() === "")
-                    array.splice(i, 1)
-            }
-        }
+        if(Array.isArray(array))
+            for(const i in array)
+                if(typeof array[i] !== "object" && !Array.isArray(array[i]))
+                    if(array[i].toString().trim() === "")
+                        array.splice(i, 1)
         return array
     },
 }

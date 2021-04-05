@@ -7,6 +7,14 @@
  * *******************************************************************************************
  */
 "use strict"
+
+const origWarning = process.emitWarning;
+process.emitWarning = function(...args) {
+  if (args[2] !== 'DEP0005') {
+    return origWarning.apply(process, args);
+  }
+}
+
 global.fs                             = require('fs')
 global.pathMod                        = require('path')
 global.util                           = require('util')
@@ -27,21 +35,25 @@ let logStream = fs.createWriteStream(logFile, {flags : 'w'});
 let logStdout = process.stdout;
 
 console.log = function() {
-  logStdout.write(util.format(...arguments) + '\n')
+  if(
+     arguments[0] !== "Fetching new player & tribe data from ark files"
+  ) {
+    logStdout.write(util.format(...arguments) + '\n')
 
-  for(let i in arguments) {
-    if(typeof arguments[i] === "string") arguments[i] = arguments[i]
-       .replaceAll('%s\x1b[0m', '')
-       .replaceAll('\x1b[30m', '')
-       .replaceAll('\x1b[31m', '')
-       .replaceAll('\x1b[32m', '')
-       .replaceAll('\x1b[33m', '')
-       .replaceAll('\x1b[34m', '')
-       .replaceAll('\x1b[35m', '')
-       .replaceAll('\x1b[36m', '')
+    for (let i in arguments) {
+      if (typeof arguments[i] === "string") arguments[i] = arguments[i]
+         .replaceAll('%s\x1b[0m', '')
+         .replaceAll('\x1b[30m', '')
+         .replaceAll('\x1b[31m', '')
+         .replaceAll('\x1b[32m', '')
+         .replaceAll('\x1b[33m', '')
+         .replaceAll('\x1b[34m', '')
+         .replaceAll('\x1b[35m', '')
+         .replaceAll('\x1b[36m', '')
+    }
+
+    logStream.write(util.format(...arguments) + '\n', () => logStream.emit("write"))
   }
-
-  logStream.write(util.format(...arguments) + '\n', () => logStream.emit("write"))
 }
 
 // Prüfe NodeJS version
@@ -96,11 +108,11 @@ globalUtil.safeFileMkdirSync([CONFIG.app.pathBackup])
 
 global.buildIDBranch                  = false
 try {
-  global.buildIDBranch = Buffer.from(JSON.parse(syncRequest('GET', `https://api.github.com/repos/Kyri123/KAdmin-ArkLIN2/contents/build?ref=${CONFIG.updater.useBranch}`, {
+  global.buildIDBranch = JSON.parse(syncRequest('GET', `https://api.github.com/repos/Kyri123/KAdmin-ArkLIN2/contents/build?ref=${CONFIG.updater.useBranch}`, {
     headers: {
       'user-agent': 'KAdmin-ArkLIN2',
     },
-  }).getBody().toString()).content, 'base64').toString('utf-8')
+  }).getBody().toString()).content
 } catch (e) {
   global.buildIDBranch = false
 }

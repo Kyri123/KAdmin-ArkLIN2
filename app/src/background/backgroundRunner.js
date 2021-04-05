@@ -18,6 +18,7 @@ const serverCommands        = require('./server/commands')
 const steamAPIhelper        = require('./../util_steam/steamAPI')
 const updater               = require('./updater')
 const cluster               = require('./cluster')
+const ArkFiles              = require('../../../modifyed_packages/ark-files')
 
 
 module.exports = {
@@ -37,6 +38,7 @@ module.exports = {
         module.exports.getTraffic()
         module.exports.getStateFromServers()
         module.exports.doClusterStuff()
+        module.exports.doServerBackgrounder()
     },
 
     /**
@@ -229,6 +231,7 @@ module.exports = {
                     let serv = new serverClass(val[0])
                     if(serv.serverExsists()) {
                         let cfg = serv.getConfig()
+                        let INI = serv.getINI()
                         // Auto Backup system
                         if(cfg.autoBackup) {
                             if(!cfg.autoBackupNext) cfg.autoBackupNext = 0
@@ -246,6 +249,40 @@ module.exports = {
                                 serverCommands.doArkmanagerCommand(val[0], "update", cfg.autoUpdatePara);
                                 serv.writeConfig("autoUpdateNext", (Date.now() + +cfg.autoUpdateInterval))
                                 if(debug) console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}][DEBUG]\x1b[36m run > doServerBackgrounder > autoUpdate > ${val[0]}`)
+                            }
+                        }
+
+                        // tests
+                        if(serv.getSaveDirLocation() !== false) {
+                            let saveDir     = serv.getSaveDirLocation(false)
+                            if(globalUtil.safeFileExsistsSync([saveDir])) {
+                                try {
+                                    let savegames = new ArkFiles(saveDir)
+                                    let saves       = savegames.getPlayers()
+                                    for(const i in saves) {
+                                        if(saves[i].Tribe) {
+                                            if (saves[i].Tribe.Players) delete saves[i].Tribe.Players
+                                            if (saves[i].Tribe.TribeLogs) delete saves[i].Tribe.TribeLogs
+                                            if (saves[i].Tribe.TribeMemberNames) delete saves[i].Tribe.TribeMemberNames
+                                        }
+                                    }
+                                    globalUtil.safeFileSaveSync([mainDir, "public/json/savegames/players/", `${serv.server}.json`], JSON.stringify(saves))
+                                }
+                                catch (e) {
+                                    console.log(e)
+                                }
+                                try {
+                                    let savegames   = new ArkFiles(saveDir)
+                                    let saves       = savegames.getTribes()
+                                    for(const i in saves) {
+                                        if(saves[i].Players) delete saves[i].Players
+                                        if(saves[i].TribeLogs) if(Array.isArray(saves[i].TribeLogs)) saves.TribeLogs = globalUtil.removeEmtpyElementsFromArray(saves[i].TribeLogs)
+                                    }
+                                    globalUtil.safeFileSaveSync([mainDir, "public/json/savegames/tibes/", `${serv.server}.json`], JSON.stringify(saves))
+                                }
+                                catch (e) {
+                                    console.log(e)
+                                }
                             }
                         }
 
