@@ -108,11 +108,11 @@ globalUtil.safeFileMkdirSync([CONFIG.app.pathBackup])
 
 global.buildIDBranch                  = false
 try {
-  global.buildIDBranch = JSON.parse(syncRequest('GET', `https://api.github.com/repos/Kyri123/KAdmin-ArkLIN2/contents/build?ref=${CONFIG.updater.useBranch}`, {
+  global.buildIDBranch = Buffer.from(JSON.parse(syncRequest('GET', `https://api.github.com/repos/Kyri123/KAdmin-ArkLIN2/contents/build?ref=${CONFIG.updater.useBranch}`, {
     headers: {
-      'user-agent': 'KAdmin-ArkLIN2',
+      'user-agent': 'KAdmin-ArkLIN2-Server AutoUpdater :: FROM: ${ip.address()}',
     },
-  }).getBody().toString()).content
+  }).getBody().toString()).content, 'base64').toString('utf-8')
 } catch (e) {
   global.buildIDBranch = false
 }
