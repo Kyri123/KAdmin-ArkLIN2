@@ -119,7 +119,8 @@ module.exports = class BinaryParser {
             // Offset for the property
             offset += 4;
             // Trim and push to the array
-            arr.push(BinaryParser.trim(value));
+            if(typeof value === "string")
+                arr.push(BinaryParser.trim(value))
         }
 
         return arr;
@@ -167,7 +168,10 @@ module.exports = class BinaryParser {
      * @returns {string}
      */
     static trim(value) {
-        return value.replace(/\0[\s\S]*$/g,'');
+        if(typeof value === "string") {
+            return value.replace(/\0[\s\S]*$/g, '')
+        }
+        return value
     }
 
 };
