@@ -28,12 +28,12 @@ module.exports = {
      */
     poisonNull(paths) {
         let bool = true
-        if(Array.isArray()) {
+        if(Array.isArray(paths)) {
             paths.forEach((val) => {
                if(val.indexOf('\0') !== -1) bool = false
             })
         }
-        else {
+        else if(typeof paths === "string") {
             bool = paths.indexOf('\0') === -1
         }
         return bool
