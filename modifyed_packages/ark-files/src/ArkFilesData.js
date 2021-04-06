@@ -138,18 +138,7 @@ class ArkFilesData {
      * Create new Player object
      *
      * @param file
-     * @returns {{
-     * Tribe: Tribe|false,
-     * PlayerName: string,
-     * Level: Number,
-     * TotalEngramPoints: Number,
-     * CharacterName: string,
-     * TribeId: Number|false,
-     * SteamId: Number,
-     * PlayerId: Number,
-     * FileCreated: string,
-     * FileUpdated: string
-     * }}
+     * @returns {{TribeId: *, PlayerId: *, FileUpdated: string, PlayerName: *, TotalEngramPoints: *, CharacterName: *, FileCreated: string, Level: *, Tribe: boolean, SteamId: number}}
      * @private
      */
     _playerFactory(file) {
