@@ -2,6 +2,7 @@
   "actions": [
     "install",
     "start",
+    "restart",
     "stop",
     "backup",
     "update",

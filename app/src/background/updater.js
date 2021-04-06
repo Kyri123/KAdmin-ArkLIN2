@@ -27,10 +27,7 @@ module.exports = {
         let removeFileArray = [
             "/app/config/app.json",
             "/app/config/mysql.json",
-            "/app/config/updater.json",
-            "/app/json/panel/changelog.json",
-            "/app/json/server/5c68f48w.json",
-            "/app/json/server/5g28f48x.json"
+            "/app/config/updater.json"
         ]
 
         // Erstelle tmp Ordner
