@@ -13,138 +13,9 @@ const serverClass       = require('./../../../app/src/util_server/class')
 const unzip             = require("unzipper")
 
 router.route('/')
-
-    .post((req,res)=>{
+    .post((req,res) => {
         let POST            = req.body
         let FILES           = req.files
-
-        // Upload
-        try {
-            if(
-                typeof POST.server    !== "undefined" &&
-                typeof POST.upload    !== "undefined" &&
-                FILES
-            ) if(userHelper.hasPermissions(req.session.uid,`backups/upload`, POST.server)) {
-                let serverData      = new serverClass(POST.server)
-                let INI             = serverData.getINI()
-                let success         = true
-                let file            = FILES['files[]']
-
-                // lade Datei hoch
-                try {
-                    if(file.name.includes(".zip") && /^[0-9]+$/.test(file.name.replaceAll(".zip", ""))) {
-                        let path = pathMod.join(INI.arkbackupdir, file.name)
-                        globalUtil.safeFileRmSync([path])
-                        file.mv(pathMod.join(path))
-                        success = true
-                    }
-                }
-                catch (e) {
-                    if(debug) console.log('[DEBUG_FAILED]', e)
-                    success = false
-                }
-
-                res.render('ajax/json', {
-                    data: JSON.stringify({
-                        "success": success
-                    })
-                })
-                return true
-            }
-        }
-        catch (e) {
-            if(debug) console.log('[DEBUG_FAILED]', e)
-        }
-
-        // Backup entfernen
-        if(
-            POST.server     !== undefined &&
-            POST.file       !== undefined &&
-            POST.remove     !== undefined
-        ) if(userHelper.hasPermissions(req.session.uid, "backups/remove", POST.server)) {
-            let serverData  = new serverClass(POST.server)
-            let INI         = serverData.getINI()
-            let success     = false
-            try {
-                if(Array.isArray(POST.file)) {
-                    let tmpSuccess = true
-                    for(let file of POST.file) {
-                        if(!file.includes("/")) {
-                            if (globalUtil.poisonNull(file) && !file.includes("..")) {
-                                if (!globalUtil.safeFileRmSync([INI.arkbackupdir, file]))
-                                    tmpSuccess = false
-                            }
-                            else {
-                                tmpSuccess = false
-                            }
-                        }
-                        else {
-                            tmpSuccess = false
-                        }
-                    }
-                    success = tmpSuccess
-                }
-                else {
-                    if (globalUtil.poisonNull(POST.file) && !POST.file.includes("..") && !POST.file.includes("/")) {
-                        success = globalUtil.safeFileRmSync([INI.arkbackupdir, POST.file])
-                    }
-                }
-            }
-            catch (e) {
-                if(debug) console.log('[DEBUG_FAILED]', e)
-            }
-
-            res.render('ajax/json', {
-                data: JSON.stringify({
-                    success: success
-                })
-            })
-            return
-        }
-
-        // Playin
-        if(
-           POST.server     !== undefined &&
-           POST.file       !== undefined &&
-           POST.playin     !== undefined
-        ) if(userHelper.hasPermissions(req.session.uid, "backups/playin", POST.server)) {
-            let serverData      = new serverClass(POST.server)
-            let serverINI       = serverData.getINI()
-            let saveLocation    = serverData.getIniDirLocation()
-            let success         = false
-
-            try {
-                if(globalUtil.poisonNull(POST.file) && !POST.file.includes("..") && !POST.file.includes("/") && !serverData.isrun()) {
-                    if(globalUtil.safeFileMkdirSync([serverINI.arkserverroot, "tmp"]) && globalUtil.safeFileCreateSync([serverINI.arkserverroot, "isplayin"])) {
-                        fs.createReadStream(pathMod.join(serverINI.arkbackupdir, POST.file))
-                            .pipe(unzip.Extract({path: pathMod.join(serverINI.arkserverroot, "tmp")}))
-                            .on("close", () => {
-                                let dirRead = fs.readdirSync(pathMod.join(serverINI.arkserverroot, "tmp"))
-
-                                for(let file of dirRead) {
-                                    globalUtil.safeFileRmSync([serverINI.arkserverroot, file])
-                                    globalUtil.safeFileRenameSync([serverINI.arkserverroot, "tmp", file], [saveLocation, file])
-                                }
-
-                                globalUtil.safeFileRmSync([serverINI.arkserverroot, "tmp"])
-                                globalUtil.safeFileRmSync([serverINI.arkserverroot, "isplayin"])
-                            })
-                        success = true
-                    }
-                }
-            }
-            catch (e) {
-                if(debug) console.log('[DEBUG_FAILED]', e)
-            }
-
-            res.render('ajax/json', {
-                data: JSON.stringify({
-                    success: success
-                })
-            })
-            return
-        }
-
 
         res.render('ajax/json', {
             data: `{"request":"failed"}`
@@ -152,26 +23,9 @@ router.route('/')
         return true
     })
 
-    .get((req,res)=>{
+    .get((req,res) => {
         // DEFAULT AJAX
         let GET         = req.query
-        GET.server      = htmlspecialchars(GET.server)
-
-        // Wenn keine Rechte zum abruf
-        if(!userHelper.hasPermissions(req.session.uid, "show", GET.server) || !userHelper.hasPermissions(req.session.uid, "backups/show", GET.server)) return true
-
-        // GET serverInfos
-        if(GET.getDir !== undefined && GET.server !== undefined) {
-            let serverData  = new serverClass(GET.server)
-            let CFG         = serverData.getConfig()
-            let INI         = serverData.getINI()
-            if(globalUtil.safeFileExsistsSync([INI.arkbackupdir]) && serverData.serverExsists()) {
-                res.render('ajax/json', {
-                    data: JSON.stringify(globalUtil.safeFileReadDirSync([INI.arkbackupdir]))
-                })
-                return true
-            }
-        }
 
         res.render('ajax/json', {
             data: `{"request":"failed"}`

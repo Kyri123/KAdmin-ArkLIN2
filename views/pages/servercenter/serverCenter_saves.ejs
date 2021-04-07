@@ -1,0 +1,19 @@
+<%- include('../../includes/head'); -%>
+<%- include('../../includes/top') -%>
+<%- include('../../includes/nav') -%>
+<%- include('../../includes/content') -%>
+<%- include('./head'); -%>
+<div class="row" id="savesContainer">
+</div>
+
+
+<script>
+    // Vars die zur JS übergeben werden
+    // Allgemeine Vars
+    let vars = {};
+    vars.cfg = '<%- serverName %>';
+</script>
+
+<script src="/js/kadmin/serverCenter/saves.js" type="application/javascript"></script>
+
+<%- include('../../includes/foother'); -%>
