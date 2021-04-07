@@ -96,6 +96,11 @@ router.use(
    require('./pages/servercenter/serverCenter_mods')
 )
 router.use(
+    '/servercenter/:name/saves',
+    isLoggedIn, isServerExsits,
+    require('./pages/servercenter/serverCenter_saves')
+)
+router.use(
    '/servercenter/:name',
    isLoggedIn, isServerExsits,
    require('./pages/servercenter/serverCenter')
@@ -158,6 +163,11 @@ router.use(
    '/ajax/serverCenterConfig',
    isLoggedIn,
    require('./ajax/servercenter/serverCenterConfig')
+)
+router.use(
+    '/ajax/serverCenterSaves',
+    isLoggedIn,
+    require('./ajax/servercenter/serverCenterSaves')
 )
 router.use(
    '/ajax/serverCenterFilebrowser',
