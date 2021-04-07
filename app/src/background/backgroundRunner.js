@@ -33,12 +33,14 @@ module.exports = {
         setInterval(() => module.exports.doServerBackgrounder(),        CONFIG.main.interval.doServerBackgrounder)
         setInterval(() => module.exports.getDataFromSteamAPI(),         CONFIG.main.interval.getDataFromSteamAPI)
         setInterval(() => module.exports.doClusterStuff(),              CONFIG.main.interval.doClusterStuff)
+        setInterval(() => module.exports.doSavegamesRead(),             CONFIG.main.interval.doSavegamesRead)
 
         module.exports.getDataFromSteamAPI()
         module.exports.getTraffic()
         module.exports.getStateFromServers()
         module.exports.doClusterStuff()
         module.exports.doServerBackgrounder()
+        module.exports.doSavegamesRead()
     },
 
     /**
@@ -218,6 +220,62 @@ module.exports = {
 
 
     /**
+     * Lies Savegames der Server aus
+     * @returns {Promise<void>}
+     */
+    doSavegamesRead: () => {
+        (async () => {
+            if(debug) console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}][DEBUG]\x1b[36m run > doSavegamesRead`)
+            let serverInfos     = globalInfos.get()
+
+            if(serverInfos.servers_arr.length > 0) {
+                serverInfos.servers_arr.forEach((val) => {
+                    let serv = new serverClass(val[0])
+                    if(serv.serverExsists()) {
+                        let cfg = serv.getConfig()
+                        let INI = serv.getINI()
+
+                        // Lade Saves
+                        if(serv.getSaveDirLocation() !== false) {
+                            let saveDir     = serv.getSaveDirLocation(false)
+                            if(globalUtil.safeFileExsistsSync([saveDir])) {
+                                try {
+                                    let savegames = new ArkFiles(saveDir)
+                                    let saves       = savegames.getPlayers()
+                                    for(const i in saves) {
+                                        if(saves[i].Tribe) {
+                                            if (saves[i].Tribe.Players) delete saves[i].Tribe.Players
+                                            if (saves[i].Tribe.TribeLogs) delete saves[i].Tribe.TribeLogs
+                                            if (saves[i].Tribe.TribeMemberNames) delete saves[i].Tribe.TribeMemberNames
+                                        }
+                                    }
+                                    globalUtil.safeFileSaveSync([mainDir, "public/json/savegames/players/", `${serv.server}.json`], JSON.stringify(saves))
+                                }
+                                catch (e) {
+                                    if(debug) console.log('[DEBUG_FAILED]', e)
+                                }
+                                try {
+                                    let savegames   = new ArkFiles(saveDir)
+                                    let saves       = savegames.getTribes()
+                                    for(const i in saves) {
+                                        if(saves[i].Players) delete saves[i].Players
+                                        if(saves[i].TribeLogs) if(Array.isArray(saves[i].TribeLogs)) saves.TribeLogs = globalUtil.removeEmtpyElementsFromArray(saves[i].TribeLogs)
+                                    }
+                                    globalUtil.safeFileSaveSync([mainDir, "public/json/savegames/tibes/", `${serv.server}.json`], JSON.stringify(saves))
+                                }
+                                catch (e) {
+                                    if(debug) console.log('[DEBUG_FAILED]', e)
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+        })()
+    },
+
+
+    /**
      * Führt hintergrund aktionen von Server aus Bsp.: Automatisches Update
      * @returns {Promise<void>}
      */
@@ -252,45 +310,12 @@ module.exports = {
                             }
                         }
 
-                        // tests
-                        if(serv.getSaveDirLocation() !== false) {
-                            let saveDir     = serv.getSaveDirLocation(false)
-                            if(globalUtil.safeFileExsistsSync([saveDir])) {
-                                try {
-                                    let savegames = new ArkFiles(saveDir)
-                                    let saves       = savegames.getPlayers()
-                                    for(const i in saves) {
-                                        if(saves[i].Tribe) {
-                                            if (saves[i].Tribe.Players) delete saves[i].Tribe.Players
-                                            if (saves[i].Tribe.TribeLogs) delete saves[i].Tribe.TribeLogs
-                                            if (saves[i].Tribe.TribeMemberNames) delete saves[i].Tribe.TribeMemberNames
-                                        }
-                                    }
-                                    globalUtil.safeFileSaveSync([mainDir, "public/json/savegames/players/", `${serv.server}.json`], JSON.stringify(saves))
-                                }
-                                catch (e) {
-                                    console.log(e)
-                                }
-                                try {
-                                    let savegames   = new ArkFiles(saveDir)
-                                    let saves       = savegames.getTribes()
-                                    for(const i in saves) {
-                                        if(saves[i].Players) delete saves[i].Players
-                                        if(saves[i].TribeLogs) if(Array.isArray(saves[i].TribeLogs)) saves.TribeLogs = globalUtil.removeEmtpyElementsFromArray(saves[i].TribeLogs)
-                                    }
-                                    globalUtil.safeFileSaveSync([mainDir, "public/json/savegames/tibes/", `${serv.server}.json`], JSON.stringify(saves))
-                                }
-                                catch (e) {
-                                    console.log(e)
-                                }
-                            }
-                        }
-
                         // soll der Server laufen?
-                        if(cfg.shouldRun && val[1].pid === 0) {
+                        // Übernimmt Arkmanager
+                        /*if(cfg.shouldRun && val[1].pid === 0) {
                             if(debug) console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}][DEBUG]\x1b[36m run > doServerBackgrounder > Start > ${val[0]}`)
                             serverCommands.doStart(val[0], [])
-                        }
+                        }*/
                     }
                 })
             }

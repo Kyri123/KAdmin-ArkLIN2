@@ -32,6 +32,9 @@ if(Installed) {
                 console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}]\x1b[31m Exit KAdmin-ArkLIN2`)
                 process.exit(1)
             }
+            else {
+                console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}]\x1b[36m MySQL Success [1/2]`)
+            }
         })
 
         global.synccon = new MySql({
@@ -40,6 +43,10 @@ if(Installed) {
             password:   mysql_config.dbpass,
             database:   mysql_config.dbbase
         })
+
+        if(synccon) {
+            console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}]\x1b[36m MySQL Success [2/2]`)
+        }
     }
     else {
         console.log('\x1b[33m%s\x1b[0m', `[${dateFormat(new Date(), "dd.mm.yyyy HH:MM:ss")}]\x1b[31m mysql.json not found or loaded`)

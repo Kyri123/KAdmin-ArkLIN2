@@ -7,6 +7,7 @@
     "backgroundUpdater"         : 1800000,
     "doJob"                     : 60000,
     "getDataFromSteamAPI"       : 600000,
-    "doClusterStuff"            : 60000
+    "doClusterStuff"            : 60000,
+    "doSavegamesRead"           : 300000
   }
 }
