@@ -31,13 +31,15 @@ router.route('/')
             if(sendetIni.arkopt_ActiveEvent === "none")
                 delete sendetIni.arkopt_ActiveEvent
 
-            let iniString   = ini.stringify(sendetIni)
+            sendetIni           = globalUtil.convertObject(sendetIni)
+            let iniString       = serverData.iniStringtifyWithQuotes(sendetIni)
 
             res.render('ajax/json', {
                 data: JSON.stringify({
                     success: serverData.saveINI(iniString)
                 })
             })
+            return
         }
 
         // Speicher Server

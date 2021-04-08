@@ -207,7 +207,7 @@ module.exports = class serverClass {
    writeIni(key, value) {
       if(this.serverExsists()) {
          this.INI[key] = value
-         return this.saveINI(ini.stringify(this.INI))
+         return this.saveINI(this.iniStringtifyWithQuotes(this.INI))
       }
       return false
    }
@@ -220,7 +220,7 @@ module.exports = class serverClass {
    removeFromIni(key) {
       if(this.serverExsists()) {
          delete this.INI[key]
-         return this.saveINI(ini.stringify(this.INI))
+         return this.saveINI(this.iniStringtifyWithQuotes(this.INI))
       }
       return false
    }
@@ -302,12 +302,12 @@ module.exports = class serverClass {
    /**
     * Speichert eine Ini
     * @param {boolean} asString
-    * @return {boolean}
+    * @return {string|object}
     */
    getINI(asString = false) {
       if(this.serverExsists()) {
          if (asString) {
-            return ini.stringify(this.INI)
+            return this.iniStringtifyWithQuotes(this.INI)
          } else {
             return this.INI
          }
@@ -365,6 +365,30 @@ module.exports = class serverClass {
          return ini.ark_GameModIds.split(',')
       }
       return false
+   }
+
+   /**
+    *
+    */
+   iniStringtifyWithQuotes(ini) {
+      let re = []
+      if(typeof ini === "object")
+         for(const option of Object.entries(ini)) {
+            if(Array.isArray(option[1])) {
+               // current SKIP / Unused
+            }
+            else if(typeof option[1] === "object" ) {
+               // current SKIP / Unused
+            }
+            else if(typeof option[1] === "boolean") {
+               re.push(`${option[0]}=${option[1] ? "true" : "false"}`)
+            }
+            else {
+               re.push(`${option[0]}="${(typeof option[1] === "number" && !isNaN(option[1])) || typeof option[1] === "string" ? option[1] : ""}"`)
+            }
+         }
+
+      return re.join("\n")
    }
 
    /*************************************************************

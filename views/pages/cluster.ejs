@@ -67,7 +67,7 @@
                      <tr v-for="(server, iS) in cluster.servers" class="p-1" v-if="cluster.servers.length > 0 && servers[server.server]">
                         <td>{{ servers[server.server].selfname }}</td>
 
-                        <td class="text-dark"><b>{{ servers[server.server].aplayers }}</b> / {{ servers[server.server].players }}</td>
+                        <td><b>{{ servers[server.server].aplayers }}</b> / {{ servers[server.server].players }}</td>
 
                         <td :class="`text-${stateColor(servers[server.server])}`">{{ globalvars.lang_arr.forservers.state[stateColor(servers[server.server])] }}</td>
 
