@@ -237,7 +237,7 @@ String.prototype.includesArray = function (find) {
  * @param FileExt
  * @return {string}
  */
-let icon = (FileExt) => {
+const icon = (FileExt) => {
     // Folder
     if(FileExt === false || FileExt === "false")
         return "fas fa-folder"
