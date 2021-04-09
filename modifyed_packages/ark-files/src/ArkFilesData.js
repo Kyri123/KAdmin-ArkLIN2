@@ -147,6 +147,7 @@ class ArkFilesData {
             binaryParser = new ArkBinaryParser(data);
 
         return {
+            File: globalUtil.safeFileInfoSync([this.arkFilesDir, file]),
             Tribe: false,
             PlayerName: binaryParser.getProperty('PlayerName'),
             Level: binaryParser.getProperty('CharacterStatusComponent_ExtraCharacterLevel') + 1,
@@ -182,6 +183,7 @@ class ArkFilesData {
             binaryParser = new ArkBinaryParser(data);
 
         return {
+            File: globalUtil.safeFileInfoSync([this.arkFilesDir, file]),
             Players: [],
             Name: binaryParser.getProperty('TribeName'),
             OwnerId: binaryParser.getProperty('OwnerPlayerDataID'),

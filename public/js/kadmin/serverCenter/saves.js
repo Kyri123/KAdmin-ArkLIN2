@@ -7,13 +7,18 @@
 * *******************************************************************************************
 */
 "use strict"
-let VUE_configContainer = new Vue({
+let VUE_savesContainer = new Vue({
     el      : '#savesContainer',
     data    : {
         steamAPI_ID         : {},
         steamAPI_NAME       : {},
-        savegames_Player    : {},
-        savegames_Tribe     : {}
+        savegamesPlayer     : {},
+        savegamesTribe      : {},
+        savegamesMaps       : {},
+        listFiles           : [],
+        listSavegames       : true,
+        listTribes          : false,
+        listMaps            : false
     },
     methods: {
         /**
@@ -31,10 +36,17 @@ let VUE_configContainer = new Vue({
             })
 
             // Lade Tribe Daten
-            $.get(`/json/savegames/tibes/${vars.cfg}.json`, (response) => this.savegames_Tribe = response)
+            $.get(`/json/savegames/tibes/${vars.cfg}.json`, (response) => this.savegamesTribe = response)
 
             // Lade Spieler Daten
-            $.get(`/json/savegames/players/${vars.cfg}.json`, (response) => this.savegames_Player = response)
+            $.get(`/json/savegames/players/${vars.cfg}.json`, (response) => this.savegamesPlayer = response)
+
+            // Lade Spieler Daten
+            $.get(`/json/savegames/maps/${vars.cfg}.json`, (response) => this.savegamesMaps = response)
+
+            console.log("savegamesTribe", this.savegamesTribe)
+            console.log("savegamesPlayer", this.savegamesPlayer)
+            console.log("savegamesMaps", this.savegamesMaps)
         },
 
         // sendet eine Anfrage die vorher bestätigt werden muss
@@ -50,6 +62,6 @@ let VUE_configContainer = new Vue({
     },
     created() {
         this.reloadInfos()
-        setInterval(() => this.reloadInfos(), 5000)
+        setInterval(() => this.reloadInfos(), 1000)
     }
 })

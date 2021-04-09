@@ -1,3 +1,6 @@
 {
-  "pagename"      : "ServerCenter"
+  "pagename"      : "ServerCenter",
+  "maps"          : "Karten Spielstände",
+  "players"       : "Spieler Speicherstände",
+  "tribes"        : "Stämme Speicherstände"
 }

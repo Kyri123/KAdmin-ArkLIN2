@@ -232,6 +232,55 @@ module.exports = {
     },
 
     /**
+     * Liest die Informationen einer Datei aus
+     * @param {string[]} paths Pfade zur Datei
+     * @param {boolean} withSize Soll die größe von den Ordner mit erkannt werden?
+     * @return {{namePure: *, FileExt: (string|boolean), isFile: boolean, size: boolean, name: *, totalPath: string, sizebit: boolean, isDir: boolean} | boolean}
+     */
+    safeFileInfoSync(paths, withSize = true) {
+        // Prüfe Pfad
+        if(module.exports.poisonNull(paths)) {
+            // Lege Pfad fest
+            let filePath        = pathMod.join(...paths)
+
+            if(
+               module.exports.checkValidatePath(filePath) === true &&
+               fs.existsSync(filePath)
+            ) {
+                try {
+                    let item            = fs.statSync(filePath)
+                    let fileName        = pathMod.parse(filePath).base
+                    let fileExt         = item.isFile() ? "." + fileName.split(".")[(fileName.split(".").length - 1)] : false
+                    let namePure        = item.isFile() ? fileName.replace(fileExt, "") : fileName
+                    let tPath           = filePath
+                    let size            = false
+                    let sizebit         = false
+
+                    if((withSize && item.isDirectory()) || item.isFile()) {
+                        sizebit         = module.exports.getSizeSync([tPath], true)
+                        size            = module.exports.convertBytes(sizebit)
+                    }
+
+                    return {
+                        "name"      : fileName,
+                        "namePure"  : namePure,
+                        "FileExt"   : fileExt,
+                        "totalPath" : tPath,
+                        "isDir"     : item.isDirectory(),
+                        "isFile"    : item.isFile(),
+                        "size"      : size,
+                        "sizebit"   : sizebit
+                    }
+                }
+                catch (e) {
+                    if(debug) console.log('[DEBUG_FAILED]', e)
+                }
+            }
+        }
+        return false
+    },
+
+    /**
      * Liest ein Verzeichnis aus
      * @param {string[]} paths Pfade zur Datei
      * @param {boolean} withSize Soll die größe von den Ordner mit erkannt werden?

@@ -5,6 +5,76 @@
 <%- include('./head'); -%>
 
 <div class="row" id="savesContainer">
+    <div class="col-12">
+        <div class="d-flex bg-dark p-2">
+            <h5 class="m-0 mt-1 ml-1">
+                <i aria-hidden="true" class="fas pr-1" v-bind:class="listFiles ? 'fa-tasks' : 'fa-hdd'"></i>
+                {{
+                    !listSavegames
+                        ? listTribes
+                            ? globalvars.lang_arr.servercenter_saves.tribes
+                            : globalvars.lang_arr.servercenter_saves.maps
+                        : globalvars.lang_arr.servercenter_saves.players
+                }}
+            </h5>
+            <div class="btn-group btn-group-sm ml-auto">
+                <a v-if="hasPermissions(globalvars.perm, 'saves/removeSaves', vars.cfg)" href="javascript:void(0)" class="btn btn-sm btn-outline-success">
+                    <i aria-hidden="true" class="fas fa-download"></i>
+                </a>
+                <a v-if="hasPermissions(globalvars.perm, 'saves/downloadSaves', vars.cfg)" href="javascript:void(0)" class="btn btn-sm btn-outline-danger">
+                    <i aria-hidden="true" class="fa fa-trash-o"></i>
+                </a>
+                <a href="javascript:void(0)" class="btn btn-sm" :class="listSavegames ? 'btn-outline-info' : 'btn-outline-light'" @click="listSavegames = true; listTribes = false; listMaps = false">
+                    <i aria-hidden="true" class="fas fa-user"></i>
+                </a>
+                <a href="javascript:void(0)" class="btn btn-sm" :class="listTribes ? 'btn-outline-info' : 'btn-outline-light'" @click="listSavegames = false; listTribes = true; listMaps = false">
+                    <i aria-hidden="true" class="fas fa-users"></i>
+                </a>
+                <a href="javascript:void(0)" class="btn btn-sm" :class="listMaps ? 'btn-outline-info' : 'btn-outline-light'" @click="listSavegames = false; listTribes = false; listMaps = true">
+                    <i aria-hidden="true" class="fas fa-map"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <table class="table table-sm table-striped table-bordered">
+            <tbody>
+
+            <tr v-for="(file, key) in listFiles" v-if="!file.isDir">
+                <td width="62px" class="p-0"><img :src="steamAPI[mod] !== undefined ? steamAPI[mod].preview_url : '/img/unknown.png'" style="width: 62px; height: 62px" /></td>
+                <td>
+                    <b>[{{key}}] {{steamAPI[mod] !== undefined ? steamAPI[mod].title : mod}}</b> <br />
+                    <span class="text-sm">ModID: <a class="text-bold" :href="`https://steamcommunity.com/sharedfiles/filedetails/?id=${mod}`" target="_blank">{{ mod }}</a> | Last Updated: <b>{{ steamAPI[mod] ? convertTime(steamAPI[mod].time_updated*1000) : '??.??.???? ??:??' }}</b></span>
+                </td>
+                <td style="width: 1%" class="p-0">
+                    <div class="btn-group">
+                        <a v-if="hasPermissions(globalvars.perm, 'mods/toggleInstallMod', vars.cfg) && !checkIsInstalled(mod)" @click="sendRequest('toggleInstall', mod, true)" href="javascript:void(0)" id="FB_upload" class="btn btn-app bg-success m-0">
+                            <i class="fas fa-folder-plus"></i> {{ globalvars.lang_arr.servercenter_mods.install }}
+                        </a>
+                        <a v-else-if="hasPermissions(globalvars.perm, 'mods/toggleInstallMod', vars.cfg)" href="javascript:void(0)" @click="sendRequest('toggleInstall', mod, false)" id="FB_upload" class="btn btn-app bg-danger m-0">
+                            <i class="fas fa-folder-minus"></i> {{ globalvars.lang_arr.servercenter_mods.uninstall }}
+                        </a>
+
+                        <a v-if="hasPermissions(globalvars.perm, 'mods/toggleMod', vars.cfg) && mods.includes(mod)" @click="sendRequest('toggleActive', mod, false)" href="javascript:void(0)" class="btn btn-app bg-danger m-0">
+                            <i aria-hidden="true" class="fa fa-times"></i> {{ globalvars.lang_arr.servercenter_mods.deactivate }}
+                        </a>
+
+                        <a v-else-if="hasPermissions(globalvars.perm, 'mods/toggleMod', vars.cfg)" href="javascript:void(0)" href="javascript:void(0)" @click="sendRequest('toggleActive', mod, true)" class="btn btn-app bg-success m-0">
+                            <i aria-hidden="true" class="fa fa-check"></i> {{ globalvars.lang_arr.servercenter_mods.activate }}
+                        </a>
+
+                        <a v-if="hasPermissions(globalvars.perm, 'mods/removeMod', vars.cfg) && ((mods.includes(mod) && checkIsInstalled(mod)) || mods.includes(mod))" href="javascript:void(0)" @click="sendRequest('remove', mod, true)" class="btn btn-app bg-danger m-0">
+                            <i aria-hidden="true" class="fa fa-trash"></i> {{ globalvars.lang_arr.servercenter_mods.remove }}
+                        </a>
+                    </div>
+                </td>
+            </tr>
+
+            <tr v-if="(listFiles && mods.length === 0) || (!listFiles && installedMods.length === 0)" v-html="nothingFound()"></tr>
+
+            </tbody>
+        </table>
 </div>
 
 
