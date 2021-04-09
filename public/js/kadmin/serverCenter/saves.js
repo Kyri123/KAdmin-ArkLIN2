@@ -12,13 +12,14 @@ let VUE_savesContainer = new Vue({
     data    : {
         steamAPI_ID         : {},
         steamAPI_NAME       : {},
-        savegamesPlayer     : {},
-        savegamesTribe      : {},
-        savegamesMaps       : {},
+        savegamesPlayer     : [],
+        savegamesTribe      : [],
+        savegamesMaps       : [],
         listFiles           : [],
         listSavegames       : true,
         listTribes          : false,
-        listMaps            : false
+        listMaps            : false,
+        list                : []
     },
     methods: {
         /**
@@ -44,9 +45,21 @@ let VUE_savesContainer = new Vue({
             // Lade Spieler Daten
             $.get(`/json/savegames/maps/${vars.cfg}.json`, (response) => this.savegamesMaps = response)
 
-            console.log("savegamesTribe", this.savegamesTribe)
-            console.log("savegamesPlayer", this.savegamesPlayer)
-            console.log("savegamesMaps", this.savegamesMaps)
+            if(this.listTribes) {
+                if(Array.isArray(this.savegamesTribe))
+                    this.list   = this.savegamesTribe
+            }
+            else if(this.listMaps) {
+                if(Array.isArray(this.savegamesMaps))
+                    this.list   = this.savegamesMaps
+            }
+            else {
+                if(Array.isArray(this.savegamesPlayer))
+                    this.list   = this.savegamesPlayer
+            }
+
+            console.log("list", this.list)
+            console.log("steam", this.steamAPI_ID)
         },
 
         // sendet eine Anfrage die vorher bestätigt werden muss

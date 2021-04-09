@@ -7,6 +7,7 @@
   "activate"      : "Aktivieren",
   "deactivate"    : "Deaktivieren",
   "remove"        : "Entfernen",
+  "lastUpdate"    : "Letzte Aktualisierung",
   "addMod"        : {
     "cancel"        : "Schließen",
     "add"           : "Hinzufügen",

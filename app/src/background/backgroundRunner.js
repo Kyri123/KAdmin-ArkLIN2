@@ -286,6 +286,8 @@ module.exports = {
                                         }
                                     }
 
+                                    file.DownloadUrl    = file.totalPath.replace(CONFIG.app.servRoot, "")
+
                                     mapFiles.push(file)
                                 }
                             }

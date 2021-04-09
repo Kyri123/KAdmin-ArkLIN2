@@ -269,7 +269,9 @@ module.exports = {
                         "isDir"     : item.isDirectory(),
                         "isFile"    : item.isFile(),
                         "size"      : size,
-                        "sizebit"   : sizebit
+                        "sizebit"   : sizebit,
+                        "created"   : Math.round(item.birthtimeMs),
+                        "updated"   : Math.round(item.mtimeMs)
                     }
                 }
                 catch (e) {
@@ -305,6 +307,7 @@ module.exports = {
                         let fileExt         = item.isFile() ? "." + fileName.split(".")[(fileName.split(".").length - 1)] : false
                         let namePure        = item.isFile() ? fileName.replace(fileExt, "") : fileName
                         let tPath           = pathMod.join(filePath, item.name)
+                        let stats           = fs.statSync(tPath)
                         let size            = false
                         let sizebit         = false
 
@@ -320,7 +323,9 @@ module.exports = {
                             "isDir"     : item.isDirectory(),
                             "isFile"    : item.isFile(),
                             "size"      : size,
-                            "sizebit"   : sizebit
+                            "sizebit"   : sizebit,
+                            "created"   : Math.round(stats.birthtimeMs),
+                            "updated"   : Math.round(stats.mtimeMs)
                         })
                     })
                     return dirArray

@@ -2,5 +2,9 @@
   "pagename"      : "ServerCenter",
   "maps"          : "Karten Spielstände",
   "players"       : "Spieler Speicherstände",
-  "tribes"        : "Stämme Speicherstände"
+  "tribes"        : "Stämme Speicherstände",
+  "remove"        : "Entfernen",
+  "info"          : "Mehr Infos",
+  "download"      : "Runterladen",
+  "lastUpdate"    : "Letzte Aktualisierung"
 }

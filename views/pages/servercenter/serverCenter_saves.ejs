@@ -18,19 +18,19 @@
                 }}
             </h5>
             <div class="btn-group btn-group-sm ml-auto">
-                <a v-if="hasPermissions(globalvars.perm, 'saves/removeSaves', vars.cfg)" href="javascript:void(0)" class="btn btn-sm btn-outline-success">
+                <a v-if="hasPermissions(globalvars.perm, 'saves/removeSaves', vars.cfg)" href="javascript:void(0)" class="btn btn-sm btn-outline-light disabled">
                     <i aria-hidden="true" class="fas fa-download"></i>
                 </a>
                 <a v-if="hasPermissions(globalvars.perm, 'saves/downloadSaves', vars.cfg)" href="javascript:void(0)" class="btn btn-sm btn-outline-danger">
                     <i aria-hidden="true" class="fa fa-trash-o"></i>
                 </a>
-                <a href="javascript:void(0)" class="btn btn-sm" :class="listSavegames ? 'btn-outline-info' : 'btn-outline-light'" @click="listSavegames = true; listTribes = false; listMaps = false">
+                <a href="javascript:void(0)" class="btn btn-sm" :class="listSavegames ? 'btn-outline-info' : 'btn-outline-light'" @click="listSavegames = true; listTribes = false; listMaps = false; list = savegamesPlayer">
                     <i aria-hidden="true" class="fas fa-user"></i>
                 </a>
-                <a href="javascript:void(0)" class="btn btn-sm" :class="listTribes ? 'btn-outline-info' : 'btn-outline-light'" @click="listSavegames = false; listTribes = true; listMaps = false">
+                <a href="javascript:void(0)" class="btn btn-sm" :class="listTribes ? 'btn-outline-info' : 'btn-outline-light'" @click="listSavegames = false; listTribes = true; listMaps = false; list = savegamesTribe">
                     <i aria-hidden="true" class="fas fa-users"></i>
                 </a>
-                <a href="javascript:void(0)" class="btn btn-sm" :class="listMaps ? 'btn-outline-info' : 'btn-outline-light'" @click="listSavegames = false; listTribes = false; listMaps = true">
+                <a href="javascript:void(0)" class="btn btn-sm" :class="listMaps ? 'btn-outline-info' : 'btn-outline-light'" @click="listSavegames = false; listTribes = false; listMaps = true; list = savegamesMaps">
                     <i aria-hidden="true" class="fas fa-map"></i>
                 </a>
             </div>
@@ -41,37 +41,47 @@
         <table class="table table-sm table-striped table-bordered">
             <tbody>
 
-            <tr v-for="(file, key) in listFiles" v-if="!file.isDir">
-                <td width="62px" class="p-0"><img :src="steamAPI[mod] !== undefined ? steamAPI[mod].preview_url : '/img/unknown.png'" style="width: 62px; height: 62px" /></td>
-                <td>
-                    <b>[{{key}}] {{steamAPI[mod] !== undefined ? steamAPI[mod].title : mod}}</b> <br />
-                    <span class="text-sm">ModID: <a class="text-bold" :href="`https://steamcommunity.com/sharedfiles/filedetails/?id=${mod}`" target="_blank">{{ mod }}</a> | Last Updated: <b>{{ steamAPI[mod] ? convertTime(steamAPI[mod].time_updated*1000) : '??.??.???? ??:??' }}</b></span>
+            <tr v-for="(file, key) in list">
+                <td width="62px" class="p-0"><img :src="steamAPI_ID[file.SteamId] !== undefined ? steamAPI_ID[file.SteamId].avatarfull : file.iconOfMap ? file.iconOfMap : '/img/unknown.png'" style="width: 62px; height: 62px" /></td>
+
+                <td v-if="listMaps">
+                    <b>{{file.namePure}}</b> <br />
+                    <span class="text-sm"><b>{{ file.size }}</b> | {{ globalvars.lang_arr.servercenter_saves.lastUpdate }}: <b>{{ file.updated ? convertTime(file.updated) : '??.??.???? ??:??' }}</b></span>
                 </td>
+                <td v-else-if="listTribes">
+                    <b><i class="fa fa-users"></i> {{ Array.isArray(file.TribeMemberNames) ? file.TribeMemberNames.length : 0 }} | {{file.Name}}</b> <br />
+                    <span class="text-sm"><b>{{ file.File.size }}</b> | {{ globalvars.lang_arr.servercenter_saves.lastUpdate }}: <b>{{ file.FileUpdated ? convertTime(file.FileUpdated) : '??.??.???? ??:??' }}</b></span>
+                </td>
+                <td v-else>
+                    <b>
+                        Char: {{file.CharacterName}} | Steam:
+                        <a v-if="steamAPI_ID[file.SteamId]" :href="steamAPI_ID[file.SteamId].profileurl" target="_blank">
+                            {{ steamAPI_ID[file.SteamId].personaname }}
+                        </a>
+                    </b>
+                    <br />
+                    <span class="text-sm"><b>{{ file.File.size }}</b> | <i v-if="file.Tribe" class='fa fa-users'></i> {{ file.Tribe ? `${file.Tribe.Name} |` : '' }} {{ globalvars.lang_arr.servercenter_saves.lastUpdate }}: <b>{{ file.FileUpdated ? convertTime(file.FileUpdated) : '??.??.???? ??:??' }}</b></span>
+                </td>
+
+
                 <td style="width: 1%" class="p-0">
                     <div class="btn-group">
-                        <a v-if="hasPermissions(globalvars.perm, 'mods/toggleInstallMod', vars.cfg) && !checkIsInstalled(mod)" @click="sendRequest('toggleInstall', mod, true)" href="javascript:void(0)" id="FB_upload" class="btn btn-app bg-success m-0">
-                            <i class="fas fa-folder-plus"></i> {{ globalvars.lang_arr.servercenter_mods.install }}
-                        </a>
-                        <a v-else-if="hasPermissions(globalvars.perm, 'mods/toggleInstallMod', vars.cfg)" href="javascript:void(0)" @click="sendRequest('toggleInstall', mod, false)" id="FB_upload" class="btn btn-app bg-danger m-0">
-                            <i class="fas fa-folder-minus"></i> {{ globalvars.lang_arr.servercenter_mods.uninstall }}
+                        <a :href="`/serv${file.DownloadUrl}`" target="_blank" :download="file.File ? file.File.name : file.name" class="btn btn-app bg-dark m-0">
+                            <i aria-hidden="true" class="fa fa-download"></i> {{ globalvars.lang_arr.servercenter_saves.download }}
                         </a>
 
-                        <a v-if="hasPermissions(globalvars.perm, 'mods/toggleMod', vars.cfg) && mods.includes(mod)" @click="sendRequest('toggleActive', mod, false)" href="javascript:void(0)" class="btn btn-app bg-danger m-0">
-                            <i aria-hidden="true" class="fa fa-times"></i> {{ globalvars.lang_arr.servercenter_mods.deactivate }}
+                        <a href="javascript:void(0)" class="btn btn-app bg-info m-0" v-if="!listMaps">
+                            <i aria-hidden="true" class="fa fa-info"></i> {{ globalvars.lang_arr.servercenter_saves.info }}
                         </a>
 
-                        <a v-else-if="hasPermissions(globalvars.perm, 'mods/toggleMod', vars.cfg)" href="javascript:void(0)" href="javascript:void(0)" @click="sendRequest('toggleActive', mod, true)" class="btn btn-app bg-success m-0">
-                            <i aria-hidden="true" class="fa fa-check"></i> {{ globalvars.lang_arr.servercenter_mods.activate }}
-                        </a>
-
-                        <a v-if="hasPermissions(globalvars.perm, 'mods/removeMod', vars.cfg) && ((mods.includes(mod) && checkIsInstalled(mod)) || mods.includes(mod))" href="javascript:void(0)" @click="sendRequest('remove', mod, true)" class="btn btn-app bg-danger m-0">
-                            <i aria-hidden="true" class="fa fa-trash"></i> {{ globalvars.lang_arr.servercenter_mods.remove }}
+                        <a href="javascript:void(0)" class="btn btn-app bg-danger m-0">
+                            <i aria-hidden="true" class="fa fa-trash"></i> {{ globalvars.lang_arr.servercenter_saves.remove }}
                         </a>
                     </div>
                 </td>
             </tr>
 
-            <tr v-if="(listFiles && mods.length === 0) || (!listFiles && installedMods.length === 0)" v-html="nothingFound()"></tr>
+            <tr v-if="list.length === 0" v-html="nothingFound()"></tr>
 
             </tbody>
         </table>

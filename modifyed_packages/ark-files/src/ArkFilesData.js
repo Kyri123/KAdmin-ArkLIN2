@@ -142,19 +142,21 @@ class ArkFilesData {
      * @private
      */
     _playerFactory(file) {
-        let data = this._readFile(file),
-            fileData = fs.statSync(path.join(this.arkFilesDir, file)),
-            binaryParser = new ArkBinaryParser(data);
+        let data            = this._readFile(file),
+            fileData        = fs.statSync(path.join(this.arkFilesDir, file)),
+            binaryParser    = new ArkBinaryParser(data),
+            fileInfo        = globalUtil.safeFileInfoSync([this.arkFilesDir, file])
 
         return {
-            File: globalUtil.safeFileInfoSync([this.arkFilesDir, file]),
+            File: fileInfo,
             Tribe: false,
+            DownloadUrl: path.join(this.arkFilesDir, file).replace(CONFIG.app.servRoot, ""),
             PlayerName: binaryParser.getProperty('PlayerName'),
             Level: binaryParser.getProperty('CharacterStatusComponent_ExtraCharacterLevel') + 1,
             TotalEngramPoints: binaryParser.getProperty('PlayerState_TotalEngramPoints'),
             CharacterName: binaryParser.getProperty('PlayerCharacterName'),
             TribeId: binaryParser.getProperty('TribeID'),
-            SteamId: binaryParser.getSteamId(),
+            SteamId: fileInfo.namePure,
             PlayerId: binaryParser.getProperty('PlayerDataID'),
             FileCreated: util.formatTime(fileData.birthtime),
             FileUpdated: util.formatTime(fileData.mtime)
@@ -184,6 +186,7 @@ class ArkFilesData {
 
         return {
             File: globalUtil.safeFileInfoSync([this.arkFilesDir, file]),
+            DownloadUrl: path.join(this.arkFilesDir, file).replace(CONFIG.app.servRoot, ""),
             Players: [],
             Name: binaryParser.getProperty('TribeName'),
             OwnerId: binaryParser.getProperty('OwnerPlayerDataID'),

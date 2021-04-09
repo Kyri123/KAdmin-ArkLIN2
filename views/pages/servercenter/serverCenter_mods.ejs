@@ -37,7 +37,7 @@
                     <td width="62px" class="p-0"><img :src="steamAPI[mod] !== undefined ? steamAPI[mod].preview_url : '/img/unknown.png'" style="width: 62px; height: 62px" /></td>
                     <td>
                         <b>[{{key}}] {{steamAPI[mod] !== undefined ? steamAPI[mod].title : mod}}</b> <br />
-                        <span class="text-sm">ModID: <a class="text-bold" :href="`https://steamcommunity.com/sharedfiles/filedetails/?id=${mod}`" target="_blank">{{ mod }}</a> | Last Updated: <b>{{ steamAPI[mod] ? convertTime(steamAPI[mod].time_updated*1000) : '??.??.???? ??:??' }}</b></span>
+                        <span class="text-sm">ModID: <a class="text-bold" :href="`https://steamcommunity.com/sharedfiles/filedetails/?id=${mod}`" target="_blank">{{ mod }}</a> | {{ globalvars.lang_arr.servercenter_mods.lastUpdate }}: <b>{{ steamAPI[mod] ? convertTime(steamAPI[mod].time_updated*1000) : '??.??.???? ??:??' }}</b></span>
                     </td>
                     <td style="width: 1%" class="p-0">
                         <div class="btn-group">
