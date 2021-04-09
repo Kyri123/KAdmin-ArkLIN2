@@ -23,7 +23,8 @@
     "config"      : "Konfiguration",
     "mods"        : "Modifikation",
     "backups"     : "Backups",
-    "filebrowser" : "Filebrowser"
+    "filebrowser" : "Filebrowser",
+    "saves"       : "Spielstände"
   },
   "versionpicker" : {
     "title"       : "Versionen & Modpacks",

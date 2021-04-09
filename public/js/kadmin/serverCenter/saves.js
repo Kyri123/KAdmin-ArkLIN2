@@ -35,6 +35,17 @@ let VUE_configContainer = new Vue({
 
             // Lade Spieler Daten
             $.get(`/json/savegames/players/${vars.cfg}.json`, (response) => this.savegames_Player = response)
+        },
+
+        // sendet eine Anfrage die vorher bestätigt werden muss
+        sendActionWithAccept(modalCode, type = "question") {
+            fireFormModal(modalCode, type, (result) => {
+                console.log(result)
+            }, {
+                swalOptions: {
+                    cancelButtonText: "123"
+                }
+            })
         }
     },
     created() {

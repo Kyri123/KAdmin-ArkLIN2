@@ -5,7 +5,10 @@
   "info"          : "Information",
   "question"      : "Frage",
   "modal": {
-    "0"   : ""
+    "0"   : {
+      "title"   : "TEST",
+      "text"    : "TEXT"
+    }
   },
   "toast": {
     "danger"        : "Server {server} ist nun OFFLINE",

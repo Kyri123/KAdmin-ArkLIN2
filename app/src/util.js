@@ -250,11 +250,19 @@ module.exports = {
                 try {
                     let dir       = fs.readdirSync(filePath, {withFileTypes: true})
                     let dirArray  = []
+
                     dir.forEach(item => {
                         let fileName        = item.name
                         let fileExt         = item.isFile() ? "." + fileName.split(".")[(fileName.split(".").length - 1)] : false
                         let namePure        = item.isFile() ? fileName.replace(fileExt, "") : fileName
                         let tPath           = pathMod.join(filePath, item.name)
+                        let size            = false
+                        let sizebit         = false
+
+                        if((withSize && item.isDirectory()) || item.isFile()) {
+                            sizebit         = module.exports.getSizeSync([tPath], true)
+                            size            = module.exports.convertBytes(sizebit)
+                        }
                         dirArray.push({
                             "name"      : fileName,
                             "namePure"  : namePure,
@@ -262,8 +270,8 @@ module.exports = {
                             "totalPath" : tPath,
                             "isDir"     : item.isDirectory(),
                             "isFile"    : item.isFile(),
-                            "size"      : (withSize && item.isDirectory()) || item.isFile() ? module.exports.getSizeSync([tPath]) : false,
-                            "sizebit"   : (withSize && item.isDirectory()) || item.isFile() ? module.exports.getSizeSync([tPath], true) : false
+                            "size"      : size,
+                            "sizebit"   : sizebit
                         })
                     })
                     return dirArray

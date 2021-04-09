@@ -96,13 +96,14 @@ function fireModal(code, type= "success", options = {}) {
          "question"
       ])
    ) {
-      let text = globalvars.lang_arr.modalsandtoast.modal[code]
+      let text    = globalvars.lang_arr.modalsandtoast.modal[code].text
+      let title   = globalvars.lang_arr.modalsandtoast.modal[code].title
       if(options.replace !== undefined) if(Array.isArray(options.replace)) text = text.replaceArray(options.replace[0], options.replace[1])
 
       let swalOPT = {
          showCancelButton: false,
          showConfirmButton: false,
-         title: globalvars.lang_arr.modalsandtoast[type],
+         title: title,
          text: text,
          icon: type,
          timer: 10000,
@@ -120,5 +121,54 @@ function fireModal(code, type= "success", options = {}) {
       }
 
       swalWithBootstrapButtons.fire(swalOPT)
+   }
+}
+
+/**
+ * Feuert ein Accept-Modal
+ * @param {string|int} code
+ * @param {string} type
+ * @param {callback} callback
+ * @param {{}} options
+ * @return {void|callback}
+ */
+function fireFormModal(code, type= "success", callback, options = {}) {
+   if(
+      globalvars.lang_arr.modalsandtoast.modal[code] !== undefined
+      && type.includesArray([
+         "success",
+         "error",
+         "warning",
+         "info",
+         "question"
+      ])
+   ) {
+      let text    = globalvars.lang_arr.modalsandtoast.modal[code].text
+      let title   = globalvars.lang_arr.modalsandtoast.modal[code].title
+      if(options.replace !== undefined) if(Array.isArray(options.replace)) text = text.replaceArray(options.replace[0], options.replace[1])
+
+      let swalOPT = {
+         showCancelButton: true,
+         showConfirmButton: true,
+         title: title,
+         text: text,
+         icon: type,
+         confirmButtonText: `<i class="fas fa-save"></i>`,
+         cancelButtonText: `<i class="fas fa-times"></i>`,
+         didOpen: (toast) => {
+            toast.addEventListener('click', Swal.close)
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+         }
+      }
+
+      // Fügt benutzerdefinierte Optionen hinzu
+      if(options.swalOptions)
+         if(typeof options.swalOptions === "object")
+            for (const option of Object.entries(options.swalOptions))
+               swalOPT[option[0]] = option[1]
+
+      swalWithBootstrapButtons.fire(swalOPT)
+         .then((result) => callback(result))
    }
 }
