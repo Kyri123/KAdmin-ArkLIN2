@@ -365,5 +365,3 @@ function sendedit() {
            fireToast(0, "error")
        })
 }
-
-$(document).ready(() => setInterval(() => $('.content-wrapper').attr("style", "min-height: 1750px")), 500)

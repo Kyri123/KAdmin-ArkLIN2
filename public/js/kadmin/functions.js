@@ -307,3 +307,5 @@ function secondsTimeSpanToHM(s) {
     s -= m*60
     return h+":"+(m < 10 ? '0'+m : m)
 }
+
+$(document).ready(() => setInterval(() => $('.content-wrapper').attr("style", "min-height: 1250px")), 500)
