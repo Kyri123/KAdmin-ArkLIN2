@@ -85,7 +85,7 @@ module.exports = {
                let maxCount  = servCFG.autoBackupMaxCount
             if(maxCount !== 0 || maxSize !== 0) {
                maxSize              = maxSize * 1e+6
-               let backupDirInfos   = globalUtil.safeFileReadDirSync([servINI.arkserverroot])
+               let backupDirInfos   = globalUtil.safeFileReadDirSync([servINI.arkbackupdir])
                let totalSize        = 0
                let totalCount       = 0
                let oldestFile       = false
@@ -107,7 +107,7 @@ module.exports = {
                      (maxCount !== 0 && maxCount <= totalCount) ||
                      (maxSize !== 0 && maxSize <= totalSize)
                   ) {
-                     globalUtil.safeFileRmSync([servINI.arkserverroot, `${oldestFile}.zip`])
+                     globalUtil.safeFileRmSync([servINI.arkbackupdir, `${oldestFile}.zip`])
                      haveRm = true
                   }
                }
