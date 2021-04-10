@@ -58,29 +58,31 @@ module.exports = {
                     let data = serverData.getServerInfos() !== false
                        ? serverData.getServerInfos()
                        : {}
-                    let serverPath = servINI.arkserverroot
-                    let isBackupRunning = !globalUtil.safeFileExsistsSync([servINI.arkbackupdir, `backuprun`])
-                    let isPlayIn = !globalUtil.safeFileExsistsSync([servINI.arkserverroot, `isplayin`])
+                    let serverPath          = servINI.arkserverroot
+                    let isBackupRunning     = !globalUtil.safeFileExsistsSync([servINI.arkbackupdir, `backuprun`])
+                    let isPlayIn            = !globalUtil.safeFileExsistsSync([servINI.arkserverroot, `isplayin`])
 
-                    let pidFileArkmanager = [serverPath, '/ShooterGame/Saved', `.arkmanager-${name}.pid`]
-                    let pidFileServer = [serverPath, '/ShooterGame/Saved', `.arkserver-${name}.pid`]
-                    let arkUpdatePidFile = [serverPath, '/ShooterGame/Saved', `.ark-update.lock`]
-                    let versionFile = [serverPath, `version.txt`]
+                    let pidFileArkmanager   = [serverPath, '/ShooterGame/Saved', `.arkmanager-${name}.pid`]
+                    let pidFileServer       = [serverPath, '/ShooterGame/Saved', `.arkserver-${name}.pid`]
+                    let arkUpdatePidFile    = [serverPath, '/ShooterGame/Saved', `.ark-update.lock`]
+                    let versionFile         = [serverPath, `version.txt`]
 
                     // Default werte
-                    let arkmangerProcess = globalUtil.safeFileExsistsSync(pidFileArkmanager)
-                       ? !isRunning(+globalUtil.safeFileReadSync(pidFileArkmanager))
-                       : true
-                    let arkUpdateProcess = globalUtil.safeFileExsistsSync(arkUpdatePidFile)
-                       ? !isRunning(+globalUtil.safeFileReadSync(arkUpdatePidFile))
-                       : true
+                    let arkmanagerPid       = globalUtil.safeFileReadSync(pidFileArkmanager)
+                    let arkUpdatePid        = globalUtil.safeFileReadSync(arkUpdatePidFile)
+                    let arkmanagerProcess = arkmanagerPid !== false && +arkmanagerPid !== 0
+                        ? !isRunning(+arkmanagerPid)
+                        : true
+                    let arkUpdateProcess = arkUpdatePid !== false && +arkUpdatePid !== 0
+                        ? !isRunning(+arkUpdatePid)
+                        : true
 
                     if (!globalUtil.safeFileExsistsSync([servINI.arkserverroot])) globalUtil.safeFileMkdirSync([servINI.arkserverroot])
                     if (!globalUtil.safeFileExsistsSync([servINI.logdir])) globalUtil.safeFileMkdirSync([servINI.logdir])
                     if (!globalUtil.safeFileExsistsSync([servINI.arkbackupdir])) globalUtil.safeFileMkdirSync([servINI.arkbackupdir])
                     //console.log(name, servINI)
 
-                    data.isFree = arkUpdateProcess && isBackupRunning && isPlayIn
+                    data.isFree = arkUpdateProcess && isBackupRunning && isPlayIn && arkUpdateProcess
                     data.aplayers = 0
                     data.players = 0
                     data.cpuUsage = 0
