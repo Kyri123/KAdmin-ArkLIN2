@@ -8,6 +8,6 @@
     "doJob"                     : 60000,
     "getDataFromSteamAPI"       : 600000,
     "doClusterStuff"            : 60000,
-    "doSavegamesRead"           : 300000
+    "doSavegamesRead"           : 30000
   }
 }

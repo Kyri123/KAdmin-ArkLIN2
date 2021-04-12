@@ -26,8 +26,5 @@
     "removeServers"     : 0,
     "toggleSlaves"      : 0
   },
-  "saves": {
-    "show"              : 0
-  },
   "server": {}
 }

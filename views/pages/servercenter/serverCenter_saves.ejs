@@ -18,10 +18,15 @@
                 }}
             </h5>
             <div class="btn-group btn-group-sm ml-auto">
-                <a v-if="hasPermissions(globalvars.perm, 'saves/removeSaves', vars.cfg)" href="javascript:void(0)" class="btn btn-sm btn-outline-light disabled">
+                <a v-if="hasPermissions(globalvars.perm, 'saves/removeSaves', vars.cfg) && false" href="javascript:void(0)" class="btn btn-sm btn-outline-light disabled">
                     <i aria-hidden="true" class="fas fa-download"></i>
                 </a>
-                <a v-if="hasPermissions(globalvars.perm, 'saves/downloadSaves', vars.cfg)" href="javascript:void(0)" class="btn btn-sm btn-outline-danger">
+                <a v-if="hasPermissions(globalvars.perm, 'saves/downloadSaves', vars.cfg)" href="javascript:void(0)" class="btn btn-sm btn-outline-danger"
+                   @click="sendActionWithAccept(1, 'question', `<i class='fa fa-trash-o'></i>`, {
+                        server  : vars.cfg,
+                        action  : 'removeAll'
+                    })"
+                >
                     <i aria-hidden="true" class="fa fa-trash-o"></i>
                 </a>
                 <a href="javascript:void(0)" class="btn btn-sm" :class="listSavegames ? 'btn-outline-info' : 'btn-outline-light'" @click="listSavegames = true; listTribes = false; listMaps = false; list = savegamesPlayer">
@@ -66,16 +71,23 @@
 
                 <td style="width: 1%" class="p-0">
                     <div class="btn-group">
-                        <a :href="`/serv${file.DownloadUrl}`" target="_blank" :download="file.File ? file.File.name : file.name" class="btn btn-app bg-dark m-0">
+                        <a v-if="hasPermissions(globalvars.perm, 'saves/downloadSaves', vars.cfg)" :href="`/serv${file.DownloadUrl}`" target="_blank" :download="file.File ? file.File.name : file.name" class="btn btn-app bg-dark m-0">
                             <i aria-hidden="true" class="fa fa-download"></i> {{ globalvars.lang_arr.servercenter_saves.download }}
                         </a>
 
-                        <a href="javascript:void(0)" class="btn btn-app bg-info m-0" v-if="!listMaps">
+                        <a v-if="hasPermissions(globalvars.perm, 'saves/shwoInfosSaves', vars.cfg) && !listMaps" href="javascript:void(0)" class="btn btn-app bg-info m-0">
                             <i aria-hidden="true" class="fa fa-info"></i> {{ globalvars.lang_arr.servercenter_saves.info }}
                         </a>
 
-                        <a href="javascript:void(0)" class="btn btn-app bg-danger m-0">
-                            <i aria-hidden="true" class="fa fa-trash"></i> {{ globalvars.lang_arr.servercenter_saves.remove }}
+                        <a v-if="hasPermissions(globalvars.perm, 'saves/removeSaves', vars.cfg)" href="javascript:void(0)" class="btn btn-app bg-danger m-0"
+                            @click="sendActionWithAccept(0, 'question', `<i class='fa fa-trash-o'></i>`, {
+                                server      : vars.cfg,
+                                action      : 'remove',
+                                file        : file.File.totalPath,
+                                swalText    : file.File.name
+                            })"
+                        >
+                            <i aria-hidden="true" class="fa fa-trash-o"></i> {{ globalvars.lang_arr.servercenter_saves.remove }}
                         </a>
                     </div>
                 </td>

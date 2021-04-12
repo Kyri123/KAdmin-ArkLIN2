@@ -45,6 +45,12 @@
     "removeMod"             : 0,
     "toggleMod"             : 0,
     "addMod"                : 0,
-    "toggleInstallMod"          : 0
+    "toggleInstallMod"      : 0
+  },
+  "saves": {
+    "show"              : 0,
+    "downloadSaves"     : 0,
+    "removeSaves"       : 0,
+    "shwoInfosSaves"    : 0
   }
 }

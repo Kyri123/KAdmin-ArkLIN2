@@ -57,24 +57,51 @@ let VUE_savesContainer = new Vue({
                 if(Array.isArray(this.savegamesPlayer))
                     this.list   = this.savegamesPlayer
             }
-
-            console.log("list", this.list)
-            console.log("steam", this.steamAPI_ID)
         },
 
-        // sendet eine Anfrage die vorher bestätigt werden muss
-        sendActionWithAccept(modalCode, type = "question") {
-            fireFormModal(modalCode, type, (result) => {
-                console.log(result)
-            }, {
+        /**
+         * sendet eine Anfrage die vorher bestätigt werden muss
+         * @param {string|number} modalCode
+         * @param {string} type
+         * @param {string} confirmButtonText
+         * @param {object} datas
+         */
+        sendActionWithAccept(modalCode, type = "question", confirmButtonText = '<i class="fas fa-save"></i>', datas) {
+            let options = {
                 swalOptions: {
-                    cancelButtonText: "123"
+                    confirmButtonText: confirmButtonText
                 }
-            })
+            }
+
+            if(datas.swalText) {
+                options.swalOptions.text = datas.swalText
+                delete datas.swalText
+            }
+
+            fireFormModal(modalCode, type, (result) => {
+                if(result.isConfirmed && !result.isDenied) {
+                    $.post('/ajax/serverCenterSaves', datas)
+                       .then((response) => {
+                           response = JSON.parse(response)
+                           if(!response.success) {
+                               fireToast("FAIL", "error")
+                           }
+                            else {
+                                this.reloadInfos()
+                                if(response.sendToast) {
+                                    fireToast(response.Toast.code, response.Toast.type, response.Toast.options)
+                                }
+                           }
+                       })
+                       .fail(() => {
+                           fireToast("FAIL", "error")
+                       })
+                }
+            }, options)
         }
     },
     created() {
         this.reloadInfos()
-        setInterval(() => this.reloadInfos(), 1000)
+        setInterval(() => this.reloadInfos(), 500)
     }
 })

@@ -6,8 +6,12 @@
   "question"      : "Frage",
   "modal": {
     "0"   : {
-      "title"   : "TEST",
-      "text"    : "TEXT"
+      "title"   : "Möchtest du wirklich diesen Spielstand entfernen?",
+      "text"    : ""
+    },
+    "1"   : {
+      "title"   : "Möchtest du wirklich Alle Spielstände entfernen?",
+      "text"    : ""
     }
   },
   "toast": {
