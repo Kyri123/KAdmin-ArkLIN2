@@ -110,7 +110,7 @@ router.route('/')
         ) if(userHelper.hasPermissions(req.session.uid, "backups/playin", POST.server)) {
             let serverData      = new serverClass(POST.server)
             let serverINI       = serverData.getINI()
-            let saveLocation    = serverData.getIniDirLocation()
+            let saveLocation    = serverData.getSaveDirLocation(true)
             let success         = false
 
             try {
@@ -122,7 +122,7 @@ router.route('/')
                                 let dirRead = fs.readdirSync(pathMod.join(serverINI.arkserverroot, "tmp"))
 
                                 for(let file of dirRead) {
-                                    globalUtil.safeFileRmSync([serverINI.arkserverroot, file])
+                                    globalUtil.safeFileRmSync([saveLocation, file])
                                     globalUtil.safeFileRenameSync([serverINI.arkserverroot, "tmp", file], [saveLocation, file])
                                 }
 
