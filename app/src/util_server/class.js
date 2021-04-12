@@ -445,7 +445,7 @@ module.exports = class serverClass {
     * @return {string|boolean}
     */
    clusterGetID() {
-      return this.isServerInCluster() ? this.clusterFile[this.clusterIndex].name : false
+      return this.isServerInCluster() ? this.clusterFile[this.clusterIndex].clusterid : false
    }
 
    /**

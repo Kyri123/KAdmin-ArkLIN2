@@ -25,10 +25,21 @@ const isRunning     = require('is-running')
  * @param {boolean} use_state - Soll state benutzt werden?
  */
 function save(data, name, state, use_state = true) {
-      // Todo X.X.X Stats
-      // > state > use_state
-      //data.push(state)
-      globalUtil.safeFileSaveSync([mainDir, '/public/json/server', `${name}.json`], JSON.stringify(data))
+    // Todo X.X.X Stats
+    // > state > use_state
+    //data.push(state)
+
+    delete data.INI.ark_ServerAdminPassword
+    delete data.INI.ark_ServerPassword
+    delete data.INI.ark_RCONPort
+    delete data.INI.discordWebhookURL
+    delete data.INI.arkopt_clusterid
+    delete data.INI.arkopt_ClusterDirOverride
+    delete data.INI.arkserverroot
+    delete data.INI.logdir
+    delete data.INI.arkbackupdir
+
+    globalUtil.safeFileSaveSync([mainDir, '/public/json/server', `${name}.json`], JSON.stringify(data))
 }
 
 module.exports = {
@@ -80,7 +91,6 @@ module.exports = {
                     if (!globalUtil.safeFileExsistsSync([servINI.arkserverroot])) globalUtil.safeFileMkdirSync([servINI.arkserverroot])
                     if (!globalUtil.safeFileExsistsSync([servINI.logdir])) globalUtil.safeFileMkdirSync([servINI.logdir])
                     if (!globalUtil.safeFileExsistsSync([servINI.arkbackupdir])) globalUtil.safeFileMkdirSync([servINI.arkbackupdir])
-                    //console.log(name, servINI)
 
                     data.isFree = arkUpdateProcess && isBackupRunning && isPlayIn && arkUpdateProcess
                     data.aplayers = 0
