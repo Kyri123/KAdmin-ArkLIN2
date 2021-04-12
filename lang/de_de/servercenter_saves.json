@@ -6,5 +6,20 @@
   "remove"        : "Entfernen",
   "info"          : "Mehr Infos",
   "download"      : "Runterladen",
-  "lastUpdate"    : "Letzte Aktualisierung"
+  "lastUpdate"    : "Letzte Aktualisierung",
+  "infoModal"     : {
+    "title"               : "Informationen über ",
+    "memberCount"         : "Anzahl der Mitglieder",
+    "tribeId"             : "Stamm ID",
+    "ownerId"             : "Besitzer ID",
+    "owner"               : "Besitzer",
+    "fileUpdate"          : "Letztes Update (der Datei also Ingame)",
+    "tibeMembers"         : "Mitglieder",
+    "level"               : "Charakter Level",
+    "playerId"            : "Spieler ID",
+    "totalEngramPoints"   : "Engramm Punkte (Insgesamt)",
+    "tibeName"            : "Stammname",
+    "steamName"           : "Steam Name",
+    "close"               : "Schließen"
+  }
 }

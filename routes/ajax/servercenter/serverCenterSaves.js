@@ -18,9 +18,6 @@ router.route('/')
             SESS           = req.session,
             success        = false
 
-
-       console.log(POST)
-
         if(POST.server) {
             let server  = new serverClass(POST.server)
 

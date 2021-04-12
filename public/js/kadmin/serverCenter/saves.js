@@ -12,6 +12,7 @@ let VUE_savesContainer = new Vue({
     data    : {
         steamAPI_ID         : {},
         steamAPI_NAME       : {},
+        infoModal           : {},
         savegamesPlayer     : [],
         savegamesTribe      : [],
         savegamesMaps       : [],
@@ -19,7 +20,8 @@ let VUE_savesContainer = new Vue({
         listSavegames       : true,
         listTribes          : false,
         listMaps            : false,
-        list                : []
+        list                : [],
+        tmp                 : ""
     },
     methods: {
         /**
@@ -57,6 +59,31 @@ let VUE_savesContainer = new Vue({
                 if(Array.isArray(this.savegamesPlayer))
                     this.list   = this.savegamesPlayer
             }
+        },
+
+        /**
+         * gibt das Object vom Spieler
+         * @param {string|number} name Name oder ID
+         * @return {object}
+         */
+        getSavegameInfos(name) {
+            let obj = {}
+            for (const char of this.savegamesPlayer) {
+                if(char.CharacterName === name || char.PlayerId === name)
+                    obj    = char
+            }
+            return obj
+        },
+
+        /**
+         * Öffnet das InfoModal
+         * @param fileInfos
+         * @param isSavegame
+         */
+        openInfoModal(fileInfos) {
+            this.infoModal = fileInfos
+            console.log(this.infoModal, this.savegamesTribe, this.savegamesPlayer)
+            setTimeout(() => $('#infoModal').modal('show'), 500)
         },
 
         /**

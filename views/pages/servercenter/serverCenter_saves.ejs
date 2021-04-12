@@ -75,17 +75,28 @@
                             <i aria-hidden="true" class="fa fa-download"></i> {{ globalvars.lang_arr.servercenter_saves.download }}
                         </a>
 
-                        <a v-if="hasPermissions(globalvars.perm, 'saves/shwoInfosSaves', vars.cfg) && !listMaps" href="javascript:void(0)" class="btn btn-app bg-info m-0">
+                        <a v-if="hasPermissions(globalvars.perm, 'saves/showInfosSaves', vars.cfg) && !listMaps" href="javascript:void(0)" class="btn btn-app bg-info m-0" @click="openInfoModal(file)">
                             <i aria-hidden="true" class="fa fa-info"></i> {{ globalvars.lang_arr.servercenter_saves.info }}
                         </a>
 
-                        <a v-if="hasPermissions(globalvars.perm, 'saves/removeSaves', vars.cfg)" href="javascript:void(0)" class="btn btn-app bg-danger m-0"
+                        <a v-if="hasPermissions(globalvars.perm, 'saves/removeSaves', vars.cfg) && !listMaps" href="javascript:void(0)" class="btn btn-app bg-danger m-0"
                             @click="sendActionWithAccept(0, 'question', `<i class='fa fa-trash-o'></i>`, {
                                 server      : vars.cfg,
                                 action      : 'remove',
                                 file        : file.File.totalPath,
                                 swalText    : file.File.name
                             })"
+                        >
+                            <i aria-hidden="true" class="fa fa-trash-o"></i> {{ globalvars.lang_arr.servercenter_saves.remove }}
+                        </a>
+
+                        <a v-else-if="hasPermissions(globalvars.perm, 'saves/removeSaves', vars.cfg)" href="javascript:void(0)" class="btn btn-app bg-danger m-0"
+                           @click="sendActionWithAccept(0, 'question', `<i class='fa fa-trash-o'></i>`, {
+                            server      : vars.cfg,
+                            action      : 'remove',
+                            file        : file.totalPath,
+                            swalText    : file.name
+                        })"
                         >
                             <i aria-hidden="true" class="fa fa-trash-o"></i> {{ globalvars.lang_arr.servercenter_saves.remove }}
                         </a>
@@ -97,6 +108,125 @@
 
             </tbody>
         </table>
+    </div>
+
+    <div class="modal" id="infoModal" v-if="hasPermissions(globalvars.perm, 'saves/showInfosSaves', vars.cfg) && JSON.stringify(infoModal) !== '{}'">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">
+                        {{ globalvars.lang_arr.servercenter_saves.infoModal.title }} <b>{{ infoModal.CharacterName ? infoModal.CharacterName : infoModal.Name }}</b>
+                    </h5>
+                </div>
+
+
+                <div class="modal-body p-0" v-if="listTribes">
+                    <table class="table table-bordered m-0">
+                        <tbody>
+                            <tr v-if="Array.isArray(infoModal.TribeMemberNames)">
+                                <td>{{ globalvars.lang_arr.servercenter_saves.infoModal.memberCount }}</td>
+                                <td>{{ infoModal.TribeMemberNames.length }}</td>
+                            </tr>
+                            <tr v-if="infoModal.Id">
+                                <td>{{ globalvars.lang_arr.servercenter_saves.infoModal.tribeId }}</td>
+                                <td>{{ infoModal.Id }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ globalvars.lang_arr.servercenter_saves.infoModal.ownerId }}</td>
+                                <td>{{ infoModal.OwnerId }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ globalvars.lang_arr.servercenter_saves.infoModal.owner }}</td>
+                                <td>{{ getSavegameInfos(infoModal.OwnerId).CharacterName }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ globalvars.lang_arr.servercenter_saves.infoModal.fileUpdate }}</td>
+                                <td>{{ convertTime(infoModal.FileUpdated) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                    <div class="list-group-item bg-dark">
+                        <div class="row p-0">
+                            <div class="col-12">
+                                <h4 class="m-0">{{ globalvars.lang_arr.servercenter_saves.infoModal.tibeMembers }}</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-if="Array.isArray(infoModal.TribeMemberNames)" class="list-group-item" v-for="name in infoModal.TribeMemberNames">
+                        <div class="row p-0">
+                            <div class="col-12">
+                                <img class="rounded -align-left position-absolute" :src="steamAPI_ID[getSavegameInfos(name).File.namePure] ? steamAPI_ID[getSavegameInfos(name).File.namePure].avatarfull : '/img/unknown.png'" height="50" width="50">
+                                <div class="ml-auto float-right  btn-group" v-if="steamAPI_ID[getSavegameInfos(name).File.namePure]">
+                                    <a :href="steamAPI_ID[getSavegameInfos(name).File.namePure].profileurl" class="btn btn-dark" target="_blank">
+                                    <span class="icon text-white">
+                                        <i class="fab fa-steam-symbol"></i>
+                                    </span>
+                                    </a>
+                                </div>
+                                <div style="margin-left: 60px;"><b v-if="getSavegameInfos(name).PlayerId === infoModal.OwnerId">[Owner]</b> {{ name }}<br><span class="font-weight-light" style="font-size: 11px;"><b>{{ convertTime(getSavegameInfos(name).FileUpdated) }}</b></span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal-body p-0" v-else>
+                    <div class="list-group-item">
+                        <div class="row p-0">
+                            <div class="col-12">
+                                <img class="rounded -align-left position-absolute" :src="steamAPI_ID[infoModal.File.namePure] ? steamAPI_ID[infoModal.File.namePure].avatarfull : '/img/unknown.png'" height="50" width="50">
+                                <div class="ml-auto float-right  btn-group" v-if="steamAPI_ID[infoModal.File.namePure]">
+                                    <a :href="steamAPI_ID[infoModal.File.namePure].profileurl" class="btn btn-dark" target="_blank">
+                                    <span class="icon text-white">
+                                        <i class="fab fa-steam-symbol"></i>
+                                    </span>
+                                    </a>
+                                </div>
+                                <div style="margin-left: 60px;">{{ infoModal.CharacterName }}<br><span class="font-weight-light" style="font-size: 11px;"><b>{{ convertTime(infoModal.FileUpdated) }}</b></span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table table-bordered m-0">
+                        <tbody>
+                        <tr>
+                            <td>{{ globalvars.lang_arr.servercenter_saves.infoModal.level }}</td>
+                            <td>{{ infoModal.Level }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ globalvars.lang_arr.servercenter_saves.infoModal.playerId }}</td>
+                            <td>{{ infoModal.PlayerId }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ globalvars.lang_arr.servercenter_saves.infoModal.totalEngramPoints }}</td>
+                            <td>{{ infoModal.TotalEngramPoints }}</td>
+                        </tr>
+                        <tr v-if="infoModal.Tribe && infoModal.Tribe.Name">
+                            <td>{{ globalvars.lang_arr.servercenter_saves.infoModal.tibeName }}</td>
+                            <td>{{ infoModal.Tribe.Name }}</td>
+                        </tr>
+                        <tr v-if="steamAPI_ID[infoModal.File.namePure]">
+                            <td>{{ globalvars.lang_arr.servercenter_saves.infoModal.steamName }}</td>
+                            <td>{{ steamAPI_ID[infoModal.File.namePure].personaname }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ globalvars.lang_arr.servercenter_saves.infoModal.fileUpdate }}</td>
+                            <td>{{ convertTime(infoModal.FileUpdated) }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ globalvars.lang_arr.servercenter_saves.infoModal.close }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
