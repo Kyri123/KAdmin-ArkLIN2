@@ -11,8 +11,9 @@
 const VUE_clusterControler = new Vue({
    el    : '#clusterControler',
    data  : {
-      clusters : [],
-      servers  : {}
+      clusters    : [],
+      servers     : {},
+      playerList  : []
    },
    methods : {
       /**

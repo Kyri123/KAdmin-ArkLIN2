@@ -3,9 +3,9 @@
   "save"            : "Speichern",
   "options"         : {
     "app.json"        : {
-      "servRoot"          : "Verzeichnis wo die Server liegen sollen (ACHTUNG: Änderungen hieran ändert auch den Pfad aller Server was notwendig für Steuern etc. ist!!)",
-      "logRoot"           : "Verzeichnis wo die Logs liegen (ACHTUNG: Änderungen hieran \"entfernt\" alle Logs!!)",
-      "pathBackup"        : "Verzeichnis wo die Backups liegen (ACHTUNG: Änderungen hieran \"entfernt\" alle Backups!!)",
+      "servRoot"          : "Verzeichnis wo die Server liegen sollen (Muss im Panelverzeichnis liegen) (ACHTUNG: Änderungen hieran ändert auch den Pfad aller Server was notwendig für Steuern etc. ist!!)",
+      "logRoot"           : "Verzeichnis wo die Logs liegen (Muss im Panelverzeichnis liegen) (ACHTUNG: Änderungen hieran \"entfernt\" alle Logs!!)",
+      "pathBackup"        : "Verzeichnis wo die Backups liegen (Muss im Panelverzeichnis liegen) (ACHTUNG: Änderungen hieran \"entfernt\" alle Backups!!)",
       "port"              : "Port der für das Panel bestimmt ist",
       "useDebug"          : "Sollen Debugs im Log angezeigt werden",
       "pathSteam"         : "Verzeichnis wo SteamCMD liegt",

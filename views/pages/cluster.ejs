@@ -65,9 +65,18 @@
                      <tbody>
 
                      <tr v-for="(server, iS) in cluster.servers" class="p-1" v-if="cluster.servers.length > 0 && servers[server.server]">
-                        <td>{{ servers[server.server].selfname }}</td>
+                        <td>
+                           <a :href="`/servercenter/${server.server}/home`">
+                              {{ servers[server.server].selfname }}
+                           </a>
+                        </td>
 
-                        <td><b>{{ servers[server.server].aplayers }}</b> / {{ servers[server.server].players }}</td>
+                        <td v-if="!servers[server.server].online"><b>{{ servers[server.server].aplayers }}</b> / {{ servers[server.server].players }}</td>
+                        <td v-else>
+                           <button class="btn btn-outline-dark" @click="this.playerList = servers[server.server].aplayersarr; $('#playerList').modal('show')">
+                              <b>{{ servers[server.server].aplayers }}</b> / {{ servers[server.server].players }}
+                           </button>
+                        </td>
 
                         <td :class="`text-${stateColor(servers[server.server])}`">{{ globalvars.lang_arr.forservers.state[stateColor(servers[server.server])] }}</td>
 
@@ -140,6 +149,42 @@
          <i aria-hidden="true" class="fas fa-plus"></i>
       </div>
    </a>
+</div>
+
+<div class="modal" id="playerList">
+   <div class="modal-dialog modal-xl" style="max-width: 700px">
+      <div class="modal-content border-0">
+         <div class="modal-header bg-info text-white">
+            <h5 class="modal-title"><%- lang["servercenter_any"].playermodal.title %></h5>
+         </div>
+         <div class="modal-body p-0">
+            <span v-html="playerAlert"></span>
+            <table class="table m-0">
+               <tbody>
+               <!-- Spielerliste -->
+               <tr v-for="item in playerArray">
+                  <td class="p-0">
+                     <div class="media">
+                        <img :src="item.img" class="mr-3" style="height: 75px">
+                        <div class="media-body">
+                           <h3 class="dropdown-item-title text-bold pt-2">
+                              <i class="fas fa-clock"></i> {{ secondsTimeSpanToHM(Math.round(item.time)) }} | {{ item.name }}
+                              <a target="_blank" :href="item.url" class="float-right text-sm btn btn-sm btn-outline-info mr-2"><i class="fa fa-link" aria-hidden="true"></i></a>
+                           </h3>
+                           <p class="text-sm m-0"><b>ADMIN:</b> <span v-bind:class="item.isOPColor">{{ item.isOPText }}</span>[TODO]</p>
+                           <p class="text-sm m-0"><b>ID:</b> {{ item.id }}</p>
+                        </div>
+                     </div>
+                  </td>
+               </tr>
+               </tbody>
+            </table>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><%- lang["servercenter_any"].alertClose %></button>
+         </div>
+      </div>
+   </div>
 </div>
 
 <script>
