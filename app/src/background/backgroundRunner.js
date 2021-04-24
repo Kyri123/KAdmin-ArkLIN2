@@ -270,25 +270,27 @@ module.exports = {
 
                             // Lade Maps
                             let dirScan     = globalUtil.safeFileReadDirSync([saveDir])
-                            let knownMaps   = globalUtil.safeFileReadSync([mainDir, "public/json/sites", "maps.json"], true)
-                            let mapFiles    = []
-                            for(const file of dirScan) {
-                                if(
-                                   file.FileExt === ".ark"
-                                   || file.name.includes("_AntiCorruptionBackup")
-                                   || file.name.includes("_NewLaunchBackup")
-                                ) {
-                                    file.iconOfMap  = "/img/unknown.png"
-                                    for(const map of Object.entries(knownMaps)) {
-                                        if(file.namePure.includes(map[0])) {
-                                            file.iconOfMap = `/img/maps/${map[0]}.jpg`
-                                            break
+                            let knownMaps = globalUtil.safeFileReadSync([mainDir, "public/json/sites", "maps.json"], true)
+                            let mapFiles = []
+                            if(dirScan !== false) {
+                                for (const file of dirScan) {
+                                    if (
+                                       file.FileExt === ".ark"
+                                       || file.name.includes("_AntiCorruptionBackup")
+                                       || file.name.includes("_NewLaunchBackup")
+                                    ) {
+                                        file.iconOfMap = "/img/unknown.png"
+                                        for (const map of Object.entries(knownMaps)) {
+                                            if (file.namePure.includes(map[0])) {
+                                                file.iconOfMap = `/img/maps/${map[0]}.jpg`
+                                                break
+                                            }
                                         }
+
+                                        file.DownloadUrl = file.totalPath.replace(CONFIG.app.servRoot, "")
+
+                                        mapFiles.push(file)
                                     }
-
-                                    file.DownloadUrl    = file.totalPath.replace(CONFIG.app.servRoot, "")
-
-                                    mapFiles.push(file)
                                 }
                             }
 
