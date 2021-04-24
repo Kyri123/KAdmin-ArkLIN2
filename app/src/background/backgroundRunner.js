@@ -272,7 +272,7 @@ module.exports = {
                             let dirScan     = globalUtil.safeFileReadDirSync([saveDir])
                             let knownMaps = globalUtil.safeFileReadSync([mainDir, "public/json/sites", "maps.json"], true)
                             let mapFiles = []
-                            if(dirScan !== false) {
+                            if(dirScan !== false && Array.isArray(dirScan)) {
                                 for (const file of dirScan) {
                                     if (
                                        file.FileExt === ".ark"
