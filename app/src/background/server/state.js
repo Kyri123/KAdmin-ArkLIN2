@@ -38,6 +38,8 @@ function save(data, name, state, use_state = true) {
     delete data.INI.arkserverroot
     delete data.INI.logdir
     delete data.INI.arkbackupdir
+    delete data.bin
+    delete data.cmd
 
     globalUtil.safeFileSaveSync([mainDir, '/public/json/server', `${name}.json`], JSON.stringify(data))
 }
